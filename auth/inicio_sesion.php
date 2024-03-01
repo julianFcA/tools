@@ -93,7 +93,7 @@ $consulllll=$consulta5->fetch();
       display: flex;
       justify-content: center;
       align-items: center;
-      height: 100vh;
+      height: 73vh;
       background: url('images/img_login.jpg') center/cover no-repeat; /* Agregado */
     }
 

@@ -3,25 +3,38 @@ require_once '../../database/conn.php';
 $database = new Database();
 $conn = $database->conectar();
 
-$consulta1 = $conn->prepare("SELECT terminos FROM usuario");
-$consulta1->execute();
-$consul = $consulta1->fetch(PDO::FETCH_ASSOC);
 
-$consulta2 = $conn->prepare("SELECT nom_tp_docu FROM tp_docu WHERE id_tp_docu >= 1 ");
-$consulta2->execute();
-$consull = $consulta2->fetchAll(PDO::FETCH_ASSOC);
+// // Validamos la sesión del usuario
+// require_once "../../auth/validationSession.php";
 
-$consulta3 = $conn->prepare("SELECT * FROM formacion");
-$consulta3->execute();
-$consulll=$consulta3->fetchAll(PDO::FETCH_ASSOC);
+// // Verificamos si el usuario está logueado
+// if (!isset($_SESSION['documento'])) {
+//     header("Location: ../../index.php"); // Redirigir a la página de inicio si no está logueado
+//     exit();
+// }
 
-$consulta4 = $conn->prepare("SELECT nom_rol FROM rol WHERE id_rol >= 2 ");
-$consulta4->execute();
-$consullll=$consulta4->fetchAll(PDO::FETCH_ASSOC);
+// Cerrar sesión
+if (isset($_POST['btncerrar'])) {
+    session_destroy();
+    header("Location:../../index.php");
+    exit();
+}
 
-$consulta5 = $conn->prepare("SELECT * FROM estado_usu");
-$consulta5->execute();
-$consulllll=$consulta5->fetch();
+$limit = 100; // Número de filas por página
+$page = isset($_GET['page']) ? $_GET['page'] : 1; // Página actual
+
+// Calcula el offset basado en la página actual
+$offset = ($page - 1) * $limit;
+
+$totalRowsQuery = $conn->query("SELECT COUNT(*) as count FROM entrada_usuario INNER JOIN usuario ON entrada_usuario.documento = usuario.documento INNER JOIN rol ON usuario.id_rol = rol.id_rol INNER JOIN compra_servicio ON entrada_usuario.documento = compra_servicio.documento INNER JOIN detalle_servicio ON compra_servicio.id_servi = detalle_servicio.id_servi INNER JOIN atracciones ON detalle_servicio.id_atrac = atracciones.id_atrac WHERE rol.id_rol = 2");
+$totalRows = $totalRowsQuery->fetch(PDO::FETCH_ASSOC)['count'];
+
+// Definir el número de resultados por página y la página actual
+$porPagina = 20; // Puedes ajustar esto según tus necesidades
+$pagina = isset($_GET['pagina']) ? $_GET['pagina'] : 1;
+$empieza = ($pagina - 1) * $porPagina;
+
+
 ?>
 
 
@@ -212,9 +225,11 @@ $consulllll=$consulta5->fetch();
                 <li class="nav-item">
                   <a class="nav-link" href="./inicio_sesion.php">Iniciar Sesion</a>
                 </li>
-                <li class="nav-item">
-                  <a class="nav-link" href="../roles.php">Registro</a>
-                </li>
+                <form method="POST" action="">
+                <span class="ms-2">
+                    <input class="btn btn-outline-danger my-2 my-sm-0" type="submit" value="Cerrar sesion" id="btn_quote" name="btncerrar" />
+                </span>
+            </form>
               </ul>
             </div>
           </div>
@@ -231,31 +246,126 @@ $consulllll=$consulta5->fetch();
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Activación de Licencia</title>
+    <title>Licencia</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 
-<body>
-    <div class="activation-container">
-        <form action="activar_licencia.php" method="post">
-            <h2>Activación de Licencia</h2>
+<div class="content-body container-table">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="card-title">Actividad de usuario | Atracciones Adquiridas</h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <!-- Tabla HTML para mostrar los resultados -->
+                            <table id="example3" class="table table-striped table-bordered" style="width:100%">
+                                <thead>
+                                    <tr>
+                                        <th>Documento</th>
+                                        <th>Nombre</th>
+                                        <th>ID Servicio</th>
+                                        <th>Nombre Atracción</th>
+                                        <th>Fecha de Adquisición</th>
+                                        <th>Hora de Finalización</th>
+                                        <th>Imagen</th>
+                                        <th>Precio</th>
+                                        <th>Total Pagado</th>
+                                        <th>Estado</th>
+                                        <th>Accion</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php foreach ($resultado_pagina as $entrada) { ?>
+                                        <?php
+                                        // Determinar la clase CSS y el estado del botón según el estado_servi
+                                        $estadoClase = '';
+                                        $color = '';
+                                        $mensaje = '';
+                                        $botonInactivo = '';
+                                        $botonCancelar = '';
+                                        $activo = '';
 
-            <!-- Campo para ingresar la clave de licencia -->
-            <div class="form-group">
-                <label for="licencia">Clave de Licencia:</label>
-                <input type="text" id="licencia" name="licencia" required>
+                                        $horaFinalizacionPasada = strtotime($entrada["hora_finalizacion"]) < strtotime("now");
+
+                                        if ($entrada["estado_servi"] == 'inactivo' || $horaFinalizacionPasada) {
+                                            $estadoClase = 'table-warning';
+                                            $botonInactivo = 'disabled';
+                                            $color = 'orange';
+                                            $mensaje = 'Bloqueado';
+    
+                                            // Actualizar el estado en la base de datos
+                                            if ($horaFinalizacionPasada) {
+                                                $updateEstado = $conn->prepare("UPDATE compra_servicio SET id_esta_servi = 2 WHERE id_servi = :id_servi");
+                                                $updateEstado->bindParam(':id_servi', $entrada["id_servi"], PDO::PARAM_INT);
+                                                $updateEstado->execute();
+                                            } else {
+                                                // Si la hora de finalización no ha pasado, pero el estado es 'inactivo', cambia a 'activo'
+                                                $updateEstado = $conn->prepare("UPDATE compra_servicio SET id_esta_servi = 1 WHERE id_servi = :id_servi");
+                                                $updateEstado->bindParam(':id_servi', $entrada["id_servi"], PDO::PARAM_INT);
+                                                $updateEstado->execute();
+                                            }
+    
+                                                 // Actualiza las variables para reflejar el nuevo estado
+                                                $estadoClase = 'table-success';
+                                                $activo = 'Activo';
+                                                $color = 'green';
+                                                $mensaje = 'Disponible';
+                                            }
+
+                                        if ($entrada["estado_servi"] == 'inactivo') {
+                                            $estadoClase = '';
+                                            $botonInactivo = 'disabled';
+                                            $color = 'orange';
+                                            $mensaje = 'Bloqueado';
+                                        } elseif ($entrada["estado_servi"] == 'cancelado') {
+                                            $estadoClase = '';
+                                            $botonCancelar = 'disabled';
+                                            $color = 'red';
+                                            $mensaje = 'Esta cancelado';
+                                        } elseif ($entrada["estado_servi"] == 'activo') {
+                                            $estadoClase = '';
+                                            $activo = 'disabled';
+                                            $color = 'green';
+                                            $mensaje = 'Disponible';
+                                        }
+                                        ?>
+                                        <tr class="<?= $estadoClase ?>" style="color: <?php echo $color; ?>">
+                                            <td><?= $entrada["documento"] ?></td>
+                                            <td><?= $entrada["nombre"] ?></td>
+                                            <td><?= $entrada["id_servi"] ?></td>
+                                            <td><?= $entrada["nombre_atracciones"] ?></td>
+                                            <td><?= $entrada["fecha_adqui"] ?></td>
+                                            <td><?= $entrada["hora_finalizacion"] ?></td>
+                                            <td class="image-container">
+                                                <?php
+                                                // Verificar si el índice "imagen" está definido
+                                                $imageUrl = isset($entrada["imagen"]) ? '../../images/' . $entrada["imagen"] : '';
+                                                ?>
+                                                <img src="<?= $imageUrl ?>" alt="Imagen de atracción">
+                                            </td>
+                                            <td><?= number_format($entrada["precio"], 2, ',', '.') ?></td>
+                                            <td><?= number_format($entrada["total"], 2, ',', '.') ?></td>
+                                            <td><?= $entrada["estado_servi"] ?></td>
+                                            <td>
+                                                <form method="GET" action="eliminar_servi.php">
+                                                    <input type="hidden" name="id_servi" value="<?= $entrada["id_servi"] ?>">
+                                                    <button class="btn btn-danger" type="submit" name="elimin" <?= $activo ?>>Eliminar</button>
+                                                </form>
+                                            </td>
+                                        </tr>
+                                    <?php } ?>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
             </div>
-
-            <!-- Campo para ingresar el código de activación -->
-            <div class="form-group">
-                <label for="codigo_activacion">Código de Activación:</label>
-                <input type="text" id="codigo_activacion" name="codigo_activacion" required>
-            </div>
-
-            <!-- Botón para enviar el formulario -->
-            <button type="submit">Activar Licencia</button>
-        </form>
+        </div>
     </div>
+</div>
 
 
 

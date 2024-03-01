@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 26-02-2024 a las 18:32:04
+-- Tiempo de generación: 01-03-2024 a las 20:28:28
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -152,13 +152,25 @@ CREATE TABLE `herramienta` (
 --
 
 CREATE TABLE `licencia` (
-  `id_licencia` tinyint(4) NOT NULL,
   `licencia` varchar(25) NOT NULL,
-  `id_esta_licen` enum('activo','inactivo','','') NOT NULL,
+  `esta_licen` enum('activo','inactivo','','') NOT NULL,
   `fecha_ini` date NOT NULL,
   `fecha_fin` date NOT NULL,
   `nit_empre` varchar(10) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `licencia`
+--
+
+INSERT INTO `licencia` (`licencia`, `esta_licen`, `fecha_ini`, `fecha_fin`, `nit_empre`) VALUES
+('65e2190b8913a', '', '2024-03-01', '2026-03-01', '89999034-1'),
+('65e21953c0b20', '', '2024-03-01', '2026-03-01', '89999034-1'),
+('65e21a1911d6c', '', '2024-03-01', '2026-03-01', '89999034-1'),
+('65e21a6a9a7c8', '', '2024-03-01', '2026-03-01', '89999034-1'),
+('65e21ae2ce620', '', '2024-03-01', '2026-03-01', '89999034-1'),
+('65e21bf4f2f70', '', '2024-03-01', '2026-03-01', '89999034-1'),
+('65e21c475cc7d', '', '2024-03-01', '2026-03-01', '89999034-1');
 
 -- --------------------------------------------------------
 
@@ -245,10 +257,18 @@ CREATE TABLE `tp_herra` (
 --
 
 CREATE TABLE `tri_contra` (
-  `id_trigger` tinyint(4) NOT NULL,
-  `password_vieja` varchar(255) NOT NULL,
+  `documento` int(11) NOT NULL,
+  `id_tp_docu` tinyint(4) NOT NULL,
+  `nombre` text NOT NULL,
+  `apellido` text NOT NULL,
+  `contrasena` varchar(255) NOT NULL,
+  `correo` varchar(40) NOT NULL,
+  `id_forma` tinyint(4) NOT NULL,
+  `ficha` int(8) NOT NULL,
+  `id_rol` tinyint(4) NOT NULL,
+  `nit_empre` varchar(10) NOT NULL,
   `fecha` datetime NOT NULL,
-  `documento` int(11) NOT NULL
+  `accion_usu` varchar(20) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -280,6 +300,14 @@ CREATE TABLE `usuario` (
 
 INSERT INTO `usuario` (`documento`, `id_tp_docu`, `nombre`, `apellido`, `contrasena`, `correo`, `id_forma`, `ficha`, `codigo_barras`, `fecha_registro`, `terminos`, `id_rol`, `id_esta_usu`, `nit_empre`) VALUES
 (1110567986, 2, 'julian', 'calderon', '$2y$12$Xq96wrjW89QAMdSiOQ6YfuvVrCHXIYMyulPB1wq/49y4Ohd4VBd72', 'jfcalderona16@gmail.com', 0, 0, '0', '2024-02-26', 'si', 1, 1, '0');
+
+--
+-- Disparadores `usuario`
+--
+DELIMITER $$
+CREATE TRIGGER `tri_contrasena` BEFORE DELETE ON `usuario` FOR EACH ROW INSERT INTO tri_contra (documento, id_tp_docu, nombre, apellido, contrasena, correo, id_forma, ficha, id_rol, nit_empre, fecha, accion_usu) VALUES (OLD.documento, OLD.id_tp_docu, OLD.nombre, OLD.apellido, OLD.contrasena, OLD.correo, OLD.id_forma, OLD.ficha, OLD.id_rol, OLD.nit_empre, NOW(), CURRENT_USER())
+$$
+DELIMITER ;
 
 --
 -- Índices para tablas volcadas
@@ -380,13 +408,6 @@ ALTER TABLE `tp_herra`
   ADD PRIMARY KEY (`id_tp_herra`);
 
 --
--- Indices de la tabla `tri_contra`
---
-ALTER TABLE `tri_contra`
-  ADD PRIMARY KEY (`id_trigger`),
-  ADD KEY `documento` (`documento`);
-
---
 -- Indices de la tabla `usuario`
 --
 ALTER TABLE `usuario`
@@ -412,12 +433,6 @@ ALTER TABLE `detalle_prestamo`
 --
 ALTER TABLE `deta_reporte`
   MODIFY `id_deta_reporte` tinyint(4) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT de la tabla `tri_contra`
---
-ALTER TABLE `tri_contra`
-  MODIFY `id_trigger` tinyint(4) NOT NULL AUTO_INCREMENT;
 
 --
 -- Restricciones para tablas volcadas
@@ -467,12 +482,6 @@ ALTER TABLE `prestamo_herra`
 ALTER TABLE `reporte`
   ADD CONSTRAINT `reporte_ibfk_1` FOREIGN KEY (`documento`) REFERENCES `usuario` (`documento`),
   ADD CONSTRAINT `reporte_ibfk_2` FOREIGN KEY (`id_deta_presta`) REFERENCES `detalle_prestamo` (`id_deta_presta`);
-
---
--- Filtros para la tabla `tri_contra`
---
-ALTER TABLE `tri_contra`
-  ADD CONSTRAINT `tri_contra_ibfk_1` FOREIGN KEY (`documento`) REFERENCES `usuario` (`documento`);
 
 --
 -- Filtros para la tabla `usuario`

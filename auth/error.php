@@ -1,104 +1,80 @@
+<?php
+require_once '../database/conn.php';
+$database = new Database();
+$conn = $database->conectar();
+
+// $consulta2 = $conn->prepare("SELECT * FROM genero");
+// $consulta2->execute();
+// $consulll=$consulta2->fetch();
+
+$consulta4 = $conn->prepare("SELECT * FROM rol");
+$consulta4->execute();
+$consullll=$consulta4->fetch();
+
+$consulta5 = $conn->prepare("SELECT * FROM estado_usu");
+$consulta5->execute();
+$consulllll=$consulta5->fetch();
+?>
+
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 
 <head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title>TOOLS - Iniciar Sesión</title>
+  <link rel="stylesheet" type="text/css" href="css/style.css">
+  <link rel="stylesheet" type="text/css"
+    href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.1.3/assets/owl.carousel.min.css" />
 
-    <meta charset="UTF-8">
-    <meta name="viewport" content="initial-scale=1.0, width=device-width" />
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Error de Inicio de Sesión</title>
+  <!-- bootstrap core css -->
+  <link rel="stylesheet" type="text/css" href="../css/bootstrap.css" />
 
-    <!-- Fuentes - Tipo de letra - Iconografía -->
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css">
-    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+  <!-- fonts style -->
+  <link href="https://fonts.googleapis.com/css?family=Poppins:400,700|Roboto:400,700&display=swap" rel="stylesheet">
+  <!-- Custom styles for this template -->
+  <link href="../css/styles.css" rel="stylesheet" />
+  <!-- responsive style -->
+  <link href="../css/responsive.css" rel="stylesheet" />
 
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <style>
+    /* Agrega estos estilos al archivo css/style.css */
 
-    <!-- Estilos personalizados -->
-    <link rel="stylesheet" href="../../assets/css/register.css">
-    <style>
-        body {
-            font-family: 'Lato', sans-serif;
-            background-color: #f4f4f4;
+    body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+            padding-bottom: 40px;
         }
 
-        .contenedor-login {
-            display: flex;
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .overlay-terminos {
+            background: rgba(255, 165, 0, 0.8); /* Naranja semi-transparente */
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: none;
             align-items: center;
             justify-content: center;
-            height: 100vh;
-        }
-
-        .contenedor-form {
-            background-color: #fff;
-            border-radius: 10px;
-            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-            overflow: hidden;
-            width: 400px;
-        }
-
-        .titulo_login {
-            text-align: center;
-            padding: 20px;
-            background-color: #F70A0A;
-            color: #fff;
-            margin: 0;
-        }
-
-        .tabs-links {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-            display: flex;
-            justify-content: space-around;
-            background-color: #eee;
-            margin-bottom: 20px;
-            cursor: pointer;
-        }
-
-        .tabs-links li {
-            padding: 10px;
-            flex: 1;
-            text-align: center;
-            border-bottom: 2px solid #ddd;
-            transition: background-color 0.3s ease;
-        }
-
-        .tabs-links li:hover {
-            background-color: #ddd;
-        }
-
-        .formulario {
-            padding: 20px;
-        }
-
-        .input-text {
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 15px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-        }
-
-        .clave {
-            width: 80%;
-            border-radius: 5px 0 0 5px;
-        }
-
-        .icono {
-            width: 20%;
-            border-radius: 0 5px 5px 0;
-            background-color: #F70A0A;
-            color: #fff;
-            border: 1px solid #F70A0A;
-            cursor: pointer;
+            z-index: 1;
         }
 
         .btn {
             width: 100%;
             padding: 10px;
-            background-color: #F70A0A;
+            background-color: red;
             color: #fff;
             border: none;
             border-radius: 5px;
@@ -107,44 +83,125 @@
         }
 
         .btn:hover {
-            background-color: #F70A0A;
+            background-color: orange;
         }
 
-        .return {
-            color: #F70A0A;
-        }
+    /* Estilos para el formulario de inicio de sesión y registro */
+    .login_container,
+    .registro_container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 73vh;
+      background: url('images/img_login.jpg') center/cover no-repeat; /* Agregado */
+    }
 
-        .return:hover {
-            text-decoration: none;
-        }
+    .login_form,
+    .registro_form {
+      background-color: rgba(255, 255, 255, 0.8); /* Modificado para hacerlo semi-transparente */
+      padding: 10px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      width: 500px; /* Modificado para un ancho fijo */
+      height: 400px;
 
-        .error-text {
-            color: #ff0000;
-            margin-bottom: 15px;
-        }
+    }
 
-        .redirecciones {
-            margin-top: 15px;
-        }
-    </style>
+    .form-group {
+      margin-bottom: 15px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 5px;
+    }
+
+    input {
+      width: 100%;
+      padding: 8px;
+      box-sizing: border-box;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      margin-bottom: 10px;
+    }
+
+    button {
+      background-color: #007bff;
+      color: #fff;
+      padding: 10px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      width: 100%;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+  </style>
 </head>
 
 <body>
+  <div class="hero_area">
+      <!-- header section strats -->
+      <header class="header_section">
+        <div class="container-fluid">
+          <nav class="navbar navbar-expand-lg custom_nav-container ">
+            <a class="navbar-brand" href="../index.html">
+              <span>
+                Tools
+              </span>
+            </a>
+            <button class="navbar-toggler ml-auto" type="button" data-toggle="collapse"
+              data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+              aria-label="Toggle navigation">
+              <span class="navbar-toggler-icon"></span>
+            </button>
 
-    <div class="contenedor-login">
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+              <div class="d-flex mx-auto flex-column flex-lg-row align-items-center">
+                <ul class="navbar-nav  ">
+                  <li class="nav-item active">
+                    <a class="nav-link" href="../index.html"> Inicio <span class="sr-only">(current)</span></a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="../index.html#nosotros"> Sobre Nosotros</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="../index.html#servicios"> Servicios </a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="../index.html#usuarios"> Usuarios </a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="../index.html#recomendacion"> Recomendación </a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="./inicio_sesion.php">Iniciar Sesion</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="./registro.php">Registro</a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </nav>
+        </div>
+      </header>
 
-        <div class="contenedor-form">
+<body>
 
-            <div class="container-center">
-                <h1 class="titulo_login">Error <br> Iniciar Sesión</h1>
+    <div class="login_container">
+        <form class="login_form">
+            <br>
+            <h2>Error<br> Iniciar Sesión</h2>
+            <div class="form-group">
+                  <!-- Tabs -->
 
-                <!-- Tabs -->
-                <a class="link return" onclick="window.location.href='./registro.php'">Registro </a>
-
-                <!-- Formulario -->
+                  <!-- Formulario -->
                 <form action="../controller/AuthController.php" autocomplete="off" method="POST" id="formLogin" class="formulario active">
 
-                    
+                    <br>
 
                     <input type="number" placeholder="Ingrese documento" class="input-text" name="documento" title="Debe tener de 8 a 10 digitos" required onkeyup="espacios(this)" minlength="8" maxlength="11" required autocomplete="off">
 
@@ -152,16 +209,20 @@
                         <input type="password" placeholder="Ingresa tu Contraseña" name="contrasena" class="input-text clave" title="Debe tener de 8 a 10 digitos" required onkeyup="espacios(this)" minlength="8" maxlength="20">
                         
                     </div>
+                    <br>
+                    <input class="btn" type="submit" name="iniciarSesion" value="Iniciar Sesión">
 
                     <div class="redirecciones">
                         <a href="../index.php" class="link return">Regresar</a>
                     </div>
-                    <div class="redirecciones">
-                        <a href="./passwords/cambio_con.php" class="link return">¿Olvido su contraseña?</a>
+                    <div class="botones-container">
+                        <div class="redirecciones">
+                            <a href="./registro.php" class="link return">Registro</a>
+                        </div>
+                        <div class="redirecciones">
+                            <a href="../correo.php" class="link return">¿Olvido su contraseña?</a>
+                        </div>
                     </div>
-            
-
-                    <input class="btn" type="submit" name="iniciarSesion" value="Iniciar Sesión">
 
                 </form>
             </div>
@@ -170,8 +231,8 @@
 
     </div>
 
-    <!-- Bootstrap JS y Popper.js -->
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+      <!-- Bootstrap JS y Popper.js -->
+   <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.0.7/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
@@ -255,6 +316,13 @@
             }
         }
     </script>
+
+  <section class="container-fluid footer_section">
+      <p>
+      Sena. Ibagué - Tolima 
+      <a href="https://centrodeindustria.blogspot.com/"> Centro de Industria y Construcción</a>
+      </p>
+  </section>
 
 </body>
 

@@ -1,79 +1,102 @@
+
 <?php
 require_once '../database/conn.php';
+require './../vendor/autoload.php';
+
+use Picqer\Barcode\BarcodeGeneratorPNG;
+
 $database = new Database();
 $conn = $database->conectar();
 date_default_timezone_set('America/Bogota');
 
-$consulta1 = $conn->prepare("SELECT terminos, fecha_registro FROM usuario");
-$consulta1->execute();
-$consul = $consulta1->fetch(PDO::FETCH_ASSOC);
-
+// Consulta 1
 $consulta2 = $conn->prepare("SELECT nom_tp_docu FROM tp_docu WHERE id_tp_docu >= 1 ");
 $consulta2->execute();
 $consull = $consulta2->fetchAll(PDO::FETCH_ASSOC);
 
-$consulta3 = $conn->prepare("SELECT nom_forma FROM formacion WHERE id_forma >=1");
+// Consulta 2
+$consulta3 = $conn->prepare("SELECT nom_forma FROM formacion WHERE id_forma >= 1");
 $consulta3->execute();
 $consulll = $consulta3->fetchAll(PDO::FETCH_ASSOC);
 
-$consulta4 = $conn->prepare("SELECT nom_rol FROM rol WHERE id_rol >= 3 ");
+// Consulta 3
+$consulta4 = $conn->prepare("SELECT nom_rol FROM rol WHERE id_rol >= 4 ");
 $consulta4->execute();
 $consullll = $consulta4->fetchAll(PDO::FETCH_ASSOC);
 
+// Consulta 4
 $consulta5 = $conn->prepare("SELECT * FROM estado_usu");
 $consulta5->execute();
 $consulllll = $consulta5->fetch();
 
+// Consulta 5
 $consulta6 = $conn->prepare("SELECT nom_empre FROM empresa WHERE nit_empre > 0 ");
 $consulta6->execute();
 $consullllll = $consulta6->fetchAll(PDO::FETCH_ASSOC);
 
-$codigo = $conn->prepare("SELECT codigo_barras FROM usuario");
-$codigo->execute();
-$barras = $codigo->fetchAll(PDO::FETCH_ASSOC);
+$consulta7 = $conn->prepare("SELECT terminos FROM usuario ");
+$consulta7->execute();
+$consult = $consulta7->fetch(PDO::FETCH_ASSOC);
 
+// Generación del código de barras
+$codigo_barras = uniqid();
+$tipo = "C128";
+
+$generator = new BarcodeGeneratorPNG();
+$imagen = $generator->getBarcode($codigo_barras, $tipo);
+
+// Generación del código de barras
+// $codigo_barras = $_POST['codigo_barras']; // Reemplaza esto con la lógica real para obtener el código
+
+if ($codigo_barras !== null) {
+    $tipo = "C128";
+
+    $generator = new Picqer\Barcode\BarcodeGeneratorPNG();
+    $imagen = $generator->getBarcode($codigo_barras, $tipo);
+} else {
+    // Manejar el caso donde $codigoBarras es NULL, si es necesario
+    echo "El código de barras es NULL.";
+}
+
+$codigo = $conn->prepare("SELECT codigo_barras FROM usuario WHERE codigo_barras = ?");
+$codigo->execute([$codigo_barras]); // Usar $codigo_barras en lugar de $documento
+$barras = $codigo->fetch(PDO::FETCH_ASSOC);
 ?>
 
-
-
 <!DOCTYPE html>
-<html>
-
-<!DOCTYPE html>
-<html>
+<html lang="es">
 
 <head>
-  <!-- Basic -->
-  <link rel="icon" href="../images/icono.png">
-  <meta charset="utf-8" />
-  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <!-- Mobile Metas -->
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-  <!-- Site Metas -->
-  <meta name="keywords" content="" />
-  <meta name="description" content="" />
-  <meta name="author" content="" />
+    <!-- Basic -->
+    <link rel="icon" href="../images/icono.png">
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <!-- Mobile Metas -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <!-- Site Metas -->
+    <meta name="keywords" content="" />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
 
-  <title>TOOLS</title>
+    <title>TOOLS</title>
 
-  <!-- slider stylesheet -->
-  <link rel="stylesheet" type="text/css"
-    href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.1.3/assets/owl.carousel.min.css" />
+    <!-- slider stylesheet -->
+    <link rel="stylesheet" type="text/css"
+        href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.1.3/assets/owl.carousel.min.css" />
 
-  <!-- bootstrap core css -->
-  <link rel="stylesheet" type="text/css" href="../css/bootstrap.css" />
+    <!-- bootstrap core css -->
+    <link rel="stylesheet" type="text/css" href="../css/bootstrap.css" />
 
-  <!-- fonts style -->
-  <link href="https://fonts.googleapis.com/css?family=Poppins:400,700|Roboto:400,700&display=swap" rel="stylesheet">
-  <!-- Custom styles for this template -->
-  <link href="../css/style.css" rel="stylesheet" />
-  <!-- responsive style -->
-  <link href="../css/responsive.css" rel="stylesheet" />
+    <!-- fonts style -->
+    <link href="https://fonts.googleapis.com/css?family=Poppins:400,700|Roboto:400,700&display=swap" rel="stylesheet">
+    <!-- Custom styles for this template -->
+    <link href="../css/style.css" rel="stylesheet" />
+    <!-- responsive style -->
+    <link href="../css/responsive.css" rel="stylesheet" />
 </head>
 
 <body>
     <style>
-  
         /* Agrega estos estilos al archivo css/style.css */
 
         body {
@@ -82,7 +105,6 @@ $barras = $codigo->fetchAll(PDO::FETCH_ASSOC);
             padding: 0;
             background-color: #f5f5f5;
             padding-bottom: 40px;
-        
         }
 
         /* Estilos para el formulario de inicio de sesión y registro */
@@ -122,9 +144,6 @@ $barras = $codigo->fetchAll(PDO::FETCH_ASSOC);
             margin-bottom: 10px;
         }
 
-
-
-
         .overlay-terminos {
             background: rgba(255, 165, 0, 0.8); /* Naranja semi-transparente */
             position: fixed;
@@ -152,8 +171,6 @@ $barras = $codigo->fetchAll(PDO::FETCH_ASSOC);
             cursor: pointer;
             color: #fff; /* Texto en blanco */
         }
-
-
 
         .btn {
             width: 100%;
@@ -184,71 +201,56 @@ $barras = $codigo->fetchAll(PDO::FETCH_ASSOC);
             background-color: #0056b3;
         }
     </style>
-</head>
 
-<body>
-<div class="hero_area">
-    <!-- header section strats -->
-    <header class="header_section">
-      <div class="container-fluid">
-        <nav class="navbar navbar-expand-lg custom_nav-container ">
-          <a class="navbar-brand" href="../index.html">
-            <span>
-              Tools
-            </span>
-          </a>
-          <button class="navbar-toggler ml-auto" type="button" data-toggle="collapse"
-            data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
-            aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-          </button>
+    <div class="hero_area">
+        <!-- header section strats -->
+        <header class="header_section">
+            <div class="container-fluid">
+                <nav class="navbar navbar-expand-lg custom_nav-container ">
+                    <a class="navbar-brand" href="../index.html">
+                        <span>
+                            Tools
+                        </span>
+                    </a>
+                    <button class="navbar-toggler ml-auto" type="button" data-toggle="collapse"
+                        data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+                        aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
 
-          <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <div class="d-flex mx-auto flex-column flex-lg-row align-items-center">
-              <ul class="navbar-nav  ">
-                <li class="nav-item active">
-                  <a class="nav-link" href="../index.html"> Inicio <span class="sr-only">(current)</span></a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link" href="../index.html#nosotros"> Sobre Nosotros</a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link" href="../index.html#servicios"> Servicios </a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link" href="../index.html#usuarios"> Usuarios </a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link" href="../index.html#recomendacion"> Recomendación </a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link" href="./inicio_sesion.php">Iniciar Sesion</a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link" href="../roles.php">Registro</a>
-                </li>
-              </ul>
+                    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                        <div class="d-flex mx-auto flex-column flex-lg-row align-items-center">
+                            <ul class="navbar-nav  ">
+                                <li class="nav-item active">
+                                    <a class="nav-link" href="../index.html"> Inicio <span class="sr-only">(current)</span></a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="../index.html#nosotros"> Sobre Nosotros</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="../index.html#servicios"> Servicios </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="../index.html#usuarios"> Usuarios </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="../index.html#recomendacion"> Recomendación </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="./inicio_sesion.php">Iniciar Sesion</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="../roles.php">Registro</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </nav>
             </div>
-          </div>
-        </nav>
-      </div>
-    </header>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-<br>
-<br>
-<br>
-    
-    <div class="registro_container">
+        </header>
+        <br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+
+        <div class="registro_container">
             <!-- Formulario de Registro -->
             <form class="registro_form" action="../controller/RegisterController.php" name="formRegister" autocomplete="off" method="POST" class="formulario">
                 <h1>REGISTRO </h1>
@@ -257,8 +259,6 @@ $barras = $codigo->fetchAll(PDO::FETCH_ASSOC);
                 <div class="error-text"></div>
 
                 <!-- Campos para registrar un nuevo usuario -->
-
-                <?php foreach ($barras as $row): ?>
 
                 <div class="form-group">
                     <label >Tipo de Documento</label>
@@ -271,27 +271,27 @@ $barras = $codigo->fetchAll(PDO::FETCH_ASSOC);
 
                 <div class="form-group">
                     <label >Documento</label>
-                    <input type="number" placeholder="Ingrese Documento" class="form-control" name="documento" title="Debe ser de 10 digitos" required onkeyup="espacios(this)" minlength="7" maxlength="10" required>
+                    <input type="number" placeholder="Ingrese Documento" class="form-control" name="documento" title="Debe ser de 10 dígitos" required onkeyup="espacios(this)" minlength="7" maxlength="10" required>
                 </div>
 
                 <div class="form-group">
                     <label >Nombre</label>
                     <input type="text" placeholder="Ingrese nombre" class="form-control" name="nombre" title="Debe ser de 15 letras" required oninput="validarLetras(this)" minlength="6" maxlength="12">
                 </div>
-                
+
                 <div class="form-group">
                     <label >Apellido</label>
                     <input type="text" placeholder="Ingrese apellido" class="form-control" name="apellido" title="Debe ser de 15 letras" required oninput="validarLetras(this)" minlength="6" maxlength="12">
                 </div> 
-            
+
                 <div class="form-group">
-                    <label "> Correo</label>
-                    <input type="varchar" placeholder="Ingrese correo" class="form-control" name="correo"  required onkeyup="espacios(this)" minlength="6" maxlength="25">
+                    <label > Correo</label>
+                    <input type="email" placeholder="Ingrese correo" class="form-control" name="correo" required onkeyup="espacios(this)" minlength="6" maxlength="25">
                 </div>
 
                 <div class="form-group">
                     <label > Ficha</label>
-                    <input type="number" placeholder="Ingrese Ficha" class="form-control" name="ficha"  required onkeyup="espacios(this)" minlength="7" maxlength="8">
+                    <input type="number" placeholder="Ingrese Ficha" class="form-control" name="ficha" required onkeyup="espacios(this)" minlength="7" maxlength="8">
                 </div>
 
                 <input type="hidden" placeholder="Estado" readonly class="form-control" value="1" name="id_esta_usu">
@@ -316,10 +316,10 @@ $barras = $codigo->fetchAll(PDO::FETCH_ASSOC);
 
                 <div class="group-material">
                     <label>Fecha de Registro</label>
-                    <input type="text" name="fecha_registro" class="material-control tooltips-general" value="<?php echo date('Y-m-d\TH:i:s'); ?>" readonly>
+                    <input type="text" name="fecha_registro" class="material-control tooltips-general" value="<?php echo date('Y-m-d'); ?>" readonly>
                 </div>
 
-                <input type="hidden" placeholder="Codigo" readonly class="form-control" value="" name="codigo_barras">
+                <input type="hidden" placeholder="Codigo" readonly class="form-control" value= $codigo_barras name="codigo_barras">
 
                 <div class="form-group">
                     <label >Empresa</label>
@@ -350,13 +350,12 @@ $barras = $codigo->fetchAll(PDO::FETCH_ASSOC);
                                 <li><strong>Responsabilidad:</strong> La aplicación y sus desarrolladores no se hacen responsables de cualquier daño o pérdida resultante del uso de la aplicación o de las herramientas prestadas.</li>
                             </ol>
                             <p>Al utilizar esta aplicación, aceptas cumplir con estos términos y condiciones. Si no estás de acuerdo con estos términos, por favor, no utilices la aplicación.</p>
-                            <input type="checkbox" class="form-control" id="checkboxTerminos" name="terminos" <?php echo ($consul && $consul['terminos'] == '1') ? 'checked' : ''; ?> required>
+                            <input type="checkbox" class="form-control" id="checkboxTerminos" name="terminos" <?php echo ($consult && $consult['terminos'] == '1') ? 'checked' : ''; ?> required>
                         </div>
                     </div>
-                    <br>
-                    <button type="button" onclick="openOverlayTerminos()">Acepto Términos y Condiciones</button>
-                </div>
-
+                        <br>
+                        <button type="button" onclick="openOverlayTerminos()" >Acepto Términos y Condiciones</button>
+                    </div>
 
                 <input type="submit" name="validar" value="Registrarme" class="btn"></input>
                 <input type="hidden" name="MM_register" value="formRegister">
@@ -369,187 +368,118 @@ $barras = $codigo->fetchAll(PDO::FETCH_ASSOC);
                         <a href="./inicio_sesion.php" class="link return">Inicio de Sesion</a>
                     </div>
                 </div>
-
             </form>
-    </div>
+        </div>
+        <br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+        <section class="container-fluid footer_section">
+            <p>
+            Sena. Ibagué - Tolima 
+            <a href="https://centrodeindustria.blogspot.com/"> Centro de Industria y Construcción</a>
+            </p>
+        </section>
 
-    <?php endforeach ?>
-    
-    
-    
+        <!-- Bootstrap JS y otros scripts -->
+        <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.0.7/dist/umd/popper.min.js"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
-    <!-- Bootstrap JS y Popper.js -->
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.0.7/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-                      
-    <!--========================================
-       Mis Scripts
-    ==========================================-->
-    <script src="../assets/js/register.js"></script>
+        <!-- Tus scripts personalizados -->
+        <script src="../assets/js/register.js"></script>
 
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                // Obtén el formulario
+                var form = document.forms['formRegister'];
 
-    <script>
+                // Agrega un evento de escucha al formulario
+                form.addEventListener('submit', function (event) {
+                    // Validaciones adicionales
+                    if (!validateForm()) {
+                        event.preventDefault(); // Evita que el formulario se envíe si hay errores
+                    }
+                });
 
-    document.addEventListener('DOMContentLoaded', function () {
-    // Obtén el formulario
-    var form = document.forms['formRegister'];
+                function validateForm() {
+                    var documento = form['documento'].value;
+                    var nombre = form['nombre'].value;
+                    var correo = form['correo'].value;
+                    var contrasena = form['contrasena'].value;
 
-    // Agrega un evento de escucha al formulario
-    form.addEventListener('submit', function (event) {
-        // Validaciones adicionales
-        if (!validateForm()) {
-            event.preventDefault(); // Evita que el formulario se envíe si hay errores
-        }
-    });
+                    // Aplica las funciones de validación específicas
+                    mayuscula(form['nombre']); // Convierte a mayúsculas el nombre
+                    espacios(form['documento']); // Elimina espacios en el documento
 
-        function validateForm() {
-            var documento = form['documento'].value;
-            var nombre = form['nombre'].value;
-            var correo = form['correo'].value;
-            var contrasena = form['contrasena'].value;
+                    // Realiza tus validaciones aquí y muestra mensajes de error si es necesario
 
-            // Aplica las funciones de validación específicas
-            mayuscula(form['nombre']); // Convierte a mayúsculas el nombre
-            espacios(form['documento']); // Elimina espacios en el documento
+                    // Ejemplo de validación para el documento
+                    if (documento.length !== 10 || isNaN(documento)) {
+                        showError('Documento debe tener 10 dígitos numéricos');
+                        return false;
+                    }
 
-            // Realiza tus validaciones aquí y muestra mensajes de error si es necesario
+                    // Ejemplo de validación para el nombre
+                    if (nombre.length < 6 || nombre.length > 12) {
+                        showError('Nombre debe tener entre 6 y 12 caracteres');
+                        return false;
+                    }
 
-            // Ejemplo de validación para el documento
-            if (documento.length !== 10 || isNaN(documento)) {
-                showError('Documento debe tener 10 dígitos numéricos');
-                return false;
-            }
+                    // Ejemplo de validación para el correo
+                    if (!validateEmail(correo)) {
+                        showError('Correo electrónico no válido');
+                        return false;
+                    }
 
-            // Ejemplo de validación para el nombre
-            if (nombre.length < 6 || nombre.length > 12) {
-                showError('Nombre debe tener entre 6 y 12 caracteres');
-                return false;
-            }
+                    // Más validaciones según sea necesario...
 
-            // Ejemplo de validación para el correo
-            if (!validateEmail(correo)) {
-                showError('Correo electrónico no válido');
-                return false;
-            }
-
-            // Más validaciones según sea necesario...
-
-            return true; // Si todas las validaciones pasan, retorna true
-        }
-        function validarLetras(input) {
-            // Obtener el valor actual del campo
-            var valor = input.value;
-
-            // Eliminar caracteres no alfabéticos
-            var letras = valor.replace(/[^a-zA-Z]/g, '');
-
-            // Actualizar el valor del campo con solo letras
-            input.value = letras;
-        }
-
-        function showError(message) {
-            var errorText = form.querySelector('.error-text');
-            errorText.textContent = message;
-        }
-
-        function validateEmail(email) {
-            // Utiliza una expresión regular para validar el formato del correo electrónico
-            var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            return emailRegex.test(email);
-        }
-
-        // Función que permite poner el texto en mayúscula
-        function mayuscula(e) {
-            e.value = e.value.toUpperCase();
-        }
-
-        // Función que no permite ingresar espacios
-        function espacios(e) {
-            e.value = e.value.replace(/ /g, '');
-        }
-
-        // Función de JavaScript que permite ingresar solo el número de dígitos requeridos
-        function maxlengthNumber(obj) {
-            if (obj.value.length > obj.maxLength) {
-                obj.value = obj.value.slice(0, obj.maxLength);
-                alert("Debe ingresar solo el número de dígitos requeridos");
-            }
-        }
-
-        // Función de JavaScript que permite ingresar solo números en el formulario asignado
-        function multiplenumber(e) {
-            key = e.keyCode || e.which;
-            teclado = String.fromCharCode(key).toLowerCase();
-            numeros = "1234567890";
-            especiales = "8-37-38-46-164-46";
-            teclado_especial = false;
-
-            for (var i in especiales) {
-                if (key == especiales[i]) {
-                    teclado_especial = true;
-                    alert("Debe ingresar solo números en el formulario");
-                    break;
+                    return true; // Si todas las validaciones pasan, retorna true
                 }
+                function validarLetras(input) {
+                    // Obtener el valor actual del campo
+                    var valor = input.value;
+
+                    // Eliminar caracteres no alfabéticos
+                    var letras = valor.replace(/[^a-zA-Z]/g, '');
+
+                    // Actualizar el valor del campo con solo letras
+                    input.value = letras;
+                }
+                function espacios(input) {
+                    // Reemplazar los espacios en blanco
+                    var texto = input.value;
+                    texto = texto.replace(/\s/g, '');
+                    input.value = texto;
+                }
+
+                function showError(message) {
+                    // Muestra un mensaje de error en el contenedor designado
+                    var errorContainer = document.querySelector('.error-text');
+                    errorContainer.textContent = message;
+                }
+                // Agrega más funciones de validación según sea necesario
+
+                function validateEmail(email) {
+                    // Expresión regular para validar un correo electrónico
+                    var regex =
+                        /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
+
+                    // Prueba la validez del correo electrónico
+                    return regex.test(email);
+                }
+
+                function mayuscula(input) {
+                    // Convierte el valor a mayúsculas
+                    input.value = input.value.toUpperCase();
+                }
+            });
+
+            function openOverlayTerminos() {
+                document.getElementById('overlay-terminos').style.display = 'flex';
             }
 
-            if (numeros.indexOf(teclado) == -1 && !teclado_especial) {
-                return false;
-                alert("Debe ingresar solo números en el formulario");
+            function closeOverlayTerminos() {
+                document.getElementById('overlay-terminos').style.display = 'none';
             }
-        }
+        </script>
 
-        // Función de JavaScript que permite ingresar solo letras, números y guiones bajos para la contraseña
-        function validarPassword(event) {
-            var key = event.keyCode || event.which;
-            var char = String.fromCharCode(key);
-            var regex = /[0-9a-zA-Z_]/;
-
-            if (!regex.test(char)) {
-                event.preventDefault();
-                return false;
-            }
-        }
-    });
-
-
-    function openOverlayTerminos() {
-        document.getElementById('overlay-terminos').style.display = 'flex';
-    }
-
-    function closeOverlayTerminos() {
-        document.getElementById('overlay-terminos').style.display = 'none';
-    }
-
-    // Agrega un evento de cambio al checkbox dentro de la ventana de términos y condiciones
-    document.getElementById('checkboxTerminos').addEventListener('change', function () {
-        // Si el checkbox está marcado, cierra la ventana de términos y condiciones
-        if (this.checked) {
-            closeOverlayTerminos();
-        }
-    });
-
-</script>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-
-<section class="container-fluid footer_section">
-    <p>
-    Sena. Ibagué - Tolima 
-    <a href="https://centrodeindustria.blogspot.com/"> Centro de Industria y Construcción</a>
-    </p>
-</section>
 </body>
-
 </html>

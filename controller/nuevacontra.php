@@ -48,7 +48,7 @@ if (isset($_POST["inicio"])) {
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
          body {
-            background-color: #212529;
+            background-color: #ad743e;
             margin: 0;
             display: flex;
             align-items: center;

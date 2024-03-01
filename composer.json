@@ -1,0 +1,16 @@
+{
+    "name": "usuario/tools",
+    "autoload": {
+        "psr-4": {
+            "Usuario\\Tools\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "s"
+        }
+    ],
+    "require": {
+        "picqer/php-barcode-generator": "^2.4"
+    }
+}
