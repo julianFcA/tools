@@ -1,36 +1,47 @@
-
 <?php
 require_once '../database/conn.php';
-require './../vendor/autoload.php';
-
-use Picqer\Barcode\BarcodeGeneratorPNG;
 
 $database = new Database();
 $conn = $database->conectar();
 date_default_timezone_set('America/Bogota');
 
 // Consulta 1
-$consulta2 = $conn->prepare("SELECT nom_tp_docu FROM tp_docu WHERE id_tp_docu >= 1 ");
+$consulta2 = $conn->prepare("SELECT nom_tp_docu, id_tp_docu FROM tp_docu WHERE id_tp_docu >= 1 ");
 $consulta2->execute();
 $consull = $consulta2->fetchAll(PDO::FETCH_ASSOC);
 
-// Consulta 2
-$consulta3 = $conn->prepare("SELECT nom_forma FROM formacion WHERE id_forma >= 1");
-$consulta3->execute();
-$consulll = $consulta3->fetchAll(PDO::FETCH_ASSOC);
+$statement = $conn->prepare('SELECT * FROM ficha INNER JOIN formacion ON formacion.id_forma = ficha.id_forma AND formacion.id_forma > 1 INNER JOIN jornada ON jornada.id_jornada = formacion.id_jornada AND jornada.id_jornada > 1  WHERE ficha.id_forma = ?');
+
+$cadena_formacion = "<label> Formacion</label><br>
+<select id='id_forma' name='id_forma'>";
+
+$cadena_jornada = "<label> Jornada</label><br>
+<select id='id_jornada' name='id_jornada'>";
+
+while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
+    $cadena_formacion .= "<option value=" . $row['ficha'] . ">" . $row['ficha'] . "</option>";
+    $cadena_jornada .= "<option value=" . $row['id_jornada'] . ">" . $row['tp_jornada'] . "</option>";
+}
+
+$cadena_formacion .= "</select>"; // Cerrar la etiqueta select
+$cadena_jornada .= "</select>"; // Cerrar la etiqueta select
+
+// echo $cadena_formacion;
+// echo $cadena_jornada;
+
 
 // Consulta 3
-$consulta4 = $conn->prepare("SELECT nom_rol FROM rol WHERE id_rol >= 4 ");
+$consulta4 = $conn->prepare("SELECT nom_rol, id_rol FROM rol WHERE id_rol >= 4 ");
 $consulta4->execute();
 $consullll = $consulta4->fetchAll(PDO::FETCH_ASSOC);
 
 // Consulta 4
 $consulta5 = $conn->prepare("SELECT * FROM estado_usu");
 $consulta5->execute();
-$consulllll = $consulta5->fetch();
+$consulllll = $consulta5->fetchAll(PDO::FETCH_ASSOC);
 
 // Consulta 5
-$consulta6 = $conn->prepare("SELECT nom_empre FROM empresa WHERE nit_empre > 0 ");
+$consulta6 = $conn->prepare("SELECT nom_empre, nit_empre FROM empresa WHERE nit_empre > 0 ");
 $consulta6->execute();
 $consullllll = $consulta6->fetchAll(PDO::FETCH_ASSOC);
 
@@ -38,29 +49,10 @@ $consulta7 = $conn->prepare("SELECT terminos FROM usuario ");
 $consulta7->execute();
 $consult = $consulta7->fetch(PDO::FETCH_ASSOC);
 
-// Generación del código de barras
-$codigo_barras = uniqid();
-$tipo = "C128";
+$consulta8 = $conn->prepare("SELECT tp_jornada, id_jornada FROM jornada WHERE id_jornada > 1");
+$consulta8->execute();
+$cons = $consulta8->fetchAll(PDO::FETCH_ASSOC);
 
-$generator = new BarcodeGeneratorPNG();
-$imagen = $generator->getBarcode($codigo_barras, $tipo);
-
-// Generación del código de barras
-// $codigo_barras = $_POST['codigo_barras']; // Reemplaza esto con la lógica real para obtener el código
-
-if ($codigo_barras !== null) {
-    $tipo = "C128";
-
-    $generator = new Picqer\Barcode\BarcodeGeneratorPNG();
-    $imagen = $generator->getBarcode($codigo_barras, $tipo);
-} else {
-    // Manejar el caso donde $codigoBarras es NULL, si es necesario
-    echo "El código de barras es NULL.";
-}
-
-$codigo = $conn->prepare("SELECT codigo_barras FROM usuario WHERE codigo_barras = ?");
-$codigo->execute([$codigo_barras]); // Usar $codigo_barras en lugar de $documento
-$barras = $codigo->fetch(PDO::FETCH_ASSOC);
 ?>
 
 <!DOCTYPE html>
@@ -123,7 +115,7 @@ $barras = $codigo->fetch(PDO::FETCH_ASSOC);
             border-radius: 8px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             width: 500px; /* Modificado para un ancho fijo */
-            height: 1200px;
+            height: 1260px;
         }
 
         .form-group {
@@ -207,7 +199,7 @@ $barras = $codigo->fetch(PDO::FETCH_ASSOC);
         <header class="header_section">
             <div class="container-fluid">
                 <nav class="navbar navbar-expand-lg custom_nav-container ">
-                    <a class="navbar-brand" href="../index.html">
+                    <a class="navbar-brand" href="../index.php">
                         <span>
                             Tools
                         </span>
@@ -222,25 +214,25 @@ $barras = $codigo->fetch(PDO::FETCH_ASSOC);
                         <div class="d-flex mx-auto flex-column flex-lg-row align-items-center">
                             <ul class="navbar-nav  ">
                                 <li class="nav-item active">
-                                    <a class="nav-link" href="../index.html"> Inicio <span class="sr-only">(current)</span></a>
+                                    <a class="nav-link" href="../index.php"> Inicio <span class="sr-only">(current)</span></a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" href="../index.html#nosotros"> Sobre Nosotros</a>
+                                    <a class="nav-link" href="../index.php#nosotros"> Sobre Nosotros</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" href="../index.html#servicios"> Servicios </a>
+                                    <a class="nav-link" href="../index.php#servicios"> Servicios </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" href="../index.html#usuarios"> Usuarios </a>
+                                    <a class="nav-link" href="../index.php#usuarios"> Usuarios </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" href="../index.html#recomendacion"> Recomendación </a>
+                                    <a class="nav-link" href="../index.php#recomendacion"> Recomendación </a>
                                 </li>
                                 <li class="nav-item">
                                     <a class="nav-link" href="./inicio_sesion.php">Iniciar Sesion</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" href="../roles.php">Registro</a>
+                                    <a class="nav-link" href="./registro.php">Registro</a>
                                 </li>
                             </ul>
                         </div>
@@ -252,7 +244,7 @@ $barras = $codigo->fetch(PDO::FETCH_ASSOC);
 
         <div class="registro_container">
             <!-- Formulario de Registro -->
-            <form class="registro_form" action="../controller/RegisterController.php" name="formRegister" autocomplete="off" method="POST" class="formulario">
+            <form class="registro_form" action="../controller/RegisterController.php" name="formRegister" autocomplete="off" method="POST" class="formulario" id="formulario">
                 <h1>REGISTRO </h1>
 
                 <!-- Contenedor para mostrar errores -->
@@ -264,68 +256,81 @@ $barras = $codigo->fetch(PDO::FETCH_ASSOC);
                     <label >Tipo de Documento</label>
                     <select class="form-control" name="id_tp_docu" required>
                         <?php foreach ($consull as $row): ?>
-                            <option value="<?php echo $row['nom_tp_docu']; ?>"><?php echo $row['nom_tp_docu']; ?></option>
+                            <option value="<?php echo $row['id_tp_docu']; ?>"><?php echo $row['nom_tp_docu']; ?></option>
                         <?php endforeach; ?>
                     </select>
                 </div>
 
                 <div class="form-group">
                     <label >Documento</label>
-                    <input type="number" placeholder="Ingrese Documento" class="form-control" name="documento" title="Debe ser de 10 dígitos" required onkeyup="espacios(this)" minlength="7" maxlength="10" required>
+                    <input type="number" placeholder="Ingrese Documento" class="form-control" name="documento" title="Debe ser de 10 dígitos" required minlength="7" maxlength="10">
                 </div>
 
                 <div class="form-group">
                     <label >Nombre</label>
-                    <input type="text" placeholder="Ingrese nombre" class="form-control" name="nombre" title="Debe ser de 15 letras" required oninput="validarLetras(this)" minlength="6" maxlength="12">
+                    <input type="text" placeholder="Ingrese nombre" class="form-control" name="nombre" title="Debe ser de 15 letras" required minlength="6" maxlength="12">
                 </div>
 
                 <div class="form-group">
                     <label >Apellido</label>
-                    <input type="text" placeholder="Ingrese apellido" class="form-control" name="apellido" title="Debe ser de 15 letras" required oninput="validarLetras(this)" minlength="6" maxlength="12">
+                    <input type="text" placeholder="Ingrese apellido" class="form-control" name="apellido" title="Debe ser de 15 letras" required minlength="6" maxlength="12">
                 </div> 
 
                 <div class="form-group">
                     <label > Correo</label>
-                    <input type="email" placeholder="Ingrese correo" class="form-control" name="correo" required onkeyup="espacios(this)" minlength="6" maxlength="25">
+                    <input type="email" placeholder="Ingrese correo" class="form-control" name="correo" required minlength="6" maxlength="25">
                 </div>
-
-                <div class="form-group">
-                    <label > Ficha</label>
-                    <input type="number" placeholder="Ingrese Ficha" class="form-control" name="ficha" required onkeyup="espacios(this)" minlength="7" maxlength="8">
-                </div>
-
-                <input type="hidden" placeholder="Estado" readonly class="form-control" value="1" name="id_esta_usu">
 
                 <div class="form-group">
                     <label >Rol</label>
-                    <select class="form-control" name="id_rol" required>
+                    <select class="form-control" name="id_rol" required >
                         <?php foreach ($consullll as $row): ?>
-                            <option value="<?php echo $row['nom_rol']; ?>"><?php echo $row['nom_rol']; ?></option>
+                            <option value="<?php echo $row['id_rol']; ?>"><?php echo $row['nom_rol']; ?></option>
                         <?php endforeach; ?>
                     </select>
                 </div>
 
                 <div class="form-group">
-                    <label >Formación</label>
-                    <select class="form-control" name="id_forma" required>
-                        <?php foreach ($consulll as $row): ?>
-                            <option value="<?php echo $row['nom_forma']; ?>"><?php echo $row['nom_forma']; ?></option>
-                        <?php endforeach; ?>
+                    <label>Ficha</label>
+                    <select class="form-control" name="ficha" id="ficha" required onchange="recargarLista()">
+                        <?php
+                        // Consulta para obtener las opciones de fichas
+                        $statement = $conn->prepare("SELECT ficha FROM ficha WHERE ficha > 0");
+                        $statement->execute();
+                        while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
+                            echo "<option value=" . $row['ficha'] . ">" . $row['ficha'] . "</option>";
+                        }
+                        ?>
                     </select>
                 </div>
+
+                <div class="form-group" id="id_forma">
+                    <label>Formación</label>
+                    <select name="id_forma" id="id_forma" class="form-control" required>
+                        <!-- Las opciones de formación se cargarán dinámicamente mediante JavaScript -->
+                    </select>
+                </div>
+
+                <div class="form-group" id="id_jornada">
+                    <label>Jornada</label>
+                    <select name="id_jornada" id="id_jornada" class="form-control" required>
+                        <!-- Las opciones de jornada se cargarán dinámicamente mediante JavaScript -->
+                    </select>
+                </div>
+
+
+                <input type="hidden" placeholder="Estado" readonly class="form-control" value="1" name="id_esta_usu">
 
                 <div class="group-material">
                     <label>Fecha de Registro</label>
                     <input type="text" name="fecha_registro" class="material-control tooltips-general" value="<?php echo date('Y-m-d'); ?>" readonly>
                 </div>
 
-                <input type="hidden" placeholder="Codigo" readonly class="form-control" value= $codigo_barras name="codigo_barras">
-
                 <div class="form-group">
                     <label >Empresa</label>
                     <select class="form-control" name="nit_empre" required>
                         <?php foreach ($consullllll as $row): ?>
-                            <option value="<?php echo $row['nom_empre']; ?>"><?php echo $row['nom_empre']; ?></option>
+                            <option value="<?php echo $row['nit_empre']; ?>"><?php echo $row['nom_empre']; ?></option>
                         <?php endforeach; ?>
                     </select>
                 </div>
@@ -333,7 +338,7 @@ $barras = $codigo->fetch(PDO::FETCH_ASSOC);
                 <div class="form-group">
                     <label for="contrase"> Contraseña</label>
                     <div class="input-group">
-                        <input type="password" placeholder="Contraseña" name="contrasena" class="form-control clave" title="Debe tener de 6 a 12 dígitos" required onkeyup="espacios(this)" minlength="6" maxlength="12">
+                        <input type="password" placeholder="Contraseña" name="contrasena" class="form-control clave" title="Debe tener de 6 a 12 dígitos" required minlength="6" maxlength="12">
                     </div>
                 </div>
 
@@ -357,16 +362,16 @@ $barras = $codigo->fetch(PDO::FETCH_ASSOC);
                         <button type="button" onclick="openOverlayTerminos()" >Acepto Términos y Condiciones</button>
                     </div>
 
-                <input type="submit" name="validar" value="Registrarme" class="btn"></input>
+                <input type="submit" name="MM_register" value="Registrarme" class="btn"></input>
                 <input type="hidden" name="MM_register" value="formRegister">
 
                 <div class="botones-container">
                     <div class="redirecciones">
                         <a href="./../index.php" class="link return">Regresar</a>
                     </div>
-                    <div class="redirecciones">
+                    <!-- <div class="redirecciones">
                         <a href="./inicio_sesion.php" class="link return">Inicio de Sesion</a>
-                    </div>
+                    </div> -->
                 </div>
             </form>
         </div>
@@ -406,7 +411,6 @@ $barras = $codigo->fetch(PDO::FETCH_ASSOC);
                     var contrasena = form['contrasena'].value;
 
                     // Aplica las funciones de validación específicas
-                    mayuscula(form['nombre']); // Convierte a mayúsculas el nombre
                     espacios(form['documento']); // Elimina espacios en el documento
 
                     // Realiza tus validaciones aquí y muestra mensajes de error si es necesario
@@ -433,16 +437,7 @@ $barras = $codigo->fetch(PDO::FETCH_ASSOC);
 
                     return true; // Si todas las validaciones pasan, retorna true
                 }
-                function validarLetras(input) {
-                    // Obtener el valor actual del campo
-                    var valor = input.value;
 
-                    // Eliminar caracteres no alfabéticos
-                    var letras = valor.replace(/[^a-zA-Z]/g, '');
-
-                    // Actualizar el valor del campo con solo letras
-                    input.value = letras;
-                }
                 function espacios(input) {
                     // Reemplazar los espacios en blanco
                     var texto = input.value;
@@ -465,11 +460,6 @@ $barras = $codigo->fetch(PDO::FETCH_ASSOC);
                     // Prueba la validez del correo electrónico
                     return regex.test(email);
                 }
-
-                function mayuscula(input) {
-                    // Convierte el valor a mayúsculas
-                    input.value = input.value.toUpperCase();
-                }
             });
 
             function openOverlayTerminos() {
@@ -481,5 +471,35 @@ $barras = $codigo->fetch(PDO::FETCH_ASSOC);
             }
         </script>
 
+
+
+<script type="text/javascript">
+    $(formulario).ready(function () {
+        // Cuando el documento esté listo, establecer el valor de la ficha en 0 y cargar la lista
+        $('#ficha').val(0);
+        recargarLista();
+    })
+
+    function recargarLista() {
+        // Obtener el valor seleccionado de la ficha
+        var fichaSeleccionada = $('#ficha').val();
+
+        // Hacer una llamada AJAX para obtener las opciones de formación y jornada correspondientes a la ficha seleccionada
+        $.ajax({
+            type: "POST",
+            url: "../controller/RegisterController.php",
+            data:{"ficha": $('#ficha').val()},
+            success: function (r) {
+                // Actualizar el contenido de los select de formación y jornada con los datos devueltos por la llamada AJAX
+                $('#id_forma').html(r);
+                $('#id_jornada').html(r);
+            }
+        });
+    }
+</script>
+
+
+
 </body>
+
 </html>

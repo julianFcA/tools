@@ -3,9 +3,9 @@ require_once '../database/conn.php';
 $database = new Database();
 $conn = $database->conectar();
 
-// $consulta2 = $conn->prepare("SELECT * FROM genero");
-// $consulta2->execute();
-// $consulll=$consulta2->fetch();
+$consulta2 = $conn->prepare("SELECT * FROM usuario");
+$consulta2->execute();
+$consulll=$consulta2->fetch();
 
 $consulta4 = $conn->prepare("SELECT * FROM rol");
 $consulta4->execute();
@@ -104,7 +104,7 @@ $consulllll=$consulta5->fetch();
       border-radius: 8px;
       box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
       width: 500px; /* Modificado para un ancho fijo */
-      height: 400px;
+      height: 410px;
 
     }
 
@@ -148,7 +148,7 @@ $consulllll=$consulta5->fetch();
       <header class="header_section">
         <div class="container-fluid">
           <nav class="navbar navbar-expand-lg custom_nav-container ">
-            <a class="navbar-brand" href="../index.html">
+            <a class="navbar-brand" href="../index.php">
               <span>
                 Tools
               </span>
@@ -163,19 +163,19 @@ $consulllll=$consulta5->fetch();
               <div class="d-flex mx-auto flex-column flex-lg-row align-items-center">
                 <ul class="navbar-nav  ">
                   <li class="nav-item active">
-                    <a class="nav-link" href="../index.html"> Inicio <span class="sr-only">(current)</span></a>
+                    <a class="nav-link" href="../index.php"> Inicio <span class="sr-only">(current)</span></a>
                   </li>
                   <li class="nav-item">
-                    <a class="nav-link" href="../index.html#nosotros"> Sobre Nosotros</a>
+                    <a class="nav-link" href="../index.php#nosotros"> Sobre Nosotros</a>
                   </li>
                   <li class="nav-item">
-                    <a class="nav-link" href="../index.html#servicios"> Servicios </a>
+                    <a class="nav-link" href="../index.php#servicios"> Servicios </a>
                   </li>
                   <li class="nav-item">
-                    <a class="nav-link" href="../index.html#usuarios"> Usuarios </a>
+                    <a class="nav-link" href="../index.php#usuarios"> Usuarios </a>
                   </li>
                   <li class="nav-item">
-                    <a class="nav-link" href="../index.html#recomendacion"> Recomendación </a>
+                    <a class="nav-link" href="../index.php#recomendacion"> Recomendación </a>
                   </li>
                   <li class="nav-item">
                     <a class="nav-link" href="./inicio_sesion.php">Iniciar Sesion</a>
@@ -191,22 +191,21 @@ $consulllll=$consulta5->fetch();
       </header>
 
     <div class="login_container">
-      <form class="login_form">
+      <div class="login_form">
         <br>
         <h2>Iniciar Sesión</h2>
           <div class="form-group">
-                  <!-- Tabs -->
-
-                  <!-- Formulario -->
-                  <form action="../controller/AuthController.php" autocomplete="off" method="POST" id="formLogin" class="formulario active">
-
+                <form action="../controller/AuthController.php" autocomplete="off" method="POST" id="formLogin" class="formulario active">
                       <br>
 
-                      <input type="number" placeholder="Ingrese documento" class="input-text" name="documento" title="Debe tener de 8 a 10 digitos" required onkeyup="espacios(this)" minlength="8" maxlength="11" required autocomplete="off">
+                      <input type="number" placeholder="Ingrese documento" class="input-text" name="documento" title="Debe tener de 5 a 10 dígitos" required onkeyup="espacios(this)" minlength="5" maxlength="10">
 
                       <div class="grupo-input">
-                          <input type="password" placeholder="Ingresa tu Contraseña" name="contrasena" class="input-text clave" title="Debe tener de 8 a 10 digitos" required onkeyup="espacios(this)" minlength="8" maxlength="20">
-                          
+                          <input type="text" placeholder="Ingrese Nombre" name="nombre" class="input-text clave" title="Debe tener de 8 a 15 letras" required onkeyup="espacios(this)" minlength="8" maxlength="20">
+                      </div>
+
+                      <div class="grupo-input">
+                          <input type="password" placeholder="Ingresa tu Contraseña" name="contrasena" class="input-text clave" title="Debe tener de 8 a 20 caracteres" required onkeyup="espacios(this)" minlength="8" maxlength="20">
                       </div>
                       <br>
 
@@ -220,15 +219,13 @@ $consulllll=$consulta5->fetch();
                               <a href="./registro.php" class="link return">Registro</a>
                           </div>
                           <div class="redirecciones">
-                              <a href="../correo.php" class="link return">¿Olvido su contraseña?</a>
+                              <a href="../correo.php" class="link return">¿Olvidó su contraseña?</a>
                           </div>
                       </div>
-
                   </form>
+
               </div>
-
           </div>
-
       </div>
 
    <!-- Bootstrap JS y Popper.js -->

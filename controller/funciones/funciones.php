@@ -29,23 +29,23 @@ class Encriptador {
 
     function checkExistingUser($conn, $documento, $nombre, $correo ) {
         // Escapa los valores para evitar SQL injection
-        $documento = mysqli_real_escape_string($conn, $documento);
-        $nombre = mysqli_real_escape_string($conn, $nombre);
-        $correo = mysqli_real_escape_string($conn, $correo);
+        $documento = $conn->quote($documento);
+        $nombre = $conn->quote($nombre);
+        $correo = $conn->quote($correo);
         
         // Construye la consulta SQL para verificar la existencia del usuario
-        $query = "SELECT COUNT(*) as count FROM usuario WHERE documento = '$documento' OR nombre = '$nombre'";
+        $query = "SELECT COUNT(*) as count FROM usuario WHERE documento = $documento OR nombre = $nombre";
     
         // Ejecuta la consulta
-        $result = mysqli_query($conn, $query);
+        $result = $conn->query($query);
     
         if (!$result) {
             // Manejo de errores si la consulta falla
-            die("Error en la consulta: " . mysqli_error($conn));
+            die("Error en la consulta: " . $conn->errorInfo()[2]);
         }
     
         // Obtiene el resultado
-        $row = mysqli_fetch_assoc($result);
+        $row = $result->fetch(PDO::FETCH_ASSOC);
         $count = $row['count'];
     
         // Si count es mayor que 0, significa que el usuario ya existe

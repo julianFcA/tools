@@ -1,8 +1,8 @@
 {
-    "name": "usuario/tools",
+    "name": "vendor/tools",
     "autoload": {
         "psr-4": {
-            "Usuario\\Tools\\": "src/"
+            "Vendor\\Tools\\": "src/"
         }
     },
     "authors": [
