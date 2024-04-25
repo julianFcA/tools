@@ -16,8 +16,7 @@
   <title>TOOLS</title>
 
   <!-- slider stylesheet -->
-  <link rel="stylesheet" type="text/css"
-    href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.1.3/assets/owl.carousel.min.css" />
+  <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.1.3/assets/owl.carousel.min.css" />
 
   <!-- bootstrap core css -->
   <link rel="stylesheet" type="text/css" href="css/bootstrap.css" />
@@ -41,9 +40,7 @@
               Tools
             </span>
           </a>
-          <button class="navbar-toggler ml-auto" type="button" data-toggle="collapse"
-            data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
-            aria-label="Toggle navigation">
+          <button class="navbar-toggler ml-auto" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
           </button>
 
@@ -133,7 +130,7 @@
                           </span>
                         </h1>
                         <p>
-                          Obtén acceso a herramientas especializadas que podrías no necesitar con frecuencia, pero que son fundamentales para proyectos específicos. 
+                          Obtén acceso a herramientas especializadas que podrías no necesitar con frecuencia, pero que son fundamentales para proyectos específicos.
                         </p>
                       </div>
                     </div>
@@ -224,7 +221,7 @@
           </div>
         </div>
       </section>
-    </section>  
+    </section>
 
 
     <!-- end about section -->
@@ -246,14 +243,14 @@
               <div class="col-md-3">
                 <div class="box b-1">
                   <div class="img-box">
-                    <img src="images/s-1.jpg" alt="">
+                    <img src="images/s-1.png" alt="">
                   </div>
                   <div class="detail-box">
                     <h6>
-                      Tab Services
+                      Soldadura
                     </h6>
                     <p>
-                      adipiscing elit, sed do eiusmod tempor incididunt
+                      La soldadura es un proceso de unión de metales en el cual se funden los materiales base y se agrega un material de relleno, si es necesario, para crear una unión fuerte y duradera.
                     </p>
                     <div class="btn-box">
                       <a href="">
@@ -267,14 +264,14 @@
               <div class="col-md-3">
                 <div class="box b-2">
                   <div class="img-box">
-                    <img src="images/s-2.jpg" alt="">
+                    <img src="images/s-2.png" alt="">
                   </div>
                   <div class="detail-box">
                     <h6>
-                      Pipe Water
+                      Mecanizado
                     </h6>
                     <p>
-                      adipiscing elit, sed do eiusmod tempor incididunt
+                      Proceso de fabricación
                     </p>
                     <div class="btn-box">
                       <a href="">
@@ -288,14 +285,14 @@
               <div class="col-md-3">
                 <div class="box b-3">
                   <div class="img-box">
-                    <img src="images/s-3.jpg" alt="">
+                    <img src="images/s-3.png" alt="">
                   </div>
                   <div class="detail-box">
                     <h6>
-                      Washing Machine
+                      Carpinteria en Alumnio
                     </h6>
                     <p>
-                      adipiscing elit, sed do eiusmod tempor incididunt
+                     crear una variedad de productos
                     </p>
                     <div class="btn-box">
                       <a href="">
@@ -309,14 +306,14 @@
               <div class="col-md-3">
                 <div class="box b-4">
                   <div class="img-box">
-                    <img src="images/s-4.jpg" alt="">
+                    <img src="images/s-4.png" alt="">
                   </div>
                   <div class="detail-box">
                     <h6>
-                      Hand Washing
+                      Electromecanica
                     </h6>
                     <p>
-                      adipiscing elit, sed do eiusmod tempor incididunt
+                    La electromecánica es un campo que combina principios de la electricidad y la mecánica para la construcción y dispositivos que involucran componentes eléctricos y mecánicos.
                     </p>
                     <div class="btn-box">
                       <a href="">
@@ -371,7 +368,7 @@
                 APRENDICES
               </h6>
               <p>
-                Individuo comprometido con la adquisición de nuevos conocimientos, habilidades y experiencias. 
+                Individuo comprometido con la adquisición de nuevos conocimientos, habilidades y experiencias.
               </p>
             </div>
           </div>
@@ -385,7 +382,7 @@
           </div>
         </div>
       </section>
-      
+
     </section>
 
     <!-- end work section -->
@@ -444,41 +441,41 @@
       <section class="client_section layout_padding-bottom">
         <div class="container">
           <div class="custom_heading-container">
-          <h3 class=" ">
-            RECOMENDACIÓN
-            <br>
-          </h3>
-        </div>
-        <div class="layout_padding2-top">
-          <div class="client_container">
-            <div class="detail-box">
-              <p>
-                En Tools, valoramos la eficiencia y la responsabilidad de nuestra comunidad de aprendices. Para garantizar un servicio de calidad, hemos implementado una política estricta de entrega puntual y cuidado de herramientas.
-              </p>
-            </div>
-            <div class="client_id">
-              <div class="img-box">
-                <img src="images/client.jpg" alt="">
+            <h3 class=" ">
+              RECOMENDACIÓN
+              <br>
+            </h3>
+          </div>
+          <div class="layout_padding2-top">
+            <div class="client_container">
+              <div class="detail-box">
+                <p>
+                  En Tools, valoramos la eficiencia y la responsabilidad de nuestra comunidad de aprendices. Para garantizar un servicio de calidad, hemos implementado una política estricta de entrega puntual y cuidado de herramientas.
+                </p>
               </div>
-              <div class="name">
-                <h5>
-                  Cuidado y Entrega Puntual
-                </h5>
-                <h6>
-                  RECUERDA
-                </h6>
+              <div class="client_id">
+                <div class="img-box">
+                  <img src="images/client.jpg" alt="">
+                </div>
+                <div class="name">
+                  <h5>
+                    Cuidado y Entrega Puntual
+                  </h5>
+                  <h6>
+                    RECUERDA
+                  </h6>
+                </div>
               </div>
+              <br>
+              <br>
+              <br>
             </div>
-            <br>
-            <br>
-            <br>
           </div>
         </div>
-      </div>
+      </section>
     </section>
-  </section>
     <!-- info section -->
-    
+
     <section class="info_section layout_padding">
       <div class="container">
         <div class="row">
@@ -556,12 +553,12 @@
             <div class="discover">
               <ul>
                 <li>
-                  <a href="">
+                  <a href="./auth/inicio_sesion.php">
                     Iniciar Sesion
                   </a>
                 </li>
                 <li>
-                  <a href="">
+                  <a href="./auth/registro.php">
                     Registro
                   </a>
                 </li>
@@ -592,7 +589,7 @@
     <!-- footer section -->
     <section class="container-fluid footer_section">
       <p>
-        Sena. Ibagué - Tolima 
+        Sena. Ibagué - Tolima
         <a href="https://centrodeindustria.blogspot.com/"> Centro de Industria y Construcción</a>
       </p>
     </section>

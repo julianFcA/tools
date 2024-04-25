@@ -135,6 +135,7 @@ body {
 
 .custom_nav-container .navbar-nav .nav-item.active a::before {
   display: block;
+ 
 }
 
 a,
@@ -183,6 +184,17 @@ a:focus {
 .navbar-brand span {
   font-weight: bold;
   font-size: 24px;
+  color: #ffffff;
+}
+
+.navbar-brand1 img {
+  width: 45px;
+  margin-right: 5px;
+}
+
+.navbar-brand1 span {
+  font-weight: bold;
+  font-size: 18px;
   color: #ffffff;
 }
 
@@ -673,6 +685,7 @@ a:focus {
 .footer_section a {
   color: #171717;
 }
+
 
 /* end footer section*/
 /*# sourceMappingURL=style.css.map */
