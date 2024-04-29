@@ -1,30 +1,18 @@
 <?php
 require_once 'template.php';
 
-// // Procesamiento del formulario
-// if ($_SERVER["REQUEST_METHOD"] == "POST") {
-//     // Verificar si se han seleccionado herramientas
-//     if (isset($_POST["seleccion"])) {
-//         if (session_status() == PHP_SESSION_NONE) {
-//             session_start(); // Iniciar sesión si no está activa
-//         }
-        
-//         $herramientasSeleccionadas = $_POST["seleccion"];
-//         $_SESSION["herramientasSeleccionadas"] = $herramientasSeleccionadas; // Guardar en sesión
-//         header("Location: seleccion.php");
-//         exit();
-//     } else {
-//         // Si no se seleccionaron herramientas, puedes mostrar un mensaje de error o realizar otra acción
-//     }
-// }
-
-
+// Procesamiento del formulario
+if ($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET["herramientas"])) {
+    // Recibir los IDs de las herramientas seleccionadas
+    $herramientasSeleccionadas = unserialize(urldecode($_GET["herramientas"]));
+    // Aquí puedes hacer lo que necesites con los IDs recibidos, por ejemplo, realizar consultas adicionales o mostrar los detalles de las herramientas
+} else {
+    // Si no se reciben las herramientas seleccionadas, puedes mostrar un mensaje de error o realizar otra acción
+}
 $limit = 100; // Número de filas por página
 $page = isset($_GET['page']) ? $_GET['page'] : 1; // Página actual
-
 // Calcula el offset basado en la página actual
 $offset = ($page - 1) * $limit;
-
 if (isset($_GET['documento'])) {
     $query = "SELECT herramienta.*, tp_herra.nom_tp_herra, marca_herra.* FROM herramienta INNER JOIN tp_herra ON herramienta.id_tp_herra = tp_herra.id_tp_herra INNER JOIN marca_herra ON herramienta.id_marca = marca_herra.id_marca WHERE herramienta.id_tp_herra >= 1 AND marca_herra.id_marca >= 1";
     $result = $conn->query($query);
@@ -34,9 +22,11 @@ if (isset($_GET['documento'])) {
     $empieza = ($pagina - 1) * $porPagina;
     // Inicializa la variable $resultado_pagina
     $resultado_pagina = $result->fetchAll(PDO::FETCH_ASSOC);
+} else {
+    // Inicializa la variable $resultado_pagina con un array vacío
+    $resultado_pagina = [];
 }
 ?>
-
 <div class="content-wrapper">
     <!-- Container-fluid starts -->
     <div class="container-fluid">
@@ -52,7 +42,7 @@ if (isset($_GET['documento'])) {
                                     <div class="col-12">
                                         <div class="card">
                                             <div class="card-header">
-                                                <h4 class="card-title">Prestamo de Herramienta</h4>
+                                                <h4 class="card-title">Agregar Cantidad</h4>
                                             </div>
                                             <div class="card-body">
                                                 <form method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>">
@@ -66,9 +56,7 @@ if (isset($_GET['documento'])) {
                                                                     <th>Nombre De Herramienta</th>
                                                                     <th>Marca</th>
                                                                     <th>Imagen</th>
-                                                                    <th>Descripción</th>
                                                                     <th>Cantidad</th>
-                                                                    <th>Estado de Herramienta</th>
                                                                     <th>Seleccionar</th>
                                                                 </tr>
                                                             </thead>
@@ -94,16 +82,14 @@ if (isset($_GET['documento'])) {
                                                                             ?>
                                                                             <img src="<?= $imageUrl ?>" alt="Imagen de atracción">
                                                                         </td>
-                                                                        <td><?= $entrada["descripcion"] ?></td>
                                                                         <td><?= $entrada["cantidad"] ?></td>
-                                                                        <td><?= $entrada["esta_herra"] ?></td>
                                                                         <td><input type='checkbox' style="background-color: orange; color: white; width: 100%;" name='seleccion[]' value="<?= $entrada['codigo_barra_herra'] ?>"></td>
                                                                     </tr>
                                                                 <?php } ?>
                                                             </tbody>
                                                         </table>
                                                     </div>
-                                                    <input type="submit" name="submit" value="Seleccionar Herramientas" class="btn-primary" style="width: 50%">
+                                                    <input type="submit" name="submit" value="Prestar" class="btn-primary" style="width: 50%">
                                                 </form>
                                             </div>
                                         </div>
@@ -117,3 +103,4 @@ if (isset($_GET['documento'])) {
         </div>
     </div>
 </div>
+

@@ -24,13 +24,13 @@ if (isset($_POST["MM_register"]) && $_POST["MM_register"] == "formRegister") {
         echo '<script>window.location = "../auth/registro.php";</script>';
     } else {
         $documento = filter_input(INPUT_POST, 'documento', FILTER_SANITIZE_STRING);
-        
+
         // Consulta para verificar si el documento ya existe
         $stmtCheckDocument = $conn->prepare("SELECT documento FROM usuario WHERE documento = ?");
         $stmtCheckDocument->bindParam(1, $documento, PDO::PARAM_STR);
         $stmtCheckDocument->execute();
         $resultCheckDocument = $stmtCheckDocument->fetch(PDO::FETCH_ASSOC);
-        
+
         if ($resultCheckDocument) {
             echo '<script>alert("El documento ya está registrado.");</script>';
             echo '<script>window.location = "../auth/registro.php";</script>';
@@ -78,11 +78,14 @@ if (isset($_POST["MM_register"]) && $_POST["MM_register"] == "formRegister") {
                     // Asegúrate de que el número de parámetros coincide con el número de '?' en la consulta
                     $stmt->execute([$documento, $id_tp_docu, $nombre, $apellido, $user_password, $correo, $ficha, $codigo_barras, $fecha_registro, $terminos, $id_rol, $id_esta_usu, $nit_empre]);
 
+                    $stmt1 = $conn->prepare("INSERT INTO deta_ficha (ficha, documento) VALUES (?, ?)");
+
+                    $stmt1->execute([$ficha, $documento]);
+
                     echo '<script>alert("Registro exitoso.");</script>';
-                    echo '<script>window.location = "../auth/registro.php";</script>';
+                    echo '<script>window.location = "../auth/inicio_sesion.php";</script>';
                 }
             }
         }
     }
 }
-?>
