@@ -101,8 +101,8 @@ function validateForm() {
     }
 
     // Ejemplo de validación para el nombre
-    if (nom_empre.length < 6 || nom_empre.length > 25) {
-        showError('Nombre debe tener entre 6 y 25 caracteres');
+    if (nom_empre.length < 3 || nom_empre.length > 15) {
+        showError('Nombre debe tener entre 3 y 15 caracteres');
         return false;
     }
 
@@ -149,6 +149,28 @@ function validateEmail(email) {
     return regex.test(email);
 }
 
+
+
+function validarContraseña() {
+    var contraseña = document.getElementById("contrasena").value;
+    var mayusculaRegex = /[A-Z]/;
+    var numeroRegex = /[0-9]/;
+    var signoRegex = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/;
+
+    if (!mayusculaRegex.test(contraseña)) {
+        alert("La contraseña debe contener al menos una letra mayúscula.");
+        return false;
+    }
+    if (!numeroRegex.test(contraseña)) {
+        alert("La contraseña debe contener al menos un número.");
+        return false;
+    }
+    if (!signoRegex.test(contraseña)) {
+        alert("La contraseña debe contener al menos un signo.");
+        return false;
+    }
+    return true;
+}
 
 
 

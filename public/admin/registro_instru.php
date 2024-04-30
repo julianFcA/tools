@@ -157,7 +157,7 @@ if (isset($_POST["MM_register"]) && $_POST["MM_register"] == "formRegister") {
                     <div class="card-header">
                         <div class="registro_container">
                             <!-- Formulario de Registro -->
-                            <form class="registro_form" action="registro_instru.php" name="formRegister" autocomplete="off" method="POST" class="formulario" id="formulario">
+                            <form class="registro_form" action="registro_instru.php" name="formRegister" autocomplete="off" method="POST" class="formulario" id="formulario" onsubmit="return validarContraseña()">
 
                                 <h1>Registro de Instructor </h1>
                                 <br>
@@ -177,12 +177,12 @@ if (isset($_POST["MM_register"]) && $_POST["MM_register"] == "formRegister") {
 
                                 <div class="form-group">
                                     <label>Nombre</label>
-                                    <input type="text" placeholder="Ingrese nombre" class="form-control" name="nombre" title="Debe ser de 15 letras" required minlength="6" maxlength="12">
+                                    <input type="text" placeholder="Ingrese primer nombre" class="form-control" name="nombre" title="Debe ser de 3 a 12 letras" required minlength="3" maxlength="12">
                                 </div>
 
                                 <div class="form-group">
                                     <label>Apellido</label>
-                                    <input type="text" placeholder="Ingrese apellido" class="form-control" name="apellido" title="Debe ser de 15 letras" required minlength="6" maxlength="12">
+                                    <input type="text" placeholder="Ingrese primer apellido" class="form-control" name="apellido" title="Debe ser de 6 a 15 letras" required minlength="6" maxlength="12">
                                 </div>
 
                                 <div class="form-group">
@@ -247,7 +247,7 @@ if (isset($_POST["MM_register"]) && $_POST["MM_register"] == "formRegister") {
                                 <div class="form-group">
                                     <label for="contrase"> Contraseña</label>
                                     <div class="input-group">
-                                        <input type="password" placeholder="Contraseña" name="contrasena" class="form-control clave" title="Debe tener de 6 a 12 dígitos" required minlength="6" maxlength="12">
+                                        <input type="password" placeholder="Contraseña" name="contrasena" id="contrasena" class="form-control clave" title="Debe tener de 6 a 12 dígitos" required minlength="6" maxlength="12">
                                     </div>
                                 </div>
 

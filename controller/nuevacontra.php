@@ -37,14 +37,14 @@ if (isset($_POST["inicio"])) {
         <div class="login-container">
             <div class="row">
                 <div class="col-md-12 form-left">
-                    <form method="POST" name="form1" id="form1" autocomplete="off">
+                    <form method="POST" name="form1" id="form1" autocomplete="off" onsubmit="return validarContraseña()">
                         <h3>CAMBIO DE CONTRASEÑA</h3>
 
                         <div class="form-group">
                             <label for="cont">NUEVA CONTRASEÑA<span class="text-danger">*</span></label>
                             <div class="input-group">
                                 <div class="input-group-text"><i class="bi bi-person-fill"></i></div>
-                                <input type="password" name="cont" id="cont" placeholder="Nueva clave" minlength="6" class="form-control" maxlength="20" oninput="maxlengthNumber(this);">
+                                <input type="password" name="cont" id="contrasena" placeholder="Nueva clave" minlength="6" class="form-control" maxlength="12" oninput="maxlengthNumber(this);">
                             </div>
                         </div>
 
@@ -52,7 +52,7 @@ if (isset($_POST["inicio"])) {
                             <label for="conta">CONFIRMACION DE CONTRASEÑA<span class="text-danger">*</span></label>
                             <div class="input-group">
                                 <div class="input-group-text"><i class="bi bi-lock-fill"></i></div>
-                                <input type="password" name="conta" id="conta" placeholder="Confirme clave" minlength="8" class="form-control" maxlength="20" oninput="maxlengthNumber(this);">
+                                <input type="password" name="conta" id="contrasena" placeholder="Confirme clave" minlength="6" class="form-control" maxlength="12" oninput="maxlengthNumber(this);">
                             </div>
                         </div>
 

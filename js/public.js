@@ -58,6 +58,7 @@ document.addEventListener('DOMContentLoaded', function() {
         return true; // Si todas las validaciones pasan, retorna true
     }
 
+
     // Función que convierte el texto a mayúsculas
     function minuscula(input) {
         input.value = input.value.toLowerCase();
@@ -105,8 +106,8 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         // Ejemplo de validación para el nombre de formación
-        if (nom_forma.length < 6 || nom_forma.length > 30) {
-            showError('El nombre de formación debe tener entre 6 y 30 caracteres.');
+        if (nom_forma.length < 3 || nom_forma.length > 12) {
+            showError('El nombre de formación debe tener entre 3 y 12 caracteres.');
             return false;
         }
 
@@ -140,6 +141,27 @@ function maxlengthNumber(obj) {
         obj.value = obj.value.slice(0, obj.maxLength);
         alert("Debe ingresar solo el número de dígitos requeridos");
     }
+}
+
+function validarContraseña() {
+    var contraseña = document.getElementById("contrasena").value;
+    var mayusculaRegex = /[A-Z]/;
+    var numeroRegex = /[0-9]/;
+    var signoRegex = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/;
+
+    if (!mayusculaRegex.test(contraseña)) {
+        alert("La contraseña debe contener al menos una letra mayúscula.");
+        return false;
+    }
+    if (!numeroRegex.test(contraseña)) {
+        alert("La contraseña debe contener al menos un número.");
+        return false;
+    }
+    if (!signoRegex.test(contraseña)) {
+        alert("La contraseña debe contener al menos un signo.");
+        return false;
+    }
+    return true;
 }
 
 

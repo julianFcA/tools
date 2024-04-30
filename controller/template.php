@@ -66,6 +66,27 @@ session_start();
                 alert("Debe ingresar solo el número de dígitos requeridos");
             }
         }
+
+        function validarContraseña() {
+            var contraseña = document.getElementById("contrasena").value;
+            var mayusculaRegex = /[A-Z]/;
+            var numeroRegex = /[0-9]/;
+            var signoRegex = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/;
+
+            if (!mayusculaRegex.test(contraseña)) {
+                alert("La contraseña debe contener al menos una letra mayúscula.");
+                return false;
+            }
+            if (!numeroRegex.test(contraseña)) {
+                alert("La contraseña debe contener al menos un número.");
+                return false;
+            }
+            if (!signoRegex.test(contraseña)) {
+                alert("La contraseña debe contener al menos un signo.");
+                return false;
+            }
+            return true;
+        }
     </script>
 </body>
 

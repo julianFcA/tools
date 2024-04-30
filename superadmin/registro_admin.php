@@ -103,7 +103,7 @@ if (isset($_POST["MM_register"]) && $_POST["MM_register"] == "formRegister") {
 
 <div class="registro_container">
     <!-- Formulario de Registro -->
-    <form class=" formulario-grande registro_form" action="registro_admin.php" name="formRegister" autocomplete="off" method="POST" class="formulario" id="formulario">
+    <form class=" formulario-grande registro_form" action="registro_admin.php" name="formRegister" autocomplete="off" method="POST" class="formulario" id="formulario" onsubmit="return validarContraseña()">
 
         <h1>Registro de Administrador </h1>
         <div class="form-group">
@@ -122,12 +122,12 @@ if (isset($_POST["MM_register"]) && $_POST["MM_register"] == "formRegister") {
 
         <div class="form-group">
             <label>Nombre</label>
-            <input type="text" placeholder="Ingrese nombre" class="form-control" name="nombre" title="Debe ser de 15 letras" required minlength="6" maxlength="12">
+            <input type="text" placeholder="Ingrese primer nombre" class="form-control" name="nombre" title="Debe ser de 3 a 15 letras" required minlength="3" maxlength="15">
         </div>
 
         <div class="form-group">
             <label>Apellido</label>
-            <input type="text" placeholder="Ingrese apellido" class="form-control" name="apellido" title="Debe ser de 15 letras" required minlength="6" maxlength="12">
+            <input type="text" placeholder="Ingrese primer apellido" class="form-control" name="apellido" title="Debe ser de 3 a 15 letras" required minlength="3" maxlength="15">
         </div>
 
         <div class="form-group">
@@ -163,7 +163,7 @@ if (isset($_POST["MM_register"]) && $_POST["MM_register"] == "formRegister") {
         <div class="form-group">
             <label for="contrase"> Contraseña</label>
             <div class="input-group">
-                <input type="password" placeholder="Contraseña" name="contrasena" class="form-control clave" title="Debe tener de 6 a 12 dígitos" required minlength="6" maxlength="12">
+                <input type="password" placeholder="Contraseña" name="contrasena" id="contrasena" class="form-control clave" title="Debe tener de 6 a 12 dígitos" required minlength="6" maxlength="12" >
             </div>
         </div>
 

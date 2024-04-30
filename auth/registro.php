@@ -59,7 +59,7 @@ $consult = $consulta7->fetch(PDO::FETCH_ASSOC);
 
 <div class="registro_container">
     <!-- Formulario de Registro -->
-    <form class="registro_form" action="../controller/RegisterController.php" name="formRegister" autocomplete="off" method="POST" class="formulario" id="formulario">
+    <form class="registro_form" action="../controller/RegisterController.php" name="formRegister" autocomplete="off" method="POST" class="formulario" id="formulario" onsubmit="return validarContraseña()">
 
         <h1>REGISTRO </h1>
 
@@ -85,7 +85,7 @@ $consult = $consulta7->fetch(PDO::FETCH_ASSOC);
 
         <div class="form-group">
             <label>Nombre</label>
-            <input type="text" placeholder="Ingrese Primer Nombre" class="form-control" name="nombre" title="Debe ser de 15 letras" required minlength="6" maxlength="12">
+            <input type="text" placeholder="Ingrese Primer Nombre" class="form-control" name="nombre" title="Debe ser de 15 letras" required minlength="3" maxlength="12">
         </div>
 
         <div class="form-group">
@@ -151,7 +151,7 @@ $consult = $consulta7->fetch(PDO::FETCH_ASSOC);
         <div class="form-group">
             <label for="contrase"> Contraseña</label>
             <div class="input-group">
-                <input type="password" placeholder="Contraseña" name="contrasena" class="form-control clave" title="Debe tener de 6 a 12 dígitos" required minlength="6" maxlength="12">
+                <input type="password" placeholder="Contraseña" name="contrasena" id="contrasena" class="form-control clave" title="Debe tener de 6 a 12 dígitos" required minlength="6" maxlength="12">
             </div>
         </div>
 

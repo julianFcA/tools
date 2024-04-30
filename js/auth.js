@@ -67,7 +67,7 @@ function validarFormulario(event) {
     var documento = form['documento'].value;
     var nombre = form['nombre'].value;
     var correo = form['correo'].value;
-    var contrasena = form['contrasena'].value;
+    // var contrasena = form['contrasena'].value;
 
     eliminarEspacios(form['documento']); // Elimina espacios en el documento
 
@@ -77,8 +77,8 @@ function validarFormulario(event) {
         return false;
     }
 
-    if (nombre.length < 6 || nombre.length > 12) {
-        showError('Nombre debe tener entre 6 y 12 caracteres');
+    if (nombre.length < 3 || nombre.length > 12) {
+        showError('Nombre debe tener entre 3 y 12 caracteres');
         event.preventDefault();
         return false;
     }
@@ -89,6 +89,28 @@ function validarFormulario(event) {
         return false;
     }
 
+
+    return true;
+}
+
+function validarContraseña() {
+    var contraseña = document.getElementById("contrasena").value;
+    var mayusculaRegex = /[A-Z]/;
+    var numeroRegex = /[0-9]/;
+    var signoRegex = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/;
+
+    if (!mayusculaRegex.test(contraseña)) {
+        alert("La contraseña debe contener al menos una letra mayúscula.");
+        return false;
+    }
+    if (!numeroRegex.test(contraseña)) {
+        alert("La contraseña debe contener al menos un número.");
+        return false;
+    }
+    if (!signoRegex.test(contraseña)) {
+        alert("La contraseña debe contener al menos un signo.");
+        return false;
+    }
     return true;
 }
 
