@@ -57,17 +57,28 @@ $resultado_pagina = $result->fetchAll(PDO::FETCH_ASSOC);
                                                             </tr>
                                                         </thead>
                                                         <tbody>
-                                                            <?php foreach ($resultado_pagina as $entrada) { ?>
-                                                                <?php
-                                                                // Determinar la clase CSS y el estado del botón según el estado_servi
-                                                                $estadoClase = '';
-                                                                $color = '';
-                                                                $mensaje = '';
-                                                                $botonInactivo = '';
-                                                                $botonCancelar = '';
-                                                                $activo = '';
-                                                                ?>
-                                                                <tr class="<?= $estadoClase ?>" style="color: <?php echo $color; ?>">
+                                                            <?php 
+                                                            function actualizarEstado($conn, $codigo_barra_herra, $estado)
+                                                            {
+                                                                $sql = "UPDATE herramienta SET esta_herra = :estado WHERE codigo_barra_herra = :codigo_barra";
+                                                                $stmt = $conn->prepare($sql);
+                                                                $stmt->bindParam(':estado', $estado);
+                                                                $stmt->bindParam(':codigo_barra', $codigo_barra_herra);
+                                                                $stmt->execute();
+                                                            }
+                                                            
+                                                            foreach ($resultado_pagina as $entrada) {
+                                                                // Actualizar el estado de la herramienta dependiendo de la cantidad
+                                                                if ($entrada["cantidad"] == 0) {
+                                                                    actualizarEstado($conn, $entrada["codigo_barra_herra"], 'prestado');
+                                                                } else {
+                                                                    actualizarEstado($conn, $entrada["codigo_barra_herra"], 'disponible');
+                                                                }
+                                                            
+                                                                // Definir el color de fondo según el estado de la herramienta
+                                                                $colorFondo = ($entrada["esta_herra"] == 'disponible') ? '#c3e6cb' : '#f5c6cb';
+                                                            ?>
+                                                                <tr style="background-color: <?= $colorFondo ?>;">
                                                                     <td><img src="../../images/<?= $entrada["codigo_barra_herra"] ?>.png" style="max-width: 300px; height: auto; border: 2px solid #ffffff;"><?= $entrada["codigo_barra_herra"] ?></td>
                                                                     <td><?= $entrada["nom_tp_herra"] ?></td>
                                                                     <td><?= $entrada["nombre_herra"] ?></td>

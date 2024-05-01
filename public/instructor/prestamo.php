@@ -38,7 +38,7 @@ if (isset($_GET['documento'])) {
                                             </div>
                                             <div class="card-body">
                                                 <form action="termino_prestamo.php" method="post">
-                                                    <div class="table-responsive" >
+                                                    <div class="table-responsive">
                                                         <!-- Tabla HTML para mostrar los resultados -->
                                                         <table id="example3" class="table table-striped table-bordered" style="width:100%">
                                                             <thead>
@@ -55,17 +55,26 @@ if (isset($_GET['documento'])) {
                                                                 </tr>
                                                             </thead>
                                                             <tbody>
-                                                                <?php foreach ($resultado_pagina as $entrada) { ?>
-                                                                    <?php
-                                                                    // Determinar la clase CSS y el estado del botón según el estado_servi
-                                                                    $estadoClase = '';
-                                                                    $color = '';
-                                                                    $mensaje = '';
-                                                                    $botonInactivo = '';
-                                                                    $botonCancelar = '';
-                                                                    $activo = '';
-                                                                    ?>
-                                                                    <tr class="<?= $estadoClase ?>" style="color: <?php echo $color; ?>">
+                                                                <?php
+                                                                function actualizarEstado($conn, $codigo_barra_herra, $cantidad)
+                                                                {
+                                                                    // Actualizar el estado de la herramienta dependiendo de la cantidad
+                                                                    $estado = ($cantidad == 0) ? 'prestado' : 'disponible';
+                                                                    $sql = "UPDATE herramienta SET esta_herra = :estado WHERE codigo_barra_herra = :codigo_barra";
+                                                                    $stmt = $conn->prepare($sql);
+                                                                    $stmt->bindParam(':estado', $estado);
+                                                                    $stmt->bindParam(':codigo_barra', $codigo_barra_herra);
+                                                                    $stmt->execute();
+                                                                }
+
+                                                                foreach ($resultado_pagina as $entrada) {
+                                                                    // Actualizar el estado y la cantidad de la herramienta
+                                                                    actualizarEstado($conn, $entrada["codigo_barra_herra"], $entrada["cantidad"]);
+
+                                                                    // Definir el color de fondo según el estado de la herramienta
+                                                                    $colorFondo = ($entrada["esta_herra"] == 'disponible') ? '#c3e6cb' : '#f5c6cb';
+                                                                ?>
+                                                                    <tr style="background-color: <?= $colorFondo ?>;">
                                                                         <td><img src="../../images/<?= $entrada["codigo_barra_herra"] ?>.png" style="max-width: 300px; height: auto; border: 2px solid #ffffff;"></td>
                                                                         <td><?= $entrada["nom_tp_herra"] ?></td>
                                                                         <td><?= $entrada["nombre_herra"] ?></td>
