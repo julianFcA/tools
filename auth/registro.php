@@ -28,9 +28,7 @@ if ($nom_forma !== null) {
     $cadena .= "</select>"; // Cerrar la etiqueta select
     $cadena1 .= "</select>";
     echo $cadena . $cadena1; // Imprime ambas cadenas juntas
-} else {
-    echo "No se proporcionó el valor 'nom_forma'.";
-}
+} 
 
 
 
@@ -128,7 +126,7 @@ $consult = $consulta7->fetch(PDO::FETCH_ASSOC);
 
         <div class="form-group" id="tp_jornada-group">
             <label for="tp_jornada" class="form-group">Jornada</label>
-            <select name="tp_jornada" id="tp_jornada" class="form-control"></select>
+            <select id="tp_jornada" name="tp_jornada" class="form-control"></select>
         </div>
 
         <br>
@@ -187,37 +185,83 @@ $consult = $consulta7->fetch(PDO::FETCH_ASSOC);
 </div>
 
 <script type="text/javascript">
-    $(formulario).ready(function(){
-        // Cuando el documento esté listo, establecer el valor de nom_forma en 0 y recargar la lista
-        $('#nom_forma').val(0);
-        recargarLista();
 
-        // Agregar un evento change al select de nom_forma para recargar la lista cuando cambie
-        $('#nom_forma').change(function(){
-            recargarLista();
-        });
-    });
 
-    function recargarLista() {
-        // Hacer una solicitud AJAX para obtener las opciones de ficha y tp_jornada
+$(document).ready(function() {
+    $('#nom_forma').change(function() {
+        var idForma = $(this).val();  // Obtiene el ID de la formación seleccionada
         $.ajax({
             type: "POST",
-            url: "", // Asegúrate de especificar la URL correcta aquí
-            data: {"nom_forma": $('#nom_forma').val()},
-            success:function(response){
-                // Parsear la respuesta JSON
-                var data = JSON.parse(response);
+            url: "./getFichas.php",  // Asegúrate de ajustar la ruta al archivo PHP adecuado
+            data: {id_forma: idForma},
+            dataType: 'json',  // Esto le dice a jQuery que espere una respuesta JSON
+            success: function(data) {  // 'data' ya es un objeto JavaScript
+                var fichaSelect = $('#ficha');  // El select de fichas
+                fichaSelect.empty();  // Limpia las opciones actuales
 
-                // Llenar el select de ficha con las opciones obtenidas
-                $('#ficha').html(data.fichas);
-
-                // Llenar el select de tp_jornada con las opciones obtenidas
-                $('#tp_jornada').html(data.jornadas);
+                if (data.length > 0) {
+                    $.each(data, function(index, item) {
+                        fichaSelect.append($('<option>', {
+                            value: item.ficha,
+                            text: item.ficha
+                        }));
+                    });
+                } else {
+                    fichaSelect.append($('<option>', {
+                        value: '',
+                        text: 'No hay fichas disponibles'
+                    }));
+                }
             },
             error: function(xhr, status, error) {
-                // Manejar errores en la solicitud AJAX
-                console.error('Error en la solicitud AJAX: ' + error);
+                console.error('Error: ' + error);
+                console.error('Response: ' + xhr.responseText);
             }
         });
-    }
+    });
+});
+
+
+
+
+
+$(document).ready(function() {
+    $('#ficha').change(function() {
+        var idFicha = $(this).val();  // Obtiene el ID de la ficha seleccionada
+        $.ajax({
+            type: "POST",
+            url: "./getJornada.php",  // Asegúrate de ajustar la ruta al archivo PHP adecuado
+            data: {id_ficha: idFicha},
+            dataType: 'json',
+            success: function(data) {
+                var jornadaSelect = $('#tp_jornada');  // El select de jornadas
+                jornadaSelect.empty();  // Limpia las opciones actuales
+
+                if (data.length > 0) {
+                    $.each(data, function(index, item) {
+                        jornadaSelect.append($('<option>', {
+                            value: item.id_jornada,
+                            text: item.tp_jornada
+                        }));
+                    });
+                } else {
+                    jornadaSelect.append($('<option>', {
+                        value: '',
+                        text: 'No hay jornadas disponibles'
+                    }));
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error('Error: ' + error);
+                console.error('Response: ' + xhr.responseText);
+            }
+        });
+    });
+});
+
+
+
+
+
+   
 </script>
