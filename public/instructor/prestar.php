@@ -37,9 +37,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['MM_register']) && $_P
         foreach ($codigo_barra_herramientas as $codigo_barra_herra) {
             $cant_herra = filter_input(INPUT_POST, 'cantidad', FILTER_VALIDATE_INT); // Mover la obtención de cantidad dentro del bucle
             // Suponiendo que la cantidad es 1 por cada herramienta seleccionada
-            $stmt1 = $conn->prepare("INSERT INTO detalle_prestamo (cant_herra, codigo_barra_herra, id_presta) VALUES (?, ?, ?)");
-            $stmt1->execute([$cant_herra, $codigo_barra_herra, $id_prestamo]);
+        
+            // Restar la cantidad de la herramienta prestada en la tabla herramienta
+            $stmt_update_tool = $conn->prepare("UPDATE herramienta SET cantidad = cantidad - ? WHERE codigo_barra_herra = ?");
+            $stmt_update_tool->execute([$cant_herra, $codigo_barra_herra]);
+        
+            // Insertar detalle de préstamo en la tabla detalle_prestamo
+            $stmt_insert_detail = $conn->prepare("INSERT INTO detalle_prestamo (cant_herra, codigo_barra_herra, id_presta) VALUES (?, ?, ?)");
+            $stmt_insert_detail->execute([$cant_herra, $codigo_barra_herra, $id_prestamo]);
         }
+        
 
         // Confirma la transacción
         $conn->commit();
