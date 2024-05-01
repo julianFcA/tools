@@ -1,31 +1,39 @@
 <?php
 require_once 'template.php';
 
-// Consulta SQL
-$query = "SELECT empresa.nit_empre, empresa.nom_empre, empresa.direcc_empre, empresa.telefono, empresa.correo_empre, licencia.fecha_ini, licencia.fecha_fin, licencia.esta_licen, usuario.nombre, usuario.apellido, usuario.documento, usuario.correo, usuario.codigo_barras, usuario.fecha_registro, formacion.nom_forma ,jornada.tp_jornada, tp_docu.nom_tp_docu, deta_ficha.ficha 
-          FROM empresa 
-          INNER JOIN licencia ON empresa.nit_empre = licencia.nit_empre 
-          LEFT JOIN usuario ON empresa.nit_empre = usuario.nit_empre  
-          INNER JOIN rol ON usuario.id_rol = rol.id_rol 
-          INNER JOIN deta_ficha ON deta_ficha.documento = usuario.documento 
-          INNER JOIN ficha ON ficha.ficha = deta_ficha.ficha 
-          INNER JOIN formacion ON ficha.id_forma = formacion.id_forma 
-          INNER JOIN jornada ON ficha.id_jornada = jornada.id_jornada 
-          INNER JOIN tp_docu ON usuario.id_tp_docu = tp_docu.id_tp_docu 
-          WHERE empresa.nit_empre > 0 AND ficha.ficha >= 1 AND jornada.id_jornada >= 1 AND usuario.id_rol = 2";
+$limit = 100; // Número de filas por página
+$page = isset($_GET['page']) ? $_GET['page'] : 1; // Página actual
+
+// Calcula el offset basado en la página actual
+$offset = ($page - 1) * $limit;
+
+
+$query = "SELECT usuario.nombre,usuario.apellido,usuario.documento,usuario.correo,usuario.codigo_barras,usuario.fecha_registro,formacion.nom_forma,jornada.tp_jornada, deta_ficha.ficha, deta_ficha.id_deta_ficha, deta_ficha.documento FROM usuario INNER JOIN rol ON usuario.id_rol = rol.id_rol INNER JOIN deta_ficha ON deta_ficha.documento = usuario.documento INNER JOIN ficha ON deta_ficha.ficha = ficha.ficha INNER JOIN formacion ON formacion.id_forma = ficha.id_forma INNER JOIN jornada ON ficha.id_jornada = jornada.id_jornada WHERE ficha.ficha > 0 AND jornada.id_jornada > 1 AND deta_ficha.id_deta_ficha >= 1 AND usuario.id_rol = 2";
 
 $result = $conn->query($query);
 
-// Obtener todos los resultados de la consulta
+// Definir el número de resultados por página y la página actual
+$porPagina = 20; // Puedes ajustar esto según tus necesidades
+$pagina = isset($_GET['pagina']) ? $_GET['pagina'] : 1;
+$empieza = ($pagina - 1) * $porPagina;
+
+// Inicializa la variable $resultado_pagina
 $resultado_pagina = $result->fetchAll(PDO::FETCH_ASSOC);
+
 ?>
 
+
+
 <div class="content-wrapper">
+    <!-- Container-fluid starts -->
     <div class="container-fluid">
+        <!-- Main content starts -->
         <div class="tab-list">
+            <!-- Row Starts -->
             <div class="row">
                 <div class="col-lg-12 p-0">
                     <div class="card-header">
+
                         <div class="content-body container-table">
                             <div class="container-fluid">
                                 <div class="row">
@@ -36,60 +44,52 @@ $resultado_pagina = $result->fetchAll(PDO::FETCH_ASSOC);
                                             </div>
                                             <div class="card-body">
                                                 <div class="table-responsive">
-                                                    <table id="example3" class="table table-striped table-bordered" style="width:100%">
+
+                                                    <table id="example" class="display" style="width:100%">
                                                         <thead>
                                                             <tr>
-                                                                <th>Nombre de Instructor</th>
-                                                                <th>Apellido de Instructor</th>
-                                                                <th>Numero de Identificación</th>
-                                                                <th>Correo de Instructor</th>
-                                                                <th>Codigo de Barras de Administrador</th>
+                                                                <th>Nombre</th>
+                                                                <th>Apellido</th>
+                                                                <th>Documento</th>
+                                                                <th>Correo</th>
+                                                                <th>Código de Barras</th>
                                                                 <th>Fecha de Registro</th>
-                                                                <th>Formacion</th>
+                                                                <th>Formación</th>
                                                                 <th>Ficha</th>
                                                                 <th>Jornada</th>
-                                                                <th>Asignación de Formación</th>
-                                                                <th colspan="2">Acción</th>
+                                                                <th>Acciones</th>
                                                             </tr>
                                                         </thead>
-                                                        <tbody>
-                                                            <?php foreach ($resultado_pagina as $entrada) { ?>
-                                                                <tr>
-                                                                    <td><?= $entrada["nombre"] ?></td>
-                                                                    <td><?= $entrada["apellido"] ?></td>
-                                                                    <td><?= $entrada["documento"] ?></td>
-                                                                    <td><?= $entrada["correo"] ?></td>
-                                                                    <td>
-                                                                        <img src="../../images/<?= $entrada["codigo_barras"] ?>.png" style="max-width: 300px; height: auto; border: 2px solid #ffffff;">
-                                                                        <?= $entrada["codigo_barras"] ?>
-                                                                    </td>
-                                                                    <td><?= $entrada["fecha_registro"] ?></td>
-                                                                    <td><?= $entrada["nom_forma"] ?></td>
-                                                                    <td><?= $entrada["ficha"] ?></td>
-                                                                    <td><?= $entrada["tp_jornada"] ?></td>
-                                                                    <td>
-                                                                        <form method="GET" action="asigna.php">
-                                                                            <input type="hidden" name="documento" value="<?= $entrada["documento"] ?>">
-                                                                            <button class="btn btn-success" type="submit" name="asigna">Asignación</button>
-                                                                        </form>
-                                                                    </td>
-                                                                    <td>
-                                                                        <form method="GET" action="actu_instru.php">
-                                                                            <input type="hidden" name="documento" value="<?= $entrada["documento"] ?>">
-                                                                            <button class="btn btn-primary" type="submit" name="actu">Actualizar Datos</button>
-                                                                        </form>
-                                                                    </td>
-                                                                    <td>
-                                                                        <form method="GET" action="elim_asigna.php">
-                                                                            <input type="hidden" name="ficha" value="<?= $entrada["ficha"] ?>">
-                                                                            <button class="btn btn-danger" type="submit" name="elimin">Eliminar</button>
-                                                                        </form>
-                                                                    </td>
-                                                                </tr>
-                                                            <?php } ?>
-                                                        </tbody>
+                                                        <tfoot>
+                                                            <tr>
+                                                                <th>Nombre</th>
+                                                                <th>Apellido</th>
+                                                                <th>Documento</th>
+                                                                <th>Correo</th>
+                                                                <th>Código de Barras</th>
+                                                                <th>Fecha de Registro</th>
+                                                                <th>Formación</th>
+                                                                <th>Ficha</th>
+                                                                <th>Jornada</th>
+                                                                <th>Acciones</th>
+                                                            </tr>
+                                                        </tfoot>
                                                     </table>
+
+
+
+
+
                                                 </div>
+                                                <!-- <div class="text-center" role="toolbar" aria-label="Toolbar with button groups">
+                                                        <div class="btn-group me-2" role="group" aria-label="First group" aling>
+                                                            <?php
+                                                            for ($i = 1; $i <= $total_paginas; $i++) {
+                                                                echo "<a class='btn btn-primary' href='index.php?pagina=" . $i . "'> " . $i . " </a>";
+                                                            }
+                                                            ?>
+                                                        </div>
+                                                    </div> -->
                                             </div>
                                         </div>
                                     </div>
@@ -108,6 +108,7 @@ $resultado_pagina = $result->fetchAll(PDO::FETCH_ASSOC);
             </a>
             <a href="excel.php" class="letra" style="font-size: 14px;">EXCEL</a>
         </div>
+        <!-- Agregamos un espacio horizontal -->
         <div style="width: 10px;"></div>
         <div class="ml-3">
             <a href="pdf.php" class="mr-2">
@@ -117,3 +118,52 @@ $resultado_pagina = $result->fetchAll(PDO::FETCH_ASSOC);
         </div>
     </section>
 </div>
+
+
+<script>
+    new DataTable('#example', {
+        ajax: './ajaxtable.php',
+        processing: true,
+        serverSide: true
+    });
+
+    $(document).ready(function() {
+        $('#example').DataTable({
+            "processing": true,
+            "serverSide": true,
+            "ajax": "ajaxtable.php",
+            "columns": [{
+                    "data": "nombre"
+                },
+                {
+                    "data": "apellido"
+                },
+                {
+                    "data": "documento"
+                },
+                {
+                    "data": "correo"
+                },
+                {
+                    "data": "codigo_barras"
+                },
+                {
+                    "data": "fecha_registro"
+                },
+                {
+                    "data": "nom_forma"
+                },
+                {
+                    "data": "ficha"
+                },
+                {
+                    "data": "tp_jornada"
+                },
+                {
+                    "data": null,
+                    "defaultContent": "<button>Acción</button>"
+                }
+            ]
+        });
+    });
+</script>
