@@ -186,7 +186,6 @@ $consult = $consulta7->fetch(PDO::FETCH_ASSOC);
 
 <script type="text/javascript">
 
-
 $(document).ready(function() {
     $('#nom_forma').change(function() {
         var idForma = $(this).val();  // Obtiene el ID de la formación seleccionada
@@ -222,9 +221,6 @@ $(document).ready(function() {
 });
 
 
-
-
-
 $(document).ready(function() {
     $('#ficha').change(function() {
         var idFicha = $(this).val();  // Obtiene el ID de la ficha seleccionada
@@ -258,10 +254,5 @@ $(document).ready(function() {
         });
     });
 });
-
-
-
-
-
    
 </script>

@@ -156,21 +156,3 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-
-
-// registro
-$(document).ready(function(){
-    $('#formulario').submit(function(e){
-        e.preventDefault();
-        var documento = $('#documento').val();
-        
-        $.ajax({
-            type: 'POST',
-            url: '../controller/RegisterController.php',
-            data: {documento: documento},
-            success: function(response){
-                $('#mensaje').html(response);
-            }
-        });
-    });
-});
