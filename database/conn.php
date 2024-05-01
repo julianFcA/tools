@@ -6,9 +6,9 @@
     {
         // Variable para declarar el parametro del servidor
         private $localhost = "localhost";
-        private $database = "julian";
+        private $database = "herramientas";
         private $username = "root";
-        private $userpassword = "";
+        private $userpassword = "123456";
         private $charset ="utf8";
 
         // MANEJO DE EXCEPCIONES TRY AND CATCH

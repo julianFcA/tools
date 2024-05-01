@@ -73,10 +73,10 @@ if (isset($_POST["MM_register"]) && $_POST["MM_register"] == "formRegister") {
                     $fecha_registro = date("Y-m-d H:i:s");
 
                     // Insertar usuario en la base de datos
-                    $stmt = $conn->prepare("INSERT INTO usuario (documento, id_tp_docu, nombre, apellido, contrasena, correo, ficha, codigo_barras, fecha_registro, terminos, id_rol, id_esta_usu, nit_empre) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+                    $stmt = $conn->prepare("INSERT INTO usuario (documento, id_tp_docu, nombre, apellido, contrasena, correo, codigo_barras, fecha_registro, terminos, id_rol, id_esta_usu, nit_empre) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 
                     // Asegúrate de que el número de parámetros coincide con el número de '?' en la consulta
-                    $stmt->execute([$documento, $id_tp_docu, $nombre, $apellido, $user_password, $correo, $ficha, $codigo_barras, $fecha_registro, $terminos, $id_rol, $id_esta_usu, $nit_empre]);
+                    $stmt->execute([$documento, $id_tp_docu, $nombre, $apellido, $user_password, $correo, $codigo_barras, $fecha_registro, $terminos, $id_rol, $id_esta_usu, $nit_empre]);
 
                     $stmt1 = $conn->prepare("INSERT INTO deta_ficha (ficha, documento) VALUES (?, ?)");
 
