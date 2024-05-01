@@ -1,5 +1,5 @@
 <?php
-require_once '../../database/conn.php';  // Asegura que la ruta es correcta según la ubicación del archivo
+require_once './../../database/conn.php';  // Asegura que la ruta es correcta según la ubicación del archivo
 
 $database = new Database();
 $conn = $database->conectar();  // Obtiene la conexión a la base de datos

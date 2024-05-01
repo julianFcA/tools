@@ -1,7 +1,7 @@
 <?php
 
 // getJornada.php
-require_once '../../database/conn.php';  // Ajusta según la ubicación real y método de inclusión
+require_once './../../database/conn.php';  // Ajusta según la ubicación real y método de inclusión
 
 $database = new Database();
 $conn = $database->conectar();

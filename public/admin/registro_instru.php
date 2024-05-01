@@ -85,10 +85,6 @@ $consulta7->execute();
 $consult = $consulta7->fetch(PDO::FETCH_ASSOC);
 
 
-$consulta10 = $conn->prepare("SELECT * FROM formacion");
-$consulta10->execute();
-$consu10 = $consulta10->fetchAll(PDO::FETCH_ASSOC);
-
 
 if (isset($_POST["MM_register"]) && $_POST["MM_register"] == "formRegister") {
     $documento = isset($_POST['documento']) ? $_POST['documento'] : "";
@@ -225,7 +221,7 @@ if (isset($_POST["MM_register"]) && $_POST["MM_register"] == "formRegister") {
                                     <select name="nom_forma" id="nom_forma" class="form-control">
                                         <?php
                                         // Consulta para obtener las opciones de formación
-                                        $statement = $conn->prepare("SELECT * FROM formacion WHERE id_forma > 1");
+                                        $statement = $conn->prepare("SELECT * FROM formacion WHERE id_forma >= 1");
                                         $statement->execute();
                                         while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
                                             echo "<option value='" . $row['id_forma'] . "'>" . $row['nom_forma'] . "</option>";
@@ -244,9 +240,7 @@ if (isset($_POST["MM_register"]) && $_POST["MM_register"] == "formRegister") {
                                     <select id="tp_jornada" name="tp_jornada" class="form-control"></select>
                                 </div>
 
-
                                 <input type="hidden" placeholder="Estado" readonly class="form-control" value="1" name="id_esta_usu">
-
 
                                 <div class="group-material">
                                     <label>Fecha de Registro</label>
@@ -268,9 +262,6 @@ if (isset($_POST["MM_register"]) && $_POST["MM_register"] == "formRegister") {
                                         <input type="password" placeholder="Contraseña" name="contrasena" id="contrasena" class="form-control clave" title="Debe tener de 6 a 12 dígitos" required minlength="6" maxlength="12">
                                     </div>
                                 </div>
-
-
-
 
                                 <div class="form-group">
                                     <div class="overlay-terminos" id="overlay-terminos">
@@ -305,76 +296,73 @@ if (isset($_POST["MM_register"]) && $_POST["MM_register"] == "formRegister") {
 </div>
 
 <script type="text/javascript">
-    $(document).ready(function() {
-        $('#nom_forma').change(function() {
-            var idForma = $(this).val(); // Obtiene el ID de la formación seleccionada
-            $.ajax({
-                type: "POST",
-                url: "./getFichas.php", // Asegúrate de ajustar la ruta al archivo PHP adecuado
-                data: {
-                    id_forma: idForma
-                },
-                dataType: 'json', // Esto le dice a jQuery que espere una respuesta JSON
-                success: function(data) { // 'data' ya es un objeto JavaScript
-                    var fichaSelect = $('#ficha'); // El select de fichas
-                    fichaSelect.empty(); // Limpia las opciones actuales
 
-                    if (data.length > 0) {
-                        $.each(data, function(index, item) {
-                            fichaSelect.append($('<option>', {
-                                value: item.ficha,
-                                text: item.ficha
-                            }));
-                        });
-                    } else {
+$(document).ready(function() {
+    $('#nom_forma').change(function() {
+        var idForma = $(this).val();  // Obtiene el ID de la formación seleccionada
+        $.ajax({
+            type: "POST",
+            url: "./getFichas.php",  // Asegúrate de ajustar la ruta al archivo PHP adecuado
+            data: {id_forma: idForma},
+            dataType: 'json',  // Esto le dice a jQuery que espere una respuesta JSON
+            success: function(data) {  // 'data' ya es un objeto JavaScript
+                var fichaSelect = $('#ficha');  // El select de fichas
+                fichaSelect.empty();  // Limpia las opciones actuales
+
+                if (data.length > 0) {
+                    $.each(data, function(index, item) {
                         fichaSelect.append($('<option>', {
-                            value: '',
-                            text: 'No hay fichas disponibles'
+                            value: item.ficha,
+                            text: item.ficha
                         }));
-                    }
-                },
-                error: function(xhr, status, error) {
-                    console.error('Error: ' + error);
-                    console.error('Response: ' + xhr.responseText);
+                    });
+                } else {
+                    fichaSelect.append($('<option>', {
+                        value: '',
+                        text: 'No hay fichas disponibles'
+                    }));
                 }
-            });
+            },
+            error: function(xhr, status, error) {
+                console.error('Error: ' + error);
+                console.error('Response: ' + xhr.responseText);
+            }
         });
     });
+});
 
 
-    $(document).ready(function() {
-        $('#ficha').change(function() {
-            var idFicha = $(this).val(); // Obtiene el ID de la ficha seleccionada
-            $.ajax({
-                type: "POST",
-                url: "./getJornada.php", // Asegúrate de ajustar la ruta al archivo PHP adecuado
-                data: {
-                    id_ficha: idFicha
-                },
-                dataType: 'json',
-                success: function(data) {
-                    var jornadaSelect = $('#tp_jornada'); // El select de jornadas
-                    jornadaSelect.empty(); // Limpia las opciones actuales
+$(document).ready(function() {
+    $('#ficha').change(function() {
+        var idFicha = $(this).val();  // Obtiene el ID de la ficha seleccionada
+        $.ajax({
+            type: "POST",
+            url: "./getJornada.php",  // Asegúrate de ajustar la ruta al archivo PHP adecuado
+            data: {id_ficha: idFicha},
+            dataType: 'json',
+            success: function(data) {
+                var jornadaSelect = $('#tp_jornada');  // El select de jornadas
+                jornadaSelect.empty();  // Limpia las opciones actuales
 
-                    if (data.length > 0) {
-                        $.each(data, function(index, item) {
-                            jornadaSelect.append($('<option>', {
-                                value: item.id_jornada,
-                                text: item.tp_jornada
-                            }));
-                        });
-                    } else {
+                if (data.length > 0) {
+                    $.each(data, function(index, item) {
                         jornadaSelect.append($('<option>', {
-                            value: '',
-                            text: 'No hay jornadas disponibles'
+                            value: item.id_jornada,
+                            text: item.tp_jornada
                         }));
-                    }
-                },
-                error: function(xhr, status, error) {
-                    console.error('Error: ' + error);
-                    console.error('Response: ' + xhr.responseText);
+                    });
+                } else {
+                    jornadaSelect.append($('<option>', {
+                        value: '',
+                        text: 'No hay jornadas disponibles'
+                    }));
                 }
-            });
+            },
+            error: function(xhr, status, error) {
+                console.error('Error: ' + error);
+                console.error('Response: ' + xhr.responseText);
+            }
         });
     });
+});
 </script>

@@ -42,8 +42,8 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         // Ejemplo de validación para el nombre
-        if (nombre.length < 6 || nombre.length > 12) {
-            showError('Nombre debe tener entre 6 y 12 caracteres');
+        if (nombre.length < 3 || nombre.length > 12) {
+            showError('Nombre debe tener entre 3 y 12 caracteres');
             return false;
         }
 

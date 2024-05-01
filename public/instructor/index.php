@@ -51,7 +51,7 @@ $resultado_pagina = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                                     <table id="example3" class="table table-striped table-bordered" style="width:100%">
                                                         <thead>
                                                             <tr>
-                                                                <th>Nombre de Instructor</th>
+                                                                <th>Nombre de Aprendiz</th>
                                                                 <th>Numero de Identificación</th>
                                                                 <th>Correo de Instructor</th>
                                                                 <th>Codigo de Barras de Administrador</th>
