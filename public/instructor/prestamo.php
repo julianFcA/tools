@@ -1,24 +1,6 @@
 <?php
 require_once 'template.php';
 
-// // Procesamiento del formulario
-// if ($_SERVER["REQUEST_METHOD"] == "POST") {
-//     // Verificar si se han seleccionado herramientas
-//     if (isset($_POST["seleccion"])) {
-//         if (session_status() == PHP_SESSION_NONE) {
-//             session_start(); // Iniciar sesión si no está activa
-//         }
-        
-//         $herramientasSeleccionadas = $_POST["seleccion"];
-//         $_SESSION["herramientasSeleccionadas"] = $herramientasSeleccionadas; // Guardar en sesión
-//         header("Location: seleccion.php");
-//         exit();
-//     } else {
-//         // Si no se seleccionaron herramientas, puedes mostrar un mensaje de error o realizar otra acción
-//     }
-// }
-
-
 $limit = 100; // Número de filas por página
 $page = isset($_GET['page']) ? $_GET['page'] : 1; // Página actual
 
@@ -55,8 +37,8 @@ if (isset($_GET['documento'])) {
                                                 <h4 class="card-title">Prestamo de Herramienta</h4>
                                             </div>
                                             <div class="card-body">
-                                                <form method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>">
-                                                    <div class="table-responsive">
+                                                <form action="termino_prestamo.php" method="post">
+                                                    <div class="table-responsive" >
                                                         <!-- Tabla HTML para mostrar los resultados -->
                                                         <table id="example3" class="table table-striped table-bordered" style="width:100%">
                                                             <thead>
@@ -97,14 +79,16 @@ if (isset($_GET['documento'])) {
                                                                         <td><?= $entrada["descripcion"] ?></td>
                                                                         <td><?= $entrada["cantidad"] ?></td>
                                                                         <td><?= $entrada["esta_herra"] ?></td>
-                                                                        <td><input type='checkbox' style="background-color: orange; color: white; width: 100%;" name='seleccion[]' value="<?= $entrada['codigo_barra_herra'] ?>"></td>
+                                                                        <td><input type="checkbox" name="herramienta[]" value="<?php echo $entrada['codigo_barra_herra']; ?>" onclick="checkLimit()"></td>
                                                                     </tr>
                                                                 <?php } ?>
                                                             </tbody>
                                                         </table>
                                                     </div>
-                                                    <input type="submit" name="submit" value="Seleccionar Herramientas" class="btn-primary" style="width: 50%">
+                                                    <br>
+                                                    <button type="submit" class="btn btn-orange" style="width: 50%;" onclick="prepareAndRedirect()">Seleccionar Herramientas</button>
                                                 </form>
+                                                <br>
                                             </div>
                                         </div>
                                     </div>
@@ -117,3 +101,19 @@ if (isset($_GET['documento'])) {
         </div>
     </div>
 </div>
+<script>
+    function checkLimit() {
+        const maxSelections = 3;
+        const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+        let checkedCount = 0;
+
+        checkboxes.forEach(checkbox => {
+            if (checkbox.checked) {
+                checkedCount++;
+                if (checkedCount > maxSelections) {
+                    checkbox.checked = false; // Desmarcar checkbox si se supera el límite
+                }
+            }
+        });
+    }
+</script>

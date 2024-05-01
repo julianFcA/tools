@@ -130,18 +130,18 @@ $resultado_pagina = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                                                     <td><?= $entrada["fecha_entrada"] ?></td>
                                                                     <!-- revisar bien este form -->
                                                                     <td>
-                                                                        <form method="GET" action="prestamo.php">
+                                                                        <form method="GET" action="./prestamo.php">
                                                                             <input type="hidden" name="documento" value="<?= $entrada["documento"] ?>">
                                                                             <button class="btn btn-success" type="submit" name="prest">Prestar Herramienta</button>
                                                                         </form>
                                                                     </td>
                                                                     <td>
-                                                                        <form method="GET" action="elim_apren.php">
+                                                                        <form method="GET" action="./devolucion.php">
                                                                             <input type="hidden" name="documento" value="<?= $entrada["documento"] ?>">
-                                                                            <button class="btn btn-danger" type="submit" name="elimin">Eliminar</button>
+                                                                            <button class="btn btn-orange" type="submit" name="devolv">Devolver Herramienta</button>
                                                                         </form>
                                                                     </td>
-                                                                    
+
                                                                 </tr>
                                                             <?php } ?>
                                                         </tbody>

@@ -165,6 +165,21 @@ function validarContraseña() {
 }
 
 
+    // Obtener el elemento select
+   
+
+
+    function prepareAndRedirect() {
+        const selectedWeapons = document.querySelectorAll('input[type="checkbox"]:checked');
+        const selectedIds = Array.from(selectedWeapons).map(checkbox => checkbox.value).join(',');
+        const url = `../public/instru/termino_prestamo.php?herramienta=${selectedIds}`;
+
+        // Asigna la URL al formulario y envía el formulario
+        const form = document.getElementById('ventanaEmergente');
+        form.action = url;
+        form.submit();
+    }
+
 
 
 // paginacion

@@ -98,49 +98,12 @@ $resultado_pagina = $result->fetchAll(PDO::FETCH_ASSOC);
                                                                 $botonCancelar = '';
                                                                 $activo = '';
 
-                                                                // $horaFinalizacionPasada = strtotime($entrada["fecha_fin"]) > strtotime("now");
-
-                                                                // if ($entrada["esta_licen"] == 'inactivo' || $horaFinalizacionPasada) {
-                                                                //     $estadoClase = 'table-warning';
-                                                                //     $botonInactivo = 'disabled';
-                                                                //     $color = 'orange';
-                                                                //     $mensaje = 'Bloqueado';
-
-                                                                //     // Actualizar el estado en la base de datos
-                                                                //     if ($horaFinalizacionPasada) {
-                                                                //         $updateEstado = $conn->prepare("UPDATE licencia SET esta_licen = 'inactivo' WHERE licencia = :licencia");
-                                                                //         $updateEstado->bindParam(':licencia', $entrada["licencia"], PDO::PARAM_INT);
-                                                                //         $updateEstado->execute();
-                                                                //     } else {
-                                                                //         // Si la hora de finalización no ha pasado, pero el estado es 'inactivo', cambia a 'activo'
-                                                                //         $updateEstado = $conn->prepare("UPDATE licencia SET esta_licen = 'activo' WHERE licencia = :licencia");
-                                                                //         $updateEstado->bindParam(':licencia', $entrada["licencia"], PDO::PARAM_INT);
-                                                                //         $updateEstado->execute();
-                                                                //     }
-
                                                                     // Actualiza las variables para reflejar el nuevo estado
                                                                     $estadoClase = 'table-success';
                                                                     $activo = 'Activo';
                                                                     $color = 'green';
                                                                     $mensaje = 'Disponible';
                                                                 }
-
-                                                                // if ($entrada["esta_licen"] == 'inactivo') {
-                                                                //     $estadoClase = '';
-                                                                //     $botonInactivo = 'disabled';
-                                                                //     $color = 'orange';
-                                                                //     $mensaje = 'Esta inactivo';
-                                                                // } elseif ($entrada["esta_licen"] == 'cancelado') {
-                                                                //     $estadoClase = '';
-                                                                //     $botonCancelar = 'disabled';
-                                                                //     $color = 'red';
-                                                                //     $mensaje = 'Esta cancelado';
-                                                                // } elseif ($entrada["esta_licen"] == 'activo') {
-                                                                //     $estadoClase = '';
-                                                                //     $activo = 'disabled';
-                                                                //     $color = 'green';
-                                                                //     $mensaje = 'activo';
-                                                                // }
                                                                 ?>
                                                                 <tr class="<?= $estadoClase ?>" style="color: <?php echo $color; ?>">
                                                                     <td><?= $entrada["nombre"] ?></td>
@@ -154,18 +117,7 @@ $resultado_pagina = $result->fetchAll(PDO::FETCH_ASSOC);
                                                                     <td><?= $entrada["ficha"] ?></td>
                                                                     <td><?= $entrada["tp_jornada"] ?></td>
                                                                     <!-- revisar bien este form -->
-                                                                    <!-- <td>
-                                                                            <form method="GET" action="actu_instru.php">
-                                                                                <input type="hidden" name="documento" value="<?= $entrada["documento"] ?>">
-                                                                                <button class="btn btn-danger" type="submit" name="actu">Actualizar Datos</button>
-                                                                            </form>
-                                                                        </td> -->
-                                                                    <!-- <td>
-                                                                            <form method="GET" action="elim_instru.php">
-                                                                                <input type="hidden" name="documento" value="<?= $entrada["documento"] ?>">
-                                                                                <button class="btn btn-danger" type="submit" name="elimin">Eliminar</button>
-                                                                            </form>
-                                                                        </td> -->
+                                                                    
                                                                 </tr>
                                                             <?php  ?>
                                                         </tbody>

@@ -1,5 +1,5 @@
 <?php
-require_once 'template.php';
+require_once '../template.php';
 $columnas = [];
 
 if (isset($_GET['documento'])) {
