@@ -58,6 +58,7 @@ $resultado_pagina = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                                                 <th>Fecha de Registro</th>
                                                                 <th>Formacion</th>
                                                                 <th>Ficha</th>
+                                                                <th>Jornada</th>
                                                                 <th colspan="2">Acción</th>
                                                             </tr>
                                                         </thead>
