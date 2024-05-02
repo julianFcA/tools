@@ -8,26 +8,28 @@ $page = isset($_POST['page']) ? $_POST['page'] : 1; // Página actual
 $offset = ($page - 1) * $limit;
 
 if (isset($_POST['documento'])) {
-    $query = "SELECT herramienta.*, 
-    tp_herra.nom_tp_herra, 
-    marca_herra.*, 
-    prestamo_herra.*, 
-    detalle_prestamo.*, 
-    herramienta.* 
+    $documento_usuario = $_POST['documento'];
+
+    $query = "SELECT 
+        herramienta.*, 
+        tp_herra.nom_tp_herra, 
+        marca_herra.nom_marca, 
+        prestamo_herra.*, 
+        detalle_prestamo.* 
     FROM herramienta 
     INNER JOIN tp_herra ON herramienta.id_tp_herra = tp_herra.id_tp_herra
     INNER JOIN marca_herra ON herramienta.id_marca = marca_herra.id_marca 
     INNER JOIN detalle_prestamo ON herramienta.codigo_barra_herra = detalle_prestamo.codigo_barra_herra  
     INNER JOIN prestamo_herra ON detalle_prestamo.id_presta = prestamo_herra.id_presta
-    WHERE herramienta.id_tp_herra >= 1 AND marca_herra.id_marca >= 1";
+    WHERE prestamo_herra.documento = :documento AND
+          herramienta.id_tp_herra >= 1 AND 
+          marca_herra.id_marca >= 1";
 
-    $result = $conn->query($query);
-    // Definir el número de resultados por página y la página actual
-    $porPagina = 20; // Puedes ajustar esto según tus necesidades
-    $pagina = isset($_POST['pagina']) ? $_POST['pagina'] : 1;
-    $empieza = ($pagina - 1) * $porPagina;
-    // Inicializa la variable $resultado_pagina
-    $resultado_pagina = $result->fetchAll(PDO::FETCH_ASSOC);
+    // Preparar y ejecutar la consulta
+    $stmt = $conn->prepare($query);
+    $stmt->bindParam(':documento', $documento_usuario);
+    $result = $stmt->execute();
+    $resultado_pagina = $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 ?>
 
@@ -88,8 +90,7 @@ if (isset($_POST['documento'])) {
                                                                     $colorFondo = ($entrada["esta_herra"] == 'disponible') ? '#c3e6cb' : '#f5c6cb';
                                                                 ?>
                                                                     <tr style="background-color: <?= $colorFondo ?>;">
-                                                                        <td><img src="../../images/<?= $entrada["codigo_barra_herra"] ?>.png" style="max-width: 300px; height: auto; border: 2px solid #ffffff;">
-                                                                        </td>
+                                                                        <td><?= $entrada["codigo_barra_herra"] ?></td>
                                                                         <td><?= $entrada["nom_tp_herra"] ?></td>
                                                                         <td><?= $entrada["nombre_herra"] ?></td>
                                                                         <td><?= $entrada["nom_marca"] ?></td>
@@ -98,13 +99,13 @@ if (isset($_POST['documento'])) {
                                                                             $checkboxDisabled = ($entrada["cantidad"] == 0) ? 'disabled' : '';
                                                                             $imageUrl = '../../images/' . $entrada["imagen"];
                                                                             ?>
-                                                                            <img src="<?= $imageUrl ?>" alt="Imagen de atracción">
+                                                                            <img src="<?= $imageUrl ?>" alt="Imagen de herramienta" style="max-width: 300px; height: auto; border: 2px solid #ffffff;">
                                                                         </td>
                                                                         <td><?= $entrada["fecha_adqui"] ?></td>
                                                                         <td><?= $entrada["cant_herra"] ?></td>
-                                                                        <td><?= $entrada["estado_prestamo"] ?><td>
+                                                                        <td><?= $entrada["estado_prestamo"] ?></td>
                                                                         <td><?= $entrada["fecha_entrega"] ?></td>
-                                                                        <td><input type="checkbox" name="herramienta[]" value="<?php echo $entrada['codigo_barra_herra']; ?>" onclick="checkLimit()" <?= $checkboxDisabled ?>></td>
+                                                                        <td><input type="checkbox" name="herramienta[]" value="<?= $entrada['codigo_barra_herra'] ?>" onclick="checkLimit()" <?= $checkboxDisabled ?>></td>
                                                                     </tr>
                                                                 <?php }; ?>
                                                             </tbody>
