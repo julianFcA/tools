@@ -2,17 +2,17 @@
 require_once 'template.php';
 
 $limit = 100; // Número de filas por página
-$page = isset($_GET['page']) ? $_GET['page'] : 1; // Página actual
+$page = isset($_POST['page']) ? $_POST['page'] : 1; // Página actual
 
 // Calcula el offset basado en la página actual
 $offset = ($page - 1) * $limit;
 
-if (isset($_GET['documento'])) {
+if (isset($_POST['documento'])) {
     $query = "SELECT herramienta.*, tp_herra.nom_tp_herra, marca_herra.* FROM herramienta INNER JOIN tp_herra ON herramienta.id_tp_herra = tp_herra.id_tp_herra INNER JOIN marca_herra ON herramienta.id_marca = marca_herra.id_marca WHERE herramienta.id_tp_herra >= 1 AND marca_herra.id_marca >= 1";
     $result = $conn->query($query);
     // Definir el número de resultados por página y la página actual
     $porPagina = 20; // Puedes ajustar esto según tus necesidades
-    $pagina = isset($_GET['pagina']) ? $_GET['pagina'] : 1;
+    $pagina = isset($_POST['pagina']) ? $_POST['pagina'] : 1;
     $empieza = ($pagina - 1) * $porPagina;
     // Inicializa la variable $resultado_pagina
     $resultado_pagina = $result->fetchAll(PDO::FETCH_ASSOC);
@@ -40,7 +40,8 @@ if (isset($_GET['documento'])) {
                                                 <form action="termino_prestamo.php" method="post">
                                                     <div class="table-responsive">
                                                         <!-- Tabla HTML para mostrar los resultados -->
-                                                        <table id="example3" class="table table-striped table-bordered" style="width:100%">
+                                                        <table id="example3" class="table table-striped table-bordered"
+                                                            style="width:100%">
                                                             <thead>
                                                                 <tr>
                                                                     <th>Codigo De Barras</th>
@@ -73,29 +74,39 @@ if (isset($_GET['documento'])) {
 
                                                                     // Definir el color de fondo según el estado de la herramienta
                                                                     $colorFondo = ($entrada["esta_herra"] == 'disponible') ? '#c3e6cb' : '#f5c6cb';
-                                                                ?>
-                                                                    <tr style="background-color: <?= $colorFondo ?>;">
-                                                                        <td><img src="../../images/<?= $entrada["codigo_barra_herra"] ?>.png" style="max-width: 300px; height: auto; border: 2px solid #ffffff;"></td>
-                                                                        <td><?= $entrada["nom_tp_herra"] ?></td>
-                                                                        <td><?= $entrada["nombre_herra"] ?></td>
-                                                                        <td><?= $entrada["nom_marca"] ?></td>
-                                                                        <td class="image-container">
-                                                                            <?php
+                                                                    ?>
+                                                                <tr style="background-color: <?= $colorFondo ?>;">
+                                                                    <td><img src="../../images/<?= $entrada["codigo_barra_herra"] ?>.png"
+                                                                            style="max-width: 300px; height: auto; border: 2px solid #ffffff;">
+                                                                    </td>
+                                                                    <td><?= $entrada["nom_tp_herra"] ?></td>
+                                                                    <td><?= $entrada["nombre_herra"] ?></td>
+                                                                    <td><?= $entrada["nom_marca"] ?></td>
+                                                                    <td class="image-container">
+                                                                        <?php
+                                                                        $checkboxDisabled = ($entrada["cantidad"] == 0) ? 'disabled' : '';
                                                                             $imageUrl = '../../images/' . $entrada["imagen"];
                                                                             ?>
-                                                                            <img src="<?= $imageUrl ?>" alt="Imagen de atracción">
-                                                                        </td>
-                                                                        <td><?= $entrada["descripcion"] ?></td>
-                                                                        <td><?= $entrada["cantidad"] ?></td>
-                                                                        <td><?= $entrada["esta_herra"] ?></td>
-                                                                        <td><input type="checkbox" name="herramienta[]" value="<?php echo $entrada['codigo_barra_herra']; ?>" onclick="checkLimit()"></td>
-                                                                    </tr>
-                                                                <?php } ?>
+                                                                        <img src="<?= $imageUrl ?>"
+                                                                            alt="Imagen de atracción">
+                                                                    </td>
+                                                                    <td><?= $entrada["descripcion"] ?></td>
+                                                                    <td><?= $entrada["cantidad"] ?></td>
+                                                                    <td><?= $entrada["esta_herra"] ?></td>
+                                                                    <td><input type="checkbox" name="herramienta[]"
+                                                                            value="<?php echo $entrada['codigo_barra_herra']; ?>"
+                                                                            onclick="checkLimit()"
+                                                                            <?= $checkboxDisabled ?>></td>
+                                                                </tr>
+                                                                <?php }
+                                                                ; ?>
                                                             </tbody>
                                                         </table>
                                                     </div>
                                                     <br>
-                                                    <button type="submit" class="btn btn-orange" style="width: 50%;" onclick="prepareAndRedirect()">Seleccionar Herramientas</button>
+                                                    <button type="submit" class="btn btn-orange" style="width: 50%;"
+                                                        name="documento" value="<?php echo $_POST['documento'] ?>"
+                                                        onclick="prepareAndRedirect()">Seleccionar Herramientas</button>
                                                 </form>
                                                 <br>
                                             </div>
@@ -111,18 +122,18 @@ if (isset($_GET['documento'])) {
     </div>
 </div>
 <script>
-    function checkLimit() {
-        const maxSelections = 3;
-        const checkboxes = document.querySelectorAll('input[type="checkbox"]');
-        let checkedCount = 0;
+function checkLimit() {
+    const maxSelections = 3;
+    const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+    let checkedCount = 0;
 
-        checkboxes.forEach(checkbox => {
-            if (checkbox.checked) {
-                checkedCount++;
-                if (checkedCount > maxSelections) {
-                    checkbox.checked = false; // Desmarcar checkbox si se supera el límite
-                }
+    checkboxes.forEach(checkbox => {
+        if (checkbox.checked) {
+            checkedCount++;
+            if (checkedCount > maxSelections) {
+                checkbox.checked = false; // Desmarcar checkbox si se supera el límite
             }
-        });
-    }
+        }
+    });
+}
 </script>

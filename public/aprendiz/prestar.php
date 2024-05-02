@@ -1,6 +1,7 @@
 <?php
 require_once 'template.php';
 
+$docu = $_SESSION['documento'];
 // Verifica si se ha enviado un formulario POST
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Verifica si se han recibido las herramientas y sus cantidades

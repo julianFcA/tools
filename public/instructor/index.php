@@ -48,7 +48,8 @@ $resultado_pagina = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                             <div class="card-body">
                                                 <div class="table-responsive">
                                                     <!-- Tabla HTML para mostrar los resultados -->
-                                                    <table id="example3" class="table table-striped table-bordered" style="width:100%">
+                                                    <table id="example3" class="table table-striped table-bordered"
+                                                        style="width:100%">
                                                         <thead>
                                                             <tr>
                                                                 <th>Nombre de Aprendiz</th>
@@ -64,7 +65,7 @@ $resultado_pagina = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                                         </thead>
                                                         <tbody>
                                                             <?php foreach ($resultado_pagina as $entrada) { ?>
-                                                                <?php
+                                                            <?php
                                                                 // Determinar la clase CSS y el estado del botón según el estado_servi
                                                                 $estadoClase = '';
                                                                 $color = '';
@@ -117,30 +118,37 @@ $resultado_pagina = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                                                     $mensaje = 'activo';
                                                                 }
                                                                 ?>
-                                                                <tr class="<?= $estadoClase ?>" style="color: <?php echo $color; ?>">
-                                                                    <td><?= $entrada["nombre"] ?></td>
-                                                                    <td><?= $entrada["documento"] ?></td>
-                                                                    <td><?= $entrada["correo"] ?></td>
-                                                                    <td><img src="../../images/<?= $entrada["codigo_barras"] ?>.png" style="max-width: 300px; height: auto; border: 2px solid #ffffff;"><?= $entrada["codigo_barras"] ?></td>
-                                                                    <td><?= $entrada["fecha_registro"] ?></td>
-                                                                    <td><?= $entrada["nom_forma"] ?></td>
-                                                                    <td><?= $entrada["ficha"] ?></td>
-                                                                    <td><?= $entrada["tp_jornada"] ?></td>
-                                                                    <!-- revisar bien este form -->
-                                                                    <td>
-                                                                        <form method="GET" action="./prestamo.php">
-                                                                            <input type="hidden" name="documento" value="<?= $entrada["documento"] ?>">
-                                                                            <button class="btn btn-success" type="submit" name="prest">Prestar Herramienta</button>
-                                                                        </form>
-                                                                    </td>
-                                                                    <td>
-                                                                        <form method="GET" action="./devolucion.php">
-                                                                            <input type="hidden" name="documento" value="<?= $entrada["documento"] ?>">
-                                                                            <button class="btn btn-orange" type="submit" name="devolv">Devolver Herramienta</button>
-                                                                        </form>
-                                                                    </td>
+                                                            <tr class="<?= $estadoClase ?>"
+                                                                style="color: <?php echo $color; ?>">
+                                                                <td><?= $entrada["nombre"] ?></td>
+                                                                <td><?= $entrada["documento"] ?></td>
+                                                                <td><?= $entrada["correo"] ?></td>
+                                                                <td><img src="../../images/<?= $entrada["codigo_barras"] ?>.png"
+                                                                        style="max-width: 300px; height: auto; border: 2px solid #ffffff;"><?= $entrada["codigo_barras"] ?>
+                                                                </td>
+                                                                <td><?= $entrada["fecha_registro"] ?></td>
+                                                                <td><?= $entrada["nom_forma"] ?></td>
+                                                                <td><?= $entrada["ficha"] ?></td>
+                                                                <td><?= $entrada["tp_jornada"] ?></td>
+                                                                <!-- revisar bien este form -->
+                                                                <td>
+                                                                    <form method="post" action="./prestamo.php">
+                                                                        <input type="hidden" name="documento"
+                                                                            value="<?= $entrada["documento"] ?>">
+                                                                        <button class="btn btn-success" type="submit"
+                                                                            name="prest">Prestar Herramienta</button>
+                                                                    </form>
+                                                                </td>
+                                                                <td>
+                                                                    <form method="GET" action="./devolucion.php">
+                                                                        <input type="hidden" name="documento"
+                                                                            value="<?= $entrada["documento"] ?>">
+                                                                        <button class="btn btn-orange" type="submit"
+                                                                            name="devolv">Devolver Herramienta</button>
+                                                                    </form>
+                                                                </td>
 
-                                                                </tr>
+                                                            </tr>
                                                             <?php } ?>
                                                         </tbody>
                                                     </table>

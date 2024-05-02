@@ -7,7 +7,19 @@ $page = isset($_GET['page']) ? $_GET['page'] : 1; // Página actual
 // Calcula el offset basado en la página actual
 $offset = ($page - 1) * $limit;
 
-$query = "SELECT empresa.nit_empre, empresa.nom_empre, empresa.direcc_empre, empresa.telefono, empresa.correo_empre, licencia.fecha_ini, licencia.fecha_fin, licencia.esta_licen, usuario.nombre,usuario.apellido, usuario.documento, usuario.correo, usuario.codigo_barras, usuario.fecha_registro, formacion.nom_forma ,jornada.tp_jornada, entrada_usu.fecha_entrada, tp_docu.nom_tp_docu, deta_ficha.ficha FROM empresa INNER JOIN licencia ON empresa.nit_empre = licencia.nit_empre LEFT JOIN usuario ON empresa.nit_empre = usuario.nit_empre  INNER JOIN rol ON usuario.id_rol = rol.id_rol INNER JOIN deta_ficha ON deta_ficha.documento = usuario.documento INNER JOIN ficha ON ficha.ficha = deta_ficha.ficha INNER JOIN formacion ON ficha.id_forma = formacion.id_forma INNER JOIN jornada ON ficha.id_jornada = jornada.id_jornada INNER JOIN entrada_usu ON usuario.documento = entrada_usu.documento INNER JOIN (SELECT documento, MAX(fecha_entrada) AS ultima_entrada FROM entrada_usu GROUP BY documento) ultima_entrada ON entrada_usu.documento = ultima_entrada.documento AND entrada_usu.fecha_entrada = ultima_entrada.ultima_entrada INNER JOIN tp_docu ON usuario.id_tp_docu = tp_docu.id_tp_docu WHERE empresa.nit_empre > 0 AND ficha.ficha >=1 AND jornada.id_jornada >=1 AND usuario.id_rol = 3";
+$query = "SELECT usuario.nombre, usuario.apellido, usuario.documento, usuario.correo, usuario.codigo_barras, usuario.fecha_registro, formacion.nom_forma, jornada.tp_jornada, tp_docu.nom_tp_docu, deta_ficha.ficha, prestamo_herra.*, detalle_prestamo.*, herramienta.*
+FROM usuario 
+INNER JOIN rol ON usuario.id_rol = rol.id_rol 
+INNER JOIN deta_ficha ON deta_ficha.documento = usuario.documento 
+INNER JOIN ficha ON ficha.ficha = deta_ficha.ficha 
+INNER JOIN formacion ON ficha.id_forma = formacion.id_forma 
+INNER JOIN jornada ON ficha.id_jornada = jornada.id_jornada  
+INNER JOIN tp_docu ON usuario.id_tp_docu = tp_docu.id_tp_docu 
+INNER JOIN prestamo_herra ON usuario.documento = prestamo_herra.documento 
+INNER JOIN detalle_prestamo ON prestamo_herra.id_presta = detalle_prestamo.id_presta
+INNER JOIN herramienta ON herramienta.codigo_barra_herra = detalle_prestamo.codigo_barra_herra  
+WHERE ficha.ficha >= 1 AND jornada.id_jornada >= 1 AND usuario.id_rol = 3";
+
 
 $result = $conn->query($query);
 
@@ -18,7 +30,7 @@ $empieza = ($pagina - 1) * $porPagina;
 
 // Inicializa la variable $resultado_pagina
 $resultado_pagina = $result->fetchAll(PDO::FETCH_ASSOC);
-// Convierte los resultados a JSON para el console.log
+
 $userdata = json_encode($resultado_pagina);
 
 ?>
@@ -86,7 +98,10 @@ $userdata = json_encode($resultado_pagina);
                     <td>${json_data.nom_forma}</td>
                     <td>${json_data.ficha}</td>
                     <td>${json_data.tp_jornada}</td>
-                    <td>${json_data.fecha_entrada}</td>
+                    <td>${json_data.nombre_herra}</td>
+                    <td>${json_data.fecha_adqui}</td>
+                    <td>${json_data.dias}</td>
+                    <td>${json_data.fecha_entrega}</td>
                 </tr>`;
             });
             document.getElementById('tableBody_users').innerHTML = content;
@@ -117,7 +132,7 @@ $userdata = json_encode($resultado_pagina);
                                     <div class="col-12">
                                         <div class="card">
                                             <div class="card-header">
-                                                <h4 class="card-title">Actividad | Ingreso de Instructores</h4>
+                                                <h4 class="card-title">Actividad | Prestamos Activos de Aprendices</h4>
                                             </div>
                                             <div class="container my-4">
                                                 <div class="row">
@@ -126,14 +141,18 @@ $userdata = json_encode($resultado_pagina);
                                                             <table id="datatable_users" class="table table-striped">
                                                                 <thead>
                                                                     <tr>
-                                                                        <th class="centered">Nombre de Instructor</th>
-                                                                        <th class="centered">Apellido de Instructor</th>
+                                                                        <th class="centered">Nombre de Aprendiz</th>
+                                                                        <th class="centered">Apellido de Aprendiz</th>
                                                                         <th class="centered">Tipo de Documento</th>
                                                                         <th class="centered">Documento</th>
                                                                         <th class="centered">Formación</th>
                                                                         <th class="centered">Ficha</th>
                                                                         <th class="centered">Jornada</th>
-                                                                        <th class="centered">Ingreso</th>
+                                                                        <th class="centered">Herramienta</th>
+                                                                        <th class="centered">Fecha de Adquisición</th>
+                                                                        <th class="centered">Dias de Prestamo</th>
+                                                                        <th class="centered">Fecha de Entrega</th>
+
                                                                     </tr>
                                                                 </thead>
                                                                 <tbody id="tableBody_users">
@@ -143,18 +162,18 @@ $userdata = json_encode($resultado_pagina);
                                                     </div>
                                                     <section class="d-flex align-items-center">
                                                         <div class="ml-3">
-                                                            <a href="excel_apren.php" class="mr-2">
+                                                            <a href="excel_presta.php" class="mr-2">
                                                                 <img src="../../images/excel1.png" alt="Imagen 2" class="img-fluid" style="max-height: 30px;">
                                                             </a>
-                                                            <a href="excel_apren.php" class="letra" style="font-size: 14px;">EXCEL</a>
+                                                            <a href="excel_presta.php" class="letra" style="font-size: 14px;">EXCEL</a>
                                                         </div>
                                                         <!-- Agregamos un espacio horizontal -->
                                                         <div style="width: 10px;"></div>
                                                         <div class="ml-3">
-                                                            <a href="pdf_apren.php" class="mr-2">
+                                                            <a href="pdf_presta.php" class="mr-2">
                                                                 <img src="../../images/pdf1.png" alt="Imagen 1" class="img-fluid" style="max-height: 30px;">
                                                             </a>
-                                                            <a href="pdf_apren.php" class="letra" style="font-size: 14px;">PDF</a>
+                                                            <a href="pdf_presta.php" class="letra" style="font-size: 14px;">PDF</a>
                                                         </div>
                                                     </section>
                                                 </div>
