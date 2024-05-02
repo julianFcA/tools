@@ -42,7 +42,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $conn->commit();
 
             echo "<script>alert('El préstamo se ha registrado exitosamente.');</script>";
-            echo '<script>window.location="./index.php"</script>';
+            echo '<script>window.location="./apren.php"</script>';
         } catch (Exception $e) {
             // Si ocurre algún error, revierte la transacción y muestra un mensaje de error
             $conn->rollBack();

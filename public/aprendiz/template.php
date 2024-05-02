@@ -79,7 +79,7 @@ $nit = $_SESSION['nit_empre'];
         <header class="main-header-top hidden-print" style="background-color: #ff7c02">
             <a class="logo" href="./index.php">
                 <span>
-                    Administrador
+                    Aprendiz
                 </span>
             </a>
             <nav class="navbar navbar-static-top" style="background-color: #ff7c02">

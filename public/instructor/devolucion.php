@@ -48,13 +48,14 @@ if (isset($_POST['documento'])) {
                                     <div class="col-12">
                                         <div class="card">
                                             <div class="card-header">
-                                                <h4 class="card-title">Prestamo de Herramienta</h4>
+                                                <h4 class="card-title">Devolución de Herramienta</h4>
                                             </div>
                                             <div class="card-body">
                                                 <form action="termino_devo.php" method="post">
                                                     <div class="table-responsive">
                                                         <!-- Tabla HTML para mostrar los resultados -->
-                                                        <table id="example3" class="table table-striped table-bordered" style="width:100%">
+                                                        <table id="example3" class="table table-striped table-bordered"
+                                                            style="width:100%">
                                                             <thead>
                                                                 <tr>
                                                                     <th>Codigo De Barras</th>
@@ -64,57 +65,54 @@ if (isset($_POST['documento'])) {
                                                                     <th>Imagen</th>
                                                                     <th>Fecha de Adquisición</th>
                                                                     <th>Cantidad</th>
-                                                                    <th>Estado de Prestamo</th>
+                                                                    <th>Dias</th>
                                                                     <th>Fecha de Entrega</th>
                                                                     <th>Seleccionar</th>
                                                                 </tr>
                                                             </thead>
                                                             <tbody>
                                                                 <?php
-                                                                function actualizarEstado($conn, $codigo_barra_herra, $cantidad)
-                                                                {
-                                                                    // Actualizar el estado de la herramienta dependiendo de la cantidad
-                                                                    $estado = ($cantidad == 0) ? 'prestado' : 'disponible';
-                                                                    $sql = "UPDATE herramienta SET esta_herra = :estado WHERE codigo_barra_herra = :codigo_barra";
-                                                                    $stmt = $conn->prepare($sql);
-                                                                    $stmt->bindParam(':estado', $estado);
-                                                                    $stmt->bindParam(':codigo_barra', $codigo_barra_herra);
-                                                                    $stmt->execute();
-                                                                }
-
                                                                 foreach ($resultado_pagina as $entrada) {
-                                                                    // Actualizar el estado y la cantidad de la herramienta
-                                                                    actualizarEstado($conn, $entrada["codigo_barra_herra"], $entrada["cantidad"]);
-
-                                                                    // Definir el color de fondo según el estado de la herramienta
-                                                                    $colorFondo = ($entrada["esta_herra"] == 'disponible') ? '#c3e6cb' : '#f5c6cb';
                                                                 ?>
-                                                                    <tr style="background-color: <?= $colorFondo ?>;">
-                                                                        <td><?= $entrada["codigo_barra_herra"] ?></td>
-                                                                        <td><?= $entrada["nom_tp_herra"] ?></td>
-                                                                        <td><?= $entrada["nombre_herra"] ?></td>
-                                                                        <td><?= $entrada["nom_marca"] ?></td>
-                                                                        <td class="image-container">
-                                                                            <?php
+                                                                <tr style="background-color: <?= $colorFondo ?>;">
+                                                                    <td><?= $entrada["codigo_barra_herra"] ?></td>
+                                                                    <td><?= $entrada["nom_tp_herra"] ?></td>
+                                                                    <td><?= $entrada["nombre_herra"] ?></td>
+                                                                    <td><?= $entrada["nom_marca"] ?></td>
+                                                                    <td class="image-container">
+                                                                        <?php
                                                                             $checkboxDisabled = ($entrada["cantidad"] == 0) ? 'disabled' : '';
                                                                             $imageUrl = '../../images/' . $entrada["imagen"];
                                                                             ?>
-                                                                            <img src="<?= $imageUrl ?>" alt="Imagen de herramienta" style="max-width: 300px; height: auto; border: 2px solid #ffffff;">
-                                                                        </td>
-                                                                        <td><?= $entrada["fecha_adqui"] ?></td>
-                                                                        <td><?= $entrada["cant_herra"] ?></td>
-                                                                        <td><?= $entrada["estado_prestamo"] ?></td>
-                                                                        <td><?= $entrada["fecha_entrega"] ?></td>
-                                                                        <td><input type="checkbox" name="herramienta[]" value="<?= $entrada['codigo_barra_herra'] ?>" onclick="checkLimit()" <?= $checkboxDisabled ?>></td>
-                                                                    </tr>
+                                                                        <img src="<?= $imageUrl ?>"
+                                                                            alt="Imagen de herramienta"
+                                                                            style="max-width: 300px; height: auto; border: 2px solid #ffffff;">
+                                                                    </td>
+                                                                    <td><?= $entrada["fecha_adqui"] ?></td>
+                                                                    <td><?= $entrada["cant_herra"] ?></td>
+                                                                    <td><?= $entrada["dias"] ?></td>
+                                                                    <td><?= $entrada["fecha_entrega"] ?></td>
+                                                                    <td><input type="checkbox" name="herramienta[]"
+                                                                            value="<?= $entrada['codigo_barra_herra'] ?>"
+                                                                            onclick="checkLimit()"
+                                                                            <?= $checkboxDisabled ?>></td>
+                                                                    <!-- Campos ocultos para enviar cantidades e IDs de herramientas -->
+                                                                    <input type="hidden" name="cantidades[]"
+                                                                        value="<?= $entrada['cant_herra'] ?>">
+                                                                    <input type="hidden" name="herramienta_ids[]"
+                                                                        value="<?= $entrada['codigo_barra_herra'] ?>">
+                                                                </tr>
                                                                 <?php }; ?>
                                                             </tbody>
                                                         </table>
                                                     </div>
                                                     <br>
-                                                    <button type="submit" class="btn btn-orange" style="width: 50%;" name="documento" value="<?php echo $_POST['documento'] ?>" onclick="prepareAndRedirect()">Devolver Herramientas</button>
+                                                    <button type="submit" class="btn btn-orange" style="width: 50%;"
+                                                        name="documento" value="<?php echo $documento_usuario ?>"
+                                                        onclick="prepareAndRedirect()">Devolver Herramientas</button>
                                                 </form>
                                                 <br>
+                                                <a href="./index.php" class="btn btn-warning btn-sm mt-2" style="width: 10%;">Volver</a>
                                             </div>
                                         </div>
                                     </div>
@@ -127,19 +125,40 @@ if (isset($_POST['documento'])) {
         </div>
     </div>
 </div>
-<script>
-    function checkLimit() {
-        const maxSelections = 3;
-        const checkboxes = document.querySelectorAll('input[type="checkbox"]');
-        let checkedCount = 0;
 
-        checkboxes.forEach(checkbox => {
-            if (checkbox.checked) {
-                checkedCount++;
-                if (checkedCount > maxSelections) {
-                    checkbox.checked = false; // Desmarcar checkbox si se supera el límite
-                }
+<script>
+function checkLimit() {
+    const maxSelections = 3;
+    const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+    let checkedCount = 0;
+
+    checkboxes.forEach(checkbox => {
+        if (checkbox.checked) {
+            checkedCount++;
+            if (checkedCount > maxSelections) {
+                checkbox.checked = false; // Desmarcar checkbox si se supera el límite
             }
-        });
-    }
+        }
+    });
+}
+
+function prepareAndRedirect() {
+    const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+    const selectedToolIds = [];
+    const selectedToolQuantities = [];
+
+    checkboxes.forEach(checkbox => {
+        if (checkbox.checked) {
+            selectedToolIds.push(checkbox.value);
+            const quantityInput = document.querySelector(
+                `input[name="cantidades[]"][value="${checkbox.value}"]`);
+            selectedToolQuantities.push(quantityInput.value);
+        }
+    });
+
+    const toolsInput = document.querySelector('input[name="herramienta_ids"]');
+    const quantitiesInput = document.querySelector('input[name="cantidades"]');
+    toolsInput.value = selectedToolIds.join(',');
+    quantitiesInput.value = selectedToolQuantities.join(',');
+}
 </script>
