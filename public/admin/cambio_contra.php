@@ -41,7 +41,7 @@ if ((isset($_POST["MM_update"])) && ($_POST["MM_update"] == "form1")) {
                                     <div class="login-container">
                                         <div class="row">
                                             <div class="col-md-12 form-left">
-                                                <form method="POST" name="form1" id="form1" autocomplete="off">
+                                                <form method="POST" name="form1" id="form1" autocomplete="off" onsubmit="return validarContraseña()">
                                                     <h3>CAMBIO DE CONTRASEÑA</h3>
 
                                                     <div class="form-group">

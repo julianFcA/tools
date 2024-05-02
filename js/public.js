@@ -144,7 +144,7 @@ function maxlengthNumber(obj) {
 }
 
 function validarContraseña() {
-    var contraseña = document.getElementById("contrasena").value;
+    var contraseña = document.getElementById("contrasena","cont","conta").value;
     var mayusculaRegex = /[A-Z]/;
     var numeroRegex = /[0-9]/;
     var signoRegex = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/;

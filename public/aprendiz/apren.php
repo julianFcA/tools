@@ -1,6 +1,9 @@
 <?php
 require_once 'template.php';
 
+$docu= $_SESSION['documento'];
+
+
 $limit = 100; // Número de filas por página
 $page = isset($_GET['page']) ? $_GET['page'] : 1; // Página actual
 
@@ -18,7 +21,7 @@ INNER JOIN tp_docu ON usuario.id_tp_docu = tp_docu.id_tp_docu
 INNER JOIN prestamo_herra ON usuario.documento = prestamo_herra.documento 
 INNER JOIN detalle_prestamo ON prestamo_herra.id_presta = detalle_prestamo.id_presta
 INNER JOIN herramienta ON herramienta.codigo_barra_herra = detalle_prestamo.codigo_barra_herra  
-WHERE ficha.ficha >= 1 AND jornada.id_jornada >= 1 AND usuario.id_rol = 3";
+WHERE usuario.documento = '$docu' AND ficha.ficha >= 1 AND jornada.id_jornada >= 1 AND usuario.id_rol = 3";
 
 
 $result = $conn->query($query);

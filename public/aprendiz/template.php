@@ -141,8 +141,8 @@ $nit = $_SESSION['nit_empre'];
                             <li><a class="waves-effect waves-dark" href="herramienta.php"><i class="icon-arrow-right"></i> Herramienta</a></li>
                             <li><a class="waves-effect waves-dark" href="prestamo.php"><i class="icon-arrow-right"></i>Adquirir Herramienta</a></li>
                             <li><a class="waves-effect waves-dark" href="apren.php"><i class="icon-arrow-right"></i> Prestamos </a></li>
-                            <li><a class="waves-effect waves-dark" href="devolucion.php"><i class="icon-arrow-right"></i> devolucion</a></li>
-                            <li><a class="waves-effect waves-dark" href="sanciones.php"><i class="icon-arrow-right"></i> sanciones</a></li>
+                            <li><a class="waves-effect waves-dark" href="devolucion.php"><i class="icon-arrow-right"></i> Devolucion</a></li>
+                            <li><a class="waves-effect waves-dark" href="sanciones.php"><i class="icon-arrow-right"></i> Reportes</a></li>
                         </ul>
                     </li>
                 </ul>
