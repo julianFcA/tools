@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 01-05-2024 a las 04:07:35
+-- Tiempo de generación: 02-05-2024 a las 05:05:10
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -34,6 +34,16 @@ CREATE TABLE `detalle_prestamo` (
   `id_presta` tinyint(4) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Volcado de datos para la tabla `detalle_prestamo`
+--
+
+INSERT INTO `detalle_prestamo` (`id_deta_presta`, `cant_herra`, `codigo_barra_herra`, `id_presta`) VALUES
+(3, 1, '6618baec23e7e8656', 2),
+(4, 2, '6627628e204e01573', 2),
+(5, 1, '6627628e204e01573', 3),
+(6, 1, '6627628e204e01573', 4);
+
 -- --------------------------------------------------------
 
 --
@@ -54,7 +64,9 @@ INSERT INTO `deta_ficha` (`id_deta_ficha`, `ficha`, `documento`) VALUES
 (2, 2500591, 1023456789),
 (3, 1234568, 1234567890),
 (8, 1234567, 1110456214),
-(9, 1230123, 1110456214);
+(9, 1230123, 1110456214),
+(10, 2500591, 2147483647),
+(11, 1234568, 1110546897);
 
 -- --------------------------------------------------------
 
@@ -220,7 +232,26 @@ INSERT INTO `entrada_usu` (`id_entrada`, `fecha_entrada`, `documento`) VALUES
 (245, '2024-04-28 14:37:10', 1110456214),
 (246, '2024-04-28 23:25:43', 123456788),
 (247, '2024-04-30 12:26:28', 1110456214),
-(248, '2024-04-30 12:30:05', 1110456214);
+(248, '2024-04-30 12:30:05', 1110456214),
+(249, '2024-04-30 22:51:40', 1110456214),
+(250, '2024-04-30 22:53:01', 123456788),
+(251, '2024-05-01 10:39:54', 1110456214),
+(252, '2024-05-01 10:59:10', 123456788),
+(253, '2024-05-01 11:40:51', 123456788),
+(254, '2024-05-01 11:44:32', 1023456789),
+(255, '2024-05-01 12:05:03', 123456788),
+(256, '2024-05-01 15:58:48', 123456788),
+(257, '2024-05-01 16:56:28', 1110456214),
+(258, '2024-05-01 17:30:05', 123456788),
+(259, '2024-05-01 17:41:48', 123456788),
+(260, '2024-05-01 17:57:20', 1110456214),
+(261, '2024-05-01 17:59:29', 123456788),
+(262, '2024-05-01 18:28:49', 1110456214),
+(263, '2024-05-01 19:35:13', 123456788),
+(264, '2024-05-01 19:39:05', 1110456214),
+(265, '2024-05-01 19:56:04', 1234567890),
+(266, '2024-05-01 20:45:47', 123456788),
+(267, '2024-05-01 21:05:46', 1110456214);
 
 -- --------------------------------------------------------
 
@@ -280,8 +311,7 @@ CREATE TABLE `formacion` (
 
 INSERT INTO `formacion` (`id_forma`, `nom_forma`) VALUES
 (2, 'soldadura'),
-(3, 'carpinteria en alumnio'),
-(4, 'lmslklssklk');
+(3, 'carpinteria en alumnio');
 
 -- --------------------------------------------------------
 
@@ -305,10 +335,10 @@ CREATE TABLE `herramienta` (
 --
 
 INSERT INTO `herramienta` (`codigo_barra_herra`, `id_tp_herra`, `nombre_herra`, `id_marca`, `descripcion`, `cantidad`, `imagen`, `esta_herra`) VALUES
-('6618ba9e1569b6707', 2, 'taladrokhkh', 1, 'funciona con cargadornkknk ', 26, '2XMFaiFBA33TfkY001GftHQM6D6-mobile-Photoroom.png-Photoroom.png', 'disponible'),
-('6618baec23e7e8656', 1, 'palustre', 1, 'tapar agujeros', 3, 'client.jpg', 'disponible'),
-('662761152e65d2051', 1, 'bjjhhjhjhj', 1, 'jhjhjhh', 0, 'angora-turco-xl-1280x720x80xX-Photoroom.png-Photoroom.png', 'disponible'),
-('6627628e204e01573', 2, 'kknnknkn', 2, 'nknnknn', 12, '2XMFaiFBA33TfkY001GftHQM6D6-mobile-Photoroom.png-Photoroom.png', 'disponible');
+('6618ba9e1569b6707', 2, 'taladrokhkh', 1, 'funciona con cargadornkknk ', 25, '2XMFaiFBA33TfkY001GftHQM6D6-mobile-Photoroom.png-Photoroom.png', 'disponible'),
+('6618baec23e7e8656', 1, 'palustre', 1, 'tapar agujeros', 0, 'client.jpg', 'prestado'),
+('662761152e65d2051', 1, 'bjjhhjhjhj', 1, 'jhjhjhh', 0, 'angora-turco-xl-1280x720x80xX-Photoroom.png-Photoroom.png', 'prestado'),
+('6627628e204e01573', 2, 'kknnknkn', 2, 'nknnknn', 8, '2XMFaiFBA33TfkY001GftHQM6D6-mobile-Photoroom.png-Photoroom.png', 'disponible');
 
 -- --------------------------------------------------------
 
@@ -380,11 +410,21 @@ INSERT INTO `marca_herra` (`id_marca`, `nom_marca`) VALUES
 
 CREATE TABLE `prestamo_herra` (
   `id_presta` tinyint(4) NOT NULL,
-  `fecha_adqui` datetime NOT NULL,
+  `fecha_adqui` date NOT NULL,
   `dias` tinyint(4) NOT NULL,
-  `estado_prestamo` enum('salvado','reportado','','') NOT NULL,
+  `fecha_entrega` date NOT NULL,
+  `estado_prestamo` enum('salvado','devuelto','reportado','') NOT NULL,
   `documento` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `prestamo_herra`
+--
+
+INSERT INTO `prestamo_herra` (`id_presta`, `fecha_adqui`, `dias`, `fecha_entrega`, `estado_prestamo`, `documento`) VALUES
+(2, '2024-05-01', 2, '2024-05-03', 'salvado', 1023456789),
+(3, '2024-05-01', 3, '2024-05-04', 'salvado', 1234567890),
+(4, '2024-05-01', 2, '2024-05-03', 'salvado', 1023456789);
 
 -- --------------------------------------------------------
 
@@ -520,7 +560,14 @@ INSERT INTO `tri_contra` (`documento`, `id_tp_docu`, `nombre`, `apellido`, `cont
 (123456788, 2, 'julian', 'calderon', '$2y$12$q0rOmwIN4Wy5WGMhui1anuA3d04aQHVsKzueg9FuvEwnjnZ4CECEC', 'jfcalderona16@gmail.com', 1, '2024-04-28 23:36:03', '89999034-1', 'Actualización'),
 (123456788, 2, 'julian', 'calderon', '$2y$12$5ddkSuMQ4HKSgUEDn9TUjObOGE3tBnygEikX0Q71mhcOvP9p9KuOC', 'jfcalderona16@gmail.com', 1, '2024-04-30 09:06:53', '89999034-1', 'Actualización'),
 (123456788, 2, 'julian', 'calderon', '$2y$12$.tyMu8b2lELs3DvbO6zl5OiiOZwQ6cpDVX6WAK7ciUHx1iiMLrEWe', 'jfcalderona16@gmail.com', 1, '2024-04-30 09:09:00', '89999034-1', 'Actualización'),
-(123456788, 2, 'julian', 'calderon', '$2y$12$rRi6dHwLqFC5LvftAP81fOByG60kP6e4K7/JKdnhK1roIQCf1nqIy', 'jfcalderona16@gmail.com', 1, '2024-04-30 09:09:49', '89999034-1', 'Actualización');
+(123456788, 2, 'julian', 'calderon', '$2y$12$rRi6dHwLqFC5LvftAP81fOByG60kP6e4K7/JKdnhK1roIQCf1nqIy', 'jfcalderona16@gmail.com', 1, '2024-04-30 09:09:49', '89999034-1', 'Actualización'),
+(123456788, 2, 'julian', 'calderon', '$2y$12$EmvIPuF5.ozU3y9ON7YgoOJ0LYk74tF7absyYQyGmtteMn0CC/EW.', 'jfcalderona16@gmail.com', 1, '2024-05-01 20:46:18', '89999034-1', 'Actualización'),
+(123456788, 2, 'julian', 'calderon', '$2y$12$Aqa9UrPQ5Q2stdO4UjMWaeRdRhu/jv4FMEf6sP2IC5li7Ar/OABJu', 'jfcalderona16@gmail.com', 1, '2024-05-01 20:46:49', '89999034-1', 'Actualización'),
+(123456788, 2, 'julian', 'calderon', '$2y$12$uhDkL8tNi/cPZNzTI04ite9QIV92hFWJAD1kqZMaEZlcIr9P8rj8O', 'jfcalderona16@gmail.com', 1, '2024-05-01 20:55:41', '89999034-1', 'Actualización'),
+(123456788, 2, 'julian', 'calderon', '$2y$12$G6l9V0MxlnxEqJPYNMub9OKku6unvG0FDYRhWYezm.Q2Ma1kLljfu', 'jfcalderona16@gmail.com', 1, '2024-05-01 20:58:35', '89999034-1', 'Actualización'),
+(123456788, 2, 'julian', 'calderon', '$2y$12$5ZXRpE8k0iAs/dMGBrGnmuJV1QOo3nHYuxSwC1ZoTL1wIeTXmIOV6', 'jfcalderona16@gmail.com', 1, '2024-05-01 20:59:20', '89999034-1', 'Actualización'),
+(123456788, 2, 'julian', 'calderon', '$2y$12$68sIlwdLSY8nnwGfKBgwgOpUG1eicKxmoLI3rFXRqDKDMVqG.B.U.', 'jfcalderona16@gmail.com', 1, '2024-05-01 21:00:42', '89999034-1', 'Actualización'),
+(123456788, 2, 'julian', 'calderon', '$2y$12$jilHcN2WxMLGjsCU3Ojpm.U5BScqjWMdKaTVzlxieAgkoQYecqZR2', 'jfcalderona16@gmail.com', 1, '2024-05-01 21:01:35', '89999034-1', 'Actualización');
 
 -- --------------------------------------------------------
 
@@ -548,10 +595,12 @@ CREATE TABLE `usuario` (
 --
 
 INSERT INTO `usuario` (`documento`, `id_tp_docu`, `nombre`, `apellido`, `contrasena`, `correo`, `codigo_barras`, `fecha_registro`, `terminos`, `id_rol`, `id_esta_usu`, `nit_empre`) VALUES
-(123456788, 2, 'julian', 'calderon', '$2y$12$EmvIPuF5.ozU3y9ON7YgoOJ0LYk74tF7absyYQyGmtteMn0CC/EW.', 'jfcalderona16@gmail.com', '65f90c1b907b97430', '2024-03-18', 'si', 1, 1, '89999034-1'),
+(123456788, 2, 'julian', 'calderon', '$2y$12$pbpHfAlWjsc5c0A6IdtOfeUCzRUXrrLxKFyNAqpw66arTGirK8iv2', 'jfcalderona16@gmail.com', '65f90c1b907b97430', '2024-03-18', 'si', 1, 1, '89999034-1'),
 (1023456789, 2, 'fabricio', 'herrera', '$2y$10$pmFzUAo0BM5zeL3ahA6VlutADajIIQIwfs//Jdnn6VMLY3T3zP/ta', 'frabricio123@gmail.com', '6618979f00cf53229', '2024-04-11', 'si', 3, 1, '89999034-1'),
 (1110456214, 2, 'ohanys', 'nombreraro', '$2y$10$nRBz7qsQc8Nv4ESbxWLz/.HWpVX6938IOJtnilyOTOqjPj6scvg66', 'yarethl@gmail.com', '662a944f17eb38813', '2024-04-25', 'si', 2, 1, '89999034-1'),
-(1234567890, 2, 'mauricio', 'calderon ', '$2y$12$Wo2Hipe2aOaKaKvGG8/dXeZMjOaTNkKc/bsosCOSj9wd6oER.BlLO', 'jfcalderon62@gmai.com', '65f4ef9d298b15013', '2024-03-15', 'si', 3, 1, '89999034-1');
+(1110546897, 2, 'cristian', 'huertas', '$2y$10$6BfeIelvDCJwFcYbHkO5/u2tjObMX/QQP5kLPciAUCvLuamB5ttti', 'huertas@gmail.com', '6631c820283849031', '2024-04-30', 'si', 2, 1, '89999034-1'),
+(1234567890, 2, 'mauricio', 'calderon ', '$2y$12$Wo2Hipe2aOaKaKvGG8/dXeZMjOaTNkKc/bsosCOSj9wd6oER.BlLO', 'jfcalderon62@gmai.com', '65f4ef9d298b15013', '2024-03-15', 'si', 3, 1, '89999034-1'),
+(2147483647, 1, 'aranazau', 'jaalaal', '$2y$10$5NoPbtZ6yTpLllRk8ZLNgO0wSKcWPjYTm8sk/.gBXWqwlZG9HOqyK', 'jkakajkja@gmail.com', '6631b8ba6b3e31653', '2024-04-30', 'si', 3, 1, '89999034-1');
 
 --
 -- Disparadores `usuario`
@@ -713,13 +762,13 @@ ALTER TABLE `usuario`
 -- AUTO_INCREMENT de la tabla `detalle_prestamo`
 --
 ALTER TABLE `detalle_prestamo`
-  MODIFY `id_deta_presta` tinyint(4) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_deta_presta` tinyint(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT de la tabla `deta_ficha`
 --
 ALTER TABLE `deta_ficha`
-  MODIFY `id_deta_ficha` tinyint(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id_deta_ficha` tinyint(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT de la tabla `deta_reporte`
@@ -731,7 +780,7 @@ ALTER TABLE `deta_reporte`
 -- AUTO_INCREMENT de la tabla `entrada_usu`
 --
 ALTER TABLE `entrada_usu`
-  MODIFY `id_entrada` int(5) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=249;
+  MODIFY `id_entrada` int(5) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=268;
 
 --
 -- AUTO_INCREMENT de la tabla `formacion`
@@ -750,6 +799,12 @@ ALTER TABLE `jornada`
 --
 ALTER TABLE `marca_herra`
   MODIFY `id_marca` tinyint(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
+-- AUTO_INCREMENT de la tabla `prestamo_herra`
+--
+ALTER TABLE `prestamo_herra`
+  MODIFY `id_presta` tinyint(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT de la tabla `tp_herra`
