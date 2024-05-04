@@ -5,6 +5,7 @@ $conn = $database->conectar();
 session_start();
 date_default_timezone_set('America/Bogota');
 
+
 // Validamos la sesión del usuario
 // require_once "../../auth/validationSession.php";
 
@@ -20,10 +21,29 @@ if (isset($_POST['btncerrar'])) {
     header("Location:../../index.php");
     exit();
 }
-
 $nit = $_SESSION['nit_empre'];
-?>
 
+
+
+// Verifica si hay una marca de tiempo de última actividad
+if(isset($_SESSION['last_activity'])){
+    // Obtiene la diferencia de tiempo en segundos
+    $inactive = 300; // 5 minutos en segundos
+    $session_life = time() - $_SESSION['last_activity'];
+
+    // Si ha pasado el tiempo de inactividad, cierra la sesión
+    if($session_life > $inactive){
+        session_unset();     // Elimina todas las variables de sesión
+        session_destroy();   // Finaliza la sesión actual
+        header("Location: ../../index.php"); // Redirige a la página de inicio de sesión
+        exit();
+    }
+}
+
+// Actualiza la marca de tiempo de última actividad
+$_SESSION['last_activity'] = time();
+
+?>
 
 <!DOCTYPE html>
 <html lang="en">

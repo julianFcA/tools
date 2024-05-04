@@ -132,7 +132,7 @@ if (isset($_POST["MM_register"]) && $_POST["MM_register"] == "formRegister") {
 
         <div class="form-group">
             <label> Correo</label>
-            <input type="email" placeholder="Ingrese correo" class="form-control" name="correo" required minlength="6" maxlength="25">
+            <input type="email" placeholder="Ingrese correo" class="form-control" name="correo" required minlength="6" maxlength="50">
         </div>
 
         <div class="form-group">

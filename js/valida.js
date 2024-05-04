@@ -190,10 +190,23 @@ window.addEventListener('load', function () {
         if (sessionExpired) {
             // Solicitar al usuario que ingrese el código de confirmación como una contraseña
             var codigoIngresado = prompt("Ingresa el código de confirmación:", "");
-            codigoIngresado.type="password" ; // Cambiar el tipo de entrada a "password"
-
+            codigoIngresado.type = "password"; // Cambiar el tipo de entrada a "password"
+            
             // Definir el código correcto como cadena
-            var codigoCorrecto = "101214"; // Código correcto definido en el PHP
+            var codigoCorrectoOriginal = "101214"; // Código correcto definido en el PHP
+            
+            // Función para cifrar el código correcto
+            function cifrarCodigo(codigo) {
+                // Aquí utilizamos SHA-256 para cifrar el código
+                var cifrado = CryptoJS.SHA256(codigo).toString();
+                return cifrado;
+            }
+            
+            // Ciframos el código correcto
+            var codigoCorrectoCifrado = cifrarCodigo(codigoCorrectoOriginal);
+            
+            console.log("Código correcto cifrado: " + codigoCorrectoCifrado);
+            
 
             // Verificar si el código ingresado es correcto
             if (codigoIngresado === codigoCorrecto) {

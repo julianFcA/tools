@@ -93,7 +93,7 @@ $consult = $consulta7->fetch(PDO::FETCH_ASSOC);
 
         <div class="form-group">
             <label> Correo</label>
-            <input type="email" placeholder="Ingrese correo" class="form-control" name="correo" required minlength="6" maxlength="25">
+            <input type="email" placeholder="Ingrese correo" class="form-control" name="correo" required minlength="6" maxlength="40">
         </div>
 
         <div class="form-group">

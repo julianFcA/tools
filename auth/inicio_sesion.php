@@ -30,7 +30,7 @@ $consulllll = $consulta5->fetch();
         </div>
 
         <div class="grupo-input">
-          <input type="password" placeholder="Ingresa tu Contraseña" name="contrasena" id="contrasena" class="input-text clave" title="Debe tener de 6 a 12 caracteres" required onkeyup="espacios(this)" minlength="6" maxlength="12">
+          <input type="password" placeholder="Ingresa tu Contraseña" name="contrasena" id="contrasena" class="input-text clave" title="Debe tener de 6 a 25 caracteres" required onkeyup="espacios(this)" minlength="6" maxlength="50">
         </div>
         <br>
 

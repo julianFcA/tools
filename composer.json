@@ -13,7 +13,8 @@
     "require": {
         "picqer/php-barcode-generator": "^2.4",
         "phpoffice/phpspreadsheet": "^2.0",
-        "spipu/html2pdf": "^5.2"
+        "spipu/html2pdf": "^5.2",
+        "resend/resend-php": "^0.12.0"
         
     }
 }
