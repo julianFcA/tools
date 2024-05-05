@@ -1,118 +1,79 @@
 <?php
 require_once 'template.php';
 
-// Verifica si se ha enviado un formulario POST y si se han seleccionado herramientas
-if (isset($_POST['accion']) && isset($_POST['documento'])) {
-    $documento = $_POST['documento'];
-    $accion = $_POST['accion'];
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $action = $_POST['action'];
+    switch ($action) {
+        case 'Devolver Herramienta':
+            if (isset($_POST['cantidad'])) {
+                foreach ($_POST['cantidad'] as $id_deta_presta => $cantidad_devuelta) {
+                    // Obtener el código de barras de la herramienta devuelta
+                    $codigo_herramienta = $_POST['herramienta'][$id_deta_presta];
 
-    // Si la acción es "buen estado"
-    if ($accion === "Devulto") {
-        // Actualizar el estado del préstamo a devuelto
-        actualizarEstadoPrestamo($conn, $documento, 'devuelto');
+                    // Resto del código para devolver la herramienta
+                    $query_cantidad_prestada = "SELECT cant_herra FROM detalle_prestamo WHERE id_deta_presta = ?";
+                    $stmt_cantidad_prestada = $conn->prepare($query_cantidad_prestada);
+                    $stmt_cantidad_prestada->execute([$id_deta_presta]);
+                    $cantidad_prestada = $stmt_cantidad_prestada->fetchColumn();
 
-        // Insertar registro en detalle_pretamo con cantidad devuelta, herramienta y estado devuelto
-        foreach ($_SESSION['herramientas'] as $codigo_barra_herra) {
-            insertarDetallePrestamo($conn, $codigo_barra_herra, $documento, 'devuelto');
-        }
+                    $nueva_cantidad_prestada = $cantidad_prestada - $cantidad_devuelta;
+
+                    $query_actualizar_cantidad = "UPDATE detalle_prestamo SET cant_devolucion = ?, cant_herra = ?, estado_presta = ? WHERE id_deta_presta = ?";
+                    $estado = ($nueva_cantidad_prestada == 0) ? 'devuelto' : 'incompleto';
+                    $stmt_actualizar_cantidad = $conn->prepare($query_actualizar_cantidad);
+                    $stmt_actualizar_cantidad->execute([$cantidad_devuelta, $nueva_cantidad_prestada, $estado, $id_deta_presta]);
+
+                    $query_herramienta = "UPDATE herramienta SET cantidad = cantidad + ? WHERE codigo_barra_herra = ?";
+                    $stmt_herramienta = $conn->prepare($query_herramienta);
+                    $stmt_herramienta->execute([$cantidad_devuelta, $codigo_herramienta]);
+                }
+
+                redirectToPrestamoPage("Herramientas devueltas con éxito.");
+            } else {
+                redirectToPrestamoPage("Error: No se han especificado herramientas para devolver o no se ha proporcionado el código de barras de la herramienta.");
+            }
+            break;
+        case 'Reportar Herramienta':
+            $codigo_herramienta = $_POST['herramienta'];
+            $documento = $_POST['documento'];
+            $motivo = $_POST['motivo'];
+            if (isset($_POST['motivo']) && isset($_POST['cantidad'])) {
+
+
+                foreach ($_POST['cantidad'] as $id_deta_presta => $cantidad_devuelta) {
+                    $query_insert_reporte = "INSERT INTO reporte (id_deta_presta, descripcion,documento, fecha) VALUES (?, ?,?, NOW())";
+                    $stmt_insert_reporte = $conn->prepare($query_insert_reporte);
+                    $stmt_insert_reporte->execute([$id_deta_presta, $motivo, $documento]);
+
+                    $id_reporte = $conn->lastInsertId();
+
+                    $query_update_detalle_prestamo = "UPDATE detalle_prestamo SET estado_presta = 'reportado' WHERE id_deta_presta = ?";
+                    $stmt_update_detalle_prestamo = $conn->prepare($query_update_detalle_prestamo);
+                    $stmt_update_detalle_prestamo->execute([$id_deta_presta]);
+
+                    $query_insert_detalle_reporte = "INSERT INTO deta_reporte (id_reporte, codigo_barra_herra) VALUES (?, ?)";
+                    $stmt_insert_detalle_reporte = $conn->prepare($query_insert_detalle_reporte);
+                    $stmt_insert_detalle_reporte->execute([$id_reporte, $codigo_herramienta]);
+
+                    redirectToPrestamoPage("Herramienta reportada con éxito.");
+                }
+            } else {
+                redirectToPrestamoPage("Error: Falta información para reportar la herramienta.");
+            }
+            break;
+
+        default:
+            redirectToPrestamoPage("Acción no reconocida.");
+            break;
     }
-    // Si la acción es "reportar daño"
-    elseif ($accion === "reportado" && isset($_POST['detalle_danio'])) {
-        // Actualizar el estado del préstamo a dañado
-        actualizarEstadoPrestamo($conn, $documento, 'danado');
-
-        // Registrar detalle de reporte
-        $detalle_danio = $_POST['detalle_danio'];
-        registrarDetalleReporte($conn, $documento, $detalle_danio);
-    }
+} else {
+    redirectToPrestamoPage("Debes enviar el formulario.");
 }
 
-// Función para actualizar el estado del préstamo
-function actualizarEstadoPrestamo($conn, $documento, $estado)
+function redirectToPrestamoPage($message)
 {
-    $sql = "UPDATE detalle_prestamo SET estado = :estado WHERE id_presta = :documento";
-    $stmt = $conn->prepare($sql);
-    $stmt->bindParam(':estado', $estado);
-    $stmt->bindParam(':documento', $documento);
-    $stmt->execute();
+    echo "<script>alert('$message');</script>";
+    echo '<script>window.location="./index.php"</script>';
+    exit();
 }
-
-// Función para insertar registro en detalle_pretamo
-function insertarDetallePrestamo($conn, $codigo_barra_herra, $id_prestamo, $estado)
-{
-    // Obtener la cantidad devuelta para esta herramienta
-    $cantidad_devuelta = $_POST['cantidad'][$codigo_barra_herra];
-
-    // Insertar registro en detalle_pretamo
-    $sql = "INSERT INTO detalle_prestamo (codigo_barra_herra, id_prestamo, estado, cant_herra) 
-            VALUES (:codigo_barra_herra, :id_prestamo, :estado, :cantidad_devuelta)";
-    $stmt = $conn->prepare($sql);
-    $stmt->bindParam(':codigo_barra_herra', $codigo_barra_herra);
-    $stmt->bindParam(':id_prestamo', $id_prestamo);
-    $stmt->bindParam(':estado', $estado);
-    $stmt->bindParam(':cantidad_devuelta', $cantidad_devuelta);
-    $stmt->execute();
-}
-
-// Función para registrar el detalle del reporte
-function registrarDetalleReporte($conn, $documento, $detalle_danio)
-{
-    // Aquí deberías insertar los detalles del reporte en la tabla detalle_reporte
-}
-
 ?>
-
-
-<div class="content-wrapper">
-    <div class="container-fluid">
-        <div class="tab-list">
-            <div class="row">
-                <div class="col-lg-12 p-0">
-                    <div class="card-header">
-                        <div class="content-body container-table">
-                            <div class="container-fluid">
-                                <div class="row">
-                                    <div class="col-12">
-                                        <div class="card">
-                                            <div class="card-header">
-                                                <h4 class="card-title">Devolución de Herramienta</h4>
-                                            </div>
-                                            <div class="card-body">
-                                                <form method="post" onsubmit="return validarFormulario()" class="mb-3">
-                                                    <div class="table-responsive">
-                                                        <table id="example3" class="table table-striped table-bordered" style="width:100%">
-                                                            <!-- Cabezal de la tabla -->
-                                                        </table>
-                                                    </div>
-
-                                                    <!-- Botones -->
-                                                    <div class="row">
-                                                        <!-- Botón para marcar como buen estado -->
-                                                        <div class="col">
-                                                            <button type="submit" name="accion" value="Devulto" class="btn btn-success btn-block">Devolver Herramientas</button>
-                                                        </div>
-
-                                                        <!-- Botón para reportar daño -->
-                                                        <div class="col">
-                                                            <button type="submit" name="accion" value="reportado" class="btn btn-danger btn-block">Reportar Daño o Anomalia</button>
-                                                        </div>
-                                                    </div>
-
-                                                    <!-- Input oculto para pasar el documento -->
-                                                    <input type="hidden" name="documento" value="<?= $documento; ?>">
-
-                                                    <!-- Enlace como botón -->
-                                                    <a href="./termino_devo.php" class="btn btn-warning btn-sm mt-2" style="width: 10%;">Volver</a>
-                                                </form>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>

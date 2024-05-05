@@ -23,7 +23,7 @@ if (isset($_POST['documento'])) {
     INNER JOIN prestamo_herra ON detalle_prestamo.id_presta = prestamo_herra.id_presta
     WHERE prestamo_herra.documento = :documento AND
           herramienta.id_tp_herra >= 1 AND 
-          marca_herra.id_marca >= 1";
+          marca_herra.id_marca >= 1 AND detalle_prestamo.estado_presta = 'prestado' or detalle_prestamo.estado_presta = 'incompleto'";
 
     // Preparar y ejecutar la consulta
     $stmt = $conn->prepare($query);
@@ -48,7 +48,7 @@ if (isset($_POST['documento'])) {
                                     <div class="col-12">
                                         <div class="card">
                                             <div class="card-header">
-                                                <h4 class="card-title">Devolución de Herramienta</h4>
+                                                <h4 class="card-title">Prestamo de Herramienta</h4>
                                             </div>
                                             <div class="card-body">
                                                 <form action="termino_devo.php" method="post">
@@ -72,37 +72,35 @@ if (isset($_POST['documento'])) {
                                                             </thead>
                                                             <tbody>
                                                                 <?php
+
                                                                 foreach ($resultado_pagina as $entrada) {
-                                                                ?>
-                                                                <tr style="background-color: <?= $colorFondo ?>;">
-                                                                    <td><?= $entrada["codigo_barra_herra"] ?></td>
-                                                                    <td><?= $entrada["nom_tp_herra"] ?></td>
-                                                                    <td><?= $entrada["nombre_herra"] ?></td>
-                                                                    <td><?= $entrada["nom_marca"] ?></td>
-                                                                    <td class="image-container">
-                                                                        <?php
-                                                                            $checkboxDisabled = ($entrada["cantidad"] == 0) ? 'disabled' : '';
+
+                                                                    ?>
+                                                                    <tr style="background-color: <?= $colorFondo ?>;">
+                                                                        <td><?= $entrada["codigo_barra_herra"] ?></td>
+                                                                        <td><?= $entrada["nom_tp_herra"] ?></td>
+                                                                        <td><?= $entrada["nombre_herra"] ?></td>
+                                                                        <td><?= $entrada["nom_marca"] ?></td>
+                                                                        <td class="image-container">
+                                                                            <?php
+
                                                                             $imageUrl = '../../images/' . $entrada["imagen"];
                                                                             ?>
-                                                                        <img src="<?= $imageUrl ?>"
-                                                                            alt="Imagen de herramienta"
-                                                                            style="max-width: 300px; height: auto; border: 2px solid #ffffff;">
-                                                                    </td>
-                                                                    <td><?= $entrada["fecha_adqui"] ?></td>
-                                                                    <td><?= $entrada["cant_herra"] ?></td>
-                                                                    <td><?= $entrada["dias"] ?></td>
-                                                                    <td><?= $entrada["fecha_entrega"] ?></td>
-                                                                    <td><input type="checkbox" name="herramienta[]"
-                                                                            value="<?= $entrada['codigo_barra_herra'] ?>"
-                                                                            onclick="checkLimit()"
-                                                                            <?= $checkboxDisabled ?>></td>
-                                                                    <!-- Campos ocultos para enviar cantidades e IDs de herramientas -->
-                                                                    <input type="hidden" name="cantidades[]"
-                                                                        value="<?= $entrada['cant_herra'] ?>">
-                                                                    <input type="hidden" name="herramienta_ids[]"
-                                                                        value="<?= $entrada['codigo_barra_herra'] ?>">
-                                                                </tr>
-                                                                <?php }; ?>
+                                                                            <img src="<?= $imageUrl ?>"
+                                                                                alt="Imagen de herramienta"
+                                                                                style="max-width: 300px; height: auto; border: 2px solid #ffffff;">
+                                                                        </td>
+                                                                        <td><?= $entrada["fecha_adqui"] ?></td>
+                                                                        <td><?= $entrada["cant_herra"] ?></td>
+                                                                        <td><?= $entrada["dias"] ?></td>
+                                                                        <td><?= $entrada["fecha_entrega"] ?></td>    
+                                                                        <td><input type="checkbox" name="id_deta_presta[]"
+                                                                                value="<?= $entrada['id_deta_presta'] ?>"
+                                                                                onclick="checkLimit()"></td>
+                                                                        </td>
+                                                                    </tr>
+                                                                <?php }
+                                                                ; ?>
                                                             </tbody>
                                                         </table>
                                                     </div>
@@ -127,38 +125,23 @@ if (isset($_POST['documento'])) {
 </div>
 
 <script>
-function checkLimit() {
-    const maxSelections = 3;
-    const checkboxes = document.querySelectorAll('input[type="checkbox"]');
-    let checkedCount = 0;
+    function prepareAndRedirect() {
+        const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+        const selectedToolIds = [];
+        const selectedToolQuantities = [];
 
-    checkboxes.forEach(checkbox => {
-        if (checkbox.checked) {
-            checkedCount++;
-            if (checkedCount > maxSelections) {
-                checkbox.checked = false; // Desmarcar checkbox si se supera el límite
+        checkboxes.forEach(checkbox => {
+            if (checkbox.checked) {
+                selectedToolIds.push(checkbox.value);
+                const quantityInput = document.querySelector(
+                    `input[name="cantidades[]"][value="${checkbox.value}"]`);
+                selectedToolQuantities.push(quantityInput.value);
             }
-        }
-    });
-}
+        });
 
-function prepareAndRedirect() {
-    const checkboxes = document.querySelectorAll('input[type="checkbox"]');
-    const selectedToolIds = [];
-    const selectedToolQuantities = [];
-
-    checkboxes.forEach(checkbox => {
-        if (checkbox.checked) {
-            selectedToolIds.push(checkbox.value);
-            const quantityInput = document.querySelector(
-                `input[name="cantidades[]"][value="${checkbox.value}"]`);
-            selectedToolQuantities.push(quantityInput.value);
-        }
-    });
-
-    const toolsInput = document.querySelector('input[name="herramienta_ids"]');
-    const quantitiesInput = document.querySelector('input[name="cantidades"]');
-    toolsInput.value = selectedToolIds.join(',');
-    quantitiesInput.value = selectedToolQuantities.join(',');
-}
+        const toolsInput = document.querySelector('input[name="herramienta_ids"]');
+        const quantitiesInput = document.querySelector('input[name="cantidades"]');
+        toolsInput.value = selectedToolIds.join(',');
+        quantitiesInput.value = selectedToolQuantities.join(',');
+    }
 </script>

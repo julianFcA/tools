@@ -190,8 +190,18 @@ window.addEventListener('load', function () {
         if (sessionExpired) {
             // Solicitar al usuario que ingrese el código de confirmación como una contraseña
             var codigoIngresado = prompt("Ingresa el código de confirmación:", "");
-            codigoIngresado.type = "password"; // Cambiar el tipo de entrada a "password"
-            
+
+            if (codigoIngresado === null) { // Si el usuario hace clic en "Cancelar"
+                // Redirigir a la página de denegación
+                window.location.href = './../index.php';
+                return; // Salir de la función
+            } else if (codigoIngresado === "") { // Si el usuario no ingresa ningún código y hace clic en "Aceptar"
+                // Solicitar nuevamente al usuario que ingrese el código
+                alert('Debes ingresar un código.');
+                window.location.reload(); // Recargar la página para solicitar el código nuevamente
+                return; // Salir de la función
+            }
+
             // Definir el código correcto como cadena
             var codigoCorrectoOriginal = "101214"; // Código correcto definido en el PHP
             
@@ -206,22 +216,22 @@ window.addEventListener('load', function () {
             var codigoCorrectoCifrado = cifrarCodigo(codigoCorrectoOriginal);
             
             console.log("Código correcto cifrado: " + codigoCorrectoCifrado);
-            
 
             // Verificar si el código ingresado es correcto
-            if (codigoIngresado === codigoCorrecto) {
+            if (codigoIngresado === codigoCorrectoCifrado) {
                 // Si el código es correcto, establecer una nueva cookie de sesión
                 document.cookie = "superadmin_valido=true; path=/superadmin/index.php; expires=" + new Date(currentTime + 3600000).toUTCString();
                 document.cookie = "hora_ingreso=" + currentTime + "; path=/superadmin/index.php; expires=" + new Date(currentTime + 3600000).toUTCString();
                 alert('Sesión activa. Bienvenido de nuevo.');
-            } else {
-                // Si el código ingresado es incorrecto, redirigir a la página de denegación
-                alert('Código incorrecto. No se puede acceder.');
-                window.location.href = './../index.php'; // Redirigir a la página de denegación
             }
         }
     }
 });
+
+
+
+
+
 
 // Función para obtener el valor de una cookie por su nombre
 function getCookie(cookieName) {

@@ -31,6 +31,8 @@ if(isset($_SESSION['last_activity'])){
 // Actualiza la marca de tiempo de última actividad
 $_SESSION['last_activity'] = time();
 
+
+
 // // Verificar si se recibió un código
 // $GLOBALS['codigo_valido'] = false;
 
@@ -39,7 +41,10 @@ $_SESSION['last_activity'] = time();
 //     $codigo_correcto = "101214"; // Código correcto
 //     $codigo_ingresado = $_POST['codigo'];
 
-//     if ($codigo_ingresado === $codigo_correcto) {
+//     // Ciframos el código correcto
+//     $codigo_correcto_cifrado = hash('sha256', $codigo_correcto);
+    
+//     if ($codigo_ingresado === $codigo_correcto_cifrado) {
 //         $_SESSION['codigo_valido'] = true; // Establecer la variable de sesión
 //         $GLOBALS['codigo_valido'] = true; // Establecer la variable global como verdadera
 //         echo "valido"; // Devolver respuesta "valido"
@@ -50,6 +55,7 @@ $_SESSION['last_activity'] = time();
 //     // Si no se recibió un código, devolver respuesta "invalido"
 //     echo "invalido";
 // }
+
 
 
 ?>
@@ -170,6 +176,8 @@ $_SESSION['last_activity'] = time();
 <!-- Tus scripts personalizados -->
 <script src="../assets/js/register.js"></script>
 <script src="./../js/valida.js"></script>
+
+<script src="./../node_modules/crypto-js.js"></script>
 
 
 </html>
