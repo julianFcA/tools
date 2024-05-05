@@ -7,7 +7,7 @@ $page = isset($_GET['page']) ? $_GET['page'] : 1; // Página actual
 // Calcula el offset basado en la página actual
 $offset = ($page - 1) * $limit;
 
-$query = "SELECT usuario.nombre, usuario.apellido, usuario.documento, usuario.correo, usuario.codigo_barras, usuario.fecha_registro, formacion.nom_forma, jornada.tp_jornada, entrada_usu.fecha_entrada, tp_docu.nom_tp_docu, deta_ficha.ficha, prestamo_herra.* 
+$query = "SELECT usuario.*, formacion.*, jornada.*, entrada_usu.fecha_entrada, tp_docu.*, deta_ficha.*, prestamo_herra.*, detalle_prestamo.*, herramienta.*, tp_herra.*, reporte.*, deta_reporte.*
           FROM usuario 
           INNER JOIN rol ON usuario.id_rol = rol.id_rol 
           INNER JOIN deta_ficha ON deta_ficha.documento = usuario.documento 
@@ -15,6 +15,9 @@ $query = "SELECT usuario.nombre, usuario.apellido, usuario.documento, usuario.co
           INNER JOIN formacion ON ficha.id_forma = formacion.id_forma 
           INNER JOIN jornada ON ficha.id_jornada = jornada.id_jornada
           INNER JOIN prestamo_herra ON prestamo_herra.documento = usuario.documento 
+          INNER JOIN detalle_prestamo ON detalle_prestamo.id_presta = prestamo_herra.id_presta 
+          INNER JOIN herramienta ON herramienta.codigo_barra_herra = detalle_prestamo.codigo_barra_herra 
+          INNER JOIN herramienta AS h ON h.id_tp_herra = tp_herra.id_tp_herra 
           INNER JOIN entrada_usu ON usuario.documento = entrada_usu.documento 
           INNER JOIN (
               SELECT documento, MAX(fecha_entrada) AS ultima_entrada 
@@ -22,8 +25,11 @@ $query = "SELECT usuario.nombre, usuario.apellido, usuario.documento, usuario.co
               GROUP BY documento
           ) ultima_entrada ON entrada_usu.documento = ultima_entrada.documento AND entrada_usu.fecha_entrada = ultima_entrada.ultima_entrada 
           INNER JOIN tp_docu ON usuario.id_tp_docu = tp_docu.id_tp_docu 
+          INNER JOIN reporte ON detalle_prestamo.id_deta_presta = reporte.id_deta_presta 
+          INNER JOIN deta_reporte ON deta_reporte.id_reporte = reporte.id_reporte 
           WHERE ficha.ficha >= 1 AND jornada.id_jornada >= 1 AND usuario.id_rol = 3 
           LIMIT :limite OFFSET :inicio";
+
 
 $stmt = $conn->prepare($query);
 $stmt->bindValue(':limite', $limit, PDO::PARAM_INT);
@@ -89,10 +95,10 @@ $resultado_pagina = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                                                 $horaFinalizacionPasada = strtotime($entrada["dias"]) < strtotime("now");
 
                                                                 // Si la licencia está activa y la hora de finalización ha pasado
-                                                                if ($entrada["estado_prestamo"] == 'salvado' && $horaFinalizacionPasada) {
+                                                                if ($entrada["estado_presta"] == 'devuelto' && $horaFinalizacionPasada) {
                                                                     // Actualizar el estado de la licencia en la base de datos a 'inactivo'
-                                                                    $updateEstado = $conn->prepare("UPDATE prestamo_herra SET estado_prestamo = 'reportado' WHERE id_presta = :id_presta");
-                                                                    $updateEstado->bindParam(':id_presta', $entrada["id_presta"], PDO::PARAM_INT);
+                                                                    $updateEstado = $conn->prepare("UPDATE deta_prestamo SET estado_prestamo = 'reportado' WHERE id_deta_presta = :id_deta_presta");
+                                                                    $updateEstado->bindParam(':id_deta_presta', $entrada["id_deta_presta"], PDO::PARAM_INT);
                                                                     $updateEstado->execute();
 
                                                                     // Actualizar las variables para reflejar el nuevo estado
@@ -100,11 +106,11 @@ $resultado_pagina = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                                                     $botonInactivo = 'disabled';
                                                                     $color = 'orange';
                                                                     $mensaje = 'reportado';
-                                                                } elseif ($entrada["estado_prestamo"] == 'reportado' && !$horaFinalizacionPasada) {
+                                                                } elseif ($entrada["estado_presta"] == 'reportado' && !$horaFinalizacionPasada) {
                                                                     // Si la licencia está inactiva y la hora de finalización no ha pasado
                                                                     // Actualizar el estado de la licencia en la base de datos a 'activo'
-                                                                    $updateEstado = $conn->prepare("UPDATE prestamo_herra SET estado_prestamo = 'salvado' WHERE id_presta = :id_presta");
-                                                                    $updateEstado->bindParam(':id_presta', $entrada["id_presta"], PDO::PARAM_INT);
+                                                                    $updateEstado = $conn->prepare("UPDATE deta_prestamo SET estado_presta = 'devuelto' WHERE id_deta_presta = :id_deta_presta");
+                                                                    $updateEstado->bindParam(':id_deta_presta', $entrada["id_deta_presta"], PDO::PARAM_INT);
                                                                     $updateEstado->execute();
 
                                                                     // Actualizar las variables para reflejar el nuevo estado
@@ -112,11 +118,11 @@ $resultado_pagina = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                                                     $activo = 'disabled';
                                                                     $color = 'green';
                                                                     $mensaje = 'Disponible';
-                                                                } elseif ($entrada["estado_prestamo"] == 'inactivo' && $horaFinalizacionPasada) {
+                                                                } elseif ($entrada["estado_presta"] == 'incompleto' && $horaFinalizacionPasada) {
                                                                     // Si la licencia está inactiva y la hora de finalización ha pasado
                                                                     // No es necesario hacer nada aquí, simplemente mantener el estado inactivo
                                                                     $color = 'orange';
-                                                                    $mensaje = 'Inactivo';
+                                                                    $mensaje = 'Incompleto';
                                                                 } {
 
                                                                     // Actualiza las variables para reflejar el nuevo estado
@@ -126,12 +132,12 @@ $resultado_pagina = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                                                     $mensaje = 'Disponible';
                                                                 }
 
-                                                                if ($entrada["estado_prestamo"] == 'reportado') {
+                                                                if ($entrada["estado_presta"] == 'reportado') {
                                                                     $estadoClase = '';
                                                                     $botonCancelar = 'disabled';
                                                                     $color = 'red';
                                                                     $mensaje = 'reportado';
-                                                                } elseif ($entrada["estado_prestamo"] == 'salvado') {
+                                                                } elseif ($entrada["estado_presta"] == 'devuelto') {
                                                                     $estadoClase = '';
                                                                     $activo = 'disabled';
                                                                     $color = 'green';

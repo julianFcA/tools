@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 02-05-2024 a las 05:05:10
+-- Tiempo de generación: 05-05-2024 a las 06:51:18
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -31,18 +31,30 @@ CREATE TABLE `detalle_prestamo` (
   `id_deta_presta` tinyint(4) NOT NULL,
   `cant_herra` tinyint(4) NOT NULL,
   `codigo_barra_herra` varchar(500) NOT NULL,
-  `id_presta` tinyint(4) NOT NULL
+  `id_presta` tinyint(4) NOT NULL,
+  `estado_presta` enum('prestado','incompleto','devuelto','reportado') NOT NULL,
+  `cant_devolucion` tinyint(4) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `detalle_prestamo`
 --
 
-INSERT INTO `detalle_prestamo` (`id_deta_presta`, `cant_herra`, `codigo_barra_herra`, `id_presta`) VALUES
-(3, 1, '6618baec23e7e8656', 2),
-(4, 2, '6627628e204e01573', 2),
-(5, 1, '6627628e204e01573', 3),
-(6, 1, '6627628e204e01573', 4);
+INSERT INTO `detalle_prestamo` (`id_deta_presta`, `cant_herra`, `codigo_barra_herra`, `id_presta`, `estado_presta`, `cant_devolucion`) VALUES
+(3, 0, '6618baec23e7e8656', 2, 'devuelto', 1),
+(4, 2, '6627628e204e01573', 2, 'reportado', 0),
+(5, 1, '6627628e204e01573', 3, 'reportado', 0),
+(6, 0, '6627628e204e01573', 4, 'devuelto', 1),
+(7, 1, '6627628e204e01573', 5, 'reportado', 0),
+(8, 0, '6627628e204e01573', 6, 'devuelto', 1),
+(9, 0, '6627628e204e01573', 7, 'devuelto', 1),
+(10, 0, '6627628e204e01573', 8, 'devuelto', 2),
+(11, 0, '6627628e204e01573', 9, 'devuelto', 1),
+(12, 0, '6627628e204e01573', 10, 'devuelto', 1),
+(13, 0, '6627628e204e01573', 11, 'devuelto', 1),
+(14, 1, '6618baec23e7e8656', 12, 'reportado', 0),
+(15, 1, '6618ba9e1569b6707', 13, 'reportado', 0),
+(16, 0, '6618ba9e1569b6707', 14, 'devuelto', 1);
 
 -- --------------------------------------------------------
 
@@ -66,7 +78,9 @@ INSERT INTO `deta_ficha` (`id_deta_ficha`, `ficha`, `documento`) VALUES
 (8, 1234567, 1110456214),
 (9, 1230123, 1110456214),
 (10, 2500591, 2147483647),
-(11, 1234568, 1110546897);
+(11, 1234568, 1110546897),
+(12, 2500591, 1110567985),
+(13, 1234567, 1110567986);
 
 -- --------------------------------------------------------
 
@@ -79,6 +93,13 @@ CREATE TABLE `deta_reporte` (
   `id_reporte` tinyint(4) NOT NULL,
   `codigo_barra_herra` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `deta_reporte`
+--
+
+INSERT INTO `deta_reporte` (`id_deta_reporte`, `id_reporte`, `codigo_barra_herra`) VALUES
+(2, 9, '6618ba9e1569b6707');
 
 -- --------------------------------------------------------
 
@@ -251,7 +272,25 @@ INSERT INTO `entrada_usu` (`id_entrada`, `fecha_entrada`, `documento`) VALUES
 (264, '2024-05-01 19:39:05', 1110456214),
 (265, '2024-05-01 19:56:04', 1234567890),
 (266, '2024-05-01 20:45:47', 123456788),
-(267, '2024-05-01 21:05:46', 1110456214);
+(267, '2024-05-01 21:05:46', 1110456214),
+(268, '2024-05-02 02:06:22', 123456788),
+(269, '2024-05-02 06:14:57', 1110567985),
+(270, '2024-05-02 17:02:36', 1110456214),
+(271, '2024-05-03 08:01:48', 123456788),
+(272, '2024-05-03 23:18:38', 123456788),
+(273, '2024-05-04 00:42:56', 123456788),
+(274, '2024-05-04 00:43:24', 123456788),
+(275, '2024-05-04 00:44:11', 123456788),
+(276, '2024-05-04 00:45:43', 123456788),
+(277, '2024-05-04 00:46:33', 123456788),
+(278, '2024-05-04 00:47:15', 123456788),
+(279, '2024-05-04 01:00:54', 123456788),
+(280, '2024-05-04 01:02:32', 123456788),
+(281, '2024-05-04 01:05:22', 123456788),
+(282, '2024-05-04 01:16:39', 123456788),
+(283, '2024-05-04 01:27:42', 123456788),
+(284, '2024-05-04 21:18:36', 1110456214),
+(285, '2024-05-04 21:19:24', 1110456214);
 
 -- --------------------------------------------------------
 
@@ -335,10 +374,10 @@ CREATE TABLE `herramienta` (
 --
 
 INSERT INTO `herramienta` (`codigo_barra_herra`, `id_tp_herra`, `nombre_herra`, `id_marca`, `descripcion`, `cantidad`, `imagen`, `esta_herra`) VALUES
-('6618ba9e1569b6707', 2, 'taladrokhkh', 1, 'funciona con cargadornkknk ', 25, '2XMFaiFBA33TfkY001GftHQM6D6-mobile-Photoroom.png-Photoroom.png', 'disponible'),
+('6618ba9e1569b6707', 2, 'taladrokhkh', 1, 'funciona con cargadornkknk ', 23, '2XMFaiFBA33TfkY001GftHQM6D6-mobile-Photoroom.png-Photoroom.png', 'disponible'),
 ('6618baec23e7e8656', 1, 'palustre', 1, 'tapar agujeros', 0, 'client.jpg', 'prestado'),
 ('662761152e65d2051', 1, 'bjjhhjhjhj', 1, 'jhjhjhh', 0, 'angora-turco-xl-1280x720x80xX-Photoroom.png-Photoroom.png', 'prestado'),
-('6627628e204e01573', 2, 'kknnknkn', 2, 'nknnknn', 8, '2XMFaiFBA33TfkY001GftHQM6D6-mobile-Photoroom.png-Photoroom.png', 'disponible');
+('6627628e204e01573', 2, 'kknnknkn', 2, 'nknnknn', 0, '2XMFaiFBA33TfkY001GftHQM6D6-mobile-Photoroom.png-Photoroom.png', 'prestado');
 
 -- --------------------------------------------------------
 
@@ -413,7 +452,6 @@ CREATE TABLE `prestamo_herra` (
   `fecha_adqui` date NOT NULL,
   `dias` tinyint(4) NOT NULL,
   `fecha_entrega` date NOT NULL,
-  `estado_prestamo` enum('salvado','devuelto','reportado','') NOT NULL,
   `documento` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -421,10 +459,20 @@ CREATE TABLE `prestamo_herra` (
 -- Volcado de datos para la tabla `prestamo_herra`
 --
 
-INSERT INTO `prestamo_herra` (`id_presta`, `fecha_adqui`, `dias`, `fecha_entrega`, `estado_prestamo`, `documento`) VALUES
-(2, '2024-05-01', 2, '2024-05-03', 'salvado', 1023456789),
-(3, '2024-05-01', 3, '2024-05-04', 'salvado', 1234567890),
-(4, '2024-05-01', 2, '2024-05-03', 'salvado', 1023456789);
+INSERT INTO `prestamo_herra` (`id_presta`, `fecha_adqui`, `dias`, `fecha_entrega`, `documento`) VALUES
+(2, '2024-05-01', 2, '2024-05-03', 1023456789),
+(3, '2024-05-01', 3, '2024-05-04', 1234567890),
+(4, '2024-05-01', 2, '2024-05-03', 1023456789),
+(5, '2024-05-02', 3, '2024-05-05', 1110567985),
+(6, '2024-05-04', 2, '2024-05-06', 1110567986),
+(7, '2024-05-04', 2, '2024-05-06', 1110567986),
+(8, '2024-05-04', 1, '2024-05-05', 1110567986),
+(9, '2024-05-04', 4, '2024-05-08', 1110567986),
+(10, '2024-05-04', 2, '2024-05-06', 1110567986),
+(11, '2024-05-04', 1, '2024-05-05', 1110567986),
+(12, '2024-05-04', 1, '2024-05-05', 1110567986),
+(13, '2024-05-04', 1, '2024-05-05', 1110567986),
+(14, '2024-05-04', 1, '2024-05-05', 1110567986);
 
 -- --------------------------------------------------------
 
@@ -436,8 +484,24 @@ CREATE TABLE `reporte` (
   `id_reporte` tinyint(4) NOT NULL,
   `descripcion` text NOT NULL,
   `id_deta_presta` tinyint(4) NOT NULL,
-  `documento` int(11) NOT NULL
+  `documento` int(11) NOT NULL,
+  `fecha` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `reporte`
+--
+
+INSERT INTO `reporte` (`id_reporte`, `descripcion`, `id_deta_presta`, `documento`, `fecha`) VALUES
+(1, '', 3, 1023456789, '2024-05-04 21:38:50'),
+(2, 'dañada', 5, 1234567890, '2024-05-04 22:17:09'),
+(3, '', 4, 1023456789, '2024-05-04 22:18:34'),
+(4, 'dañada', 7, 1110567985, '2024-05-04 22:21:45'),
+(5, 'dañada', 7, 1110567985, '2024-05-04 22:23:01'),
+(6, 'dañada', 7, 1110567985, '2024-05-04 22:26:38'),
+(7, '', 14, 1110567986, '2024-05-04 23:08:19'),
+(8, 'daasasasa', 15, 1110567986, '2024-05-04 23:16:03'),
+(9, 'daasasasa', 15, 1110567986, '2024-05-04 23:16:52');
 
 -- --------------------------------------------------------
 
@@ -599,6 +663,8 @@ INSERT INTO `usuario` (`documento`, `id_tp_docu`, `nombre`, `apellido`, `contras
 (1023456789, 2, 'fabricio', 'herrera', '$2y$10$pmFzUAo0BM5zeL3ahA6VlutADajIIQIwfs//Jdnn6VMLY3T3zP/ta', 'frabricio123@gmail.com', '6618979f00cf53229', '2024-04-11', 'si', 3, 1, '89999034-1'),
 (1110456214, 2, 'ohanys', 'nombreraro', '$2y$10$nRBz7qsQc8Nv4ESbxWLz/.HWpVX6938IOJtnilyOTOqjPj6scvg66', 'yarethl@gmail.com', '662a944f17eb38813', '2024-04-25', 'si', 2, 1, '89999034-1'),
 (1110546897, 2, 'cristian', 'huertas', '$2y$10$6BfeIelvDCJwFcYbHkO5/u2tjObMX/QQP5kLPciAUCvLuamB5ttti', 'huertas@gmail.com', '6631c820283849031', '2024-04-30', 'si', 2, 1, '89999034-1'),
+(1110567985, 1, 'plinio', 'quintero', '$2y$10$5KqvDE3gDAJlC5eXsiA.F.foGnpe1M0VgfzmOPwd6BP3.H6sriG6i', 'plinio@gmail.com', '66335cca4492e4983', '2024-05-02', 'si', 3, 1, '89999034-1'),
+(1110567986, 1, 'felipe', 'aguirre', '$2y$10$eQHe7zZ8fOoVlvIvZYoN7O1oFdpO6yiNESuVXbUSIsjE9hYp02H2e', 'aguirre@gmail.com', '6634dffbe78bb1497', '2024-05-03', 'si', 3, 1, '89999034-1'),
 (1234567890, 2, 'mauricio', 'calderon ', '$2y$12$Wo2Hipe2aOaKaKvGG8/dXeZMjOaTNkKc/bsosCOSj9wd6oER.BlLO', 'jfcalderon62@gmai.com', '65f4ef9d298b15013', '2024-03-15', 'si', 3, 1, '89999034-1'),
 (2147483647, 1, 'aranazau', 'jaalaal', '$2y$10$5NoPbtZ6yTpLllRk8ZLNgO0wSKcWPjYTm8sk/.gBXWqwlZG9HOqyK', 'jkakajkja@gmail.com', '6631b8ba6b3e31653', '2024-04-30', 'si', 3, 1, '89999034-1');
 
@@ -762,25 +828,25 @@ ALTER TABLE `usuario`
 -- AUTO_INCREMENT de la tabla `detalle_prestamo`
 --
 ALTER TABLE `detalle_prestamo`
-  MODIFY `id_deta_presta` tinyint(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id_deta_presta` tinyint(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
 -- AUTO_INCREMENT de la tabla `deta_ficha`
 --
 ALTER TABLE `deta_ficha`
-  MODIFY `id_deta_ficha` tinyint(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `id_deta_ficha` tinyint(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- AUTO_INCREMENT de la tabla `deta_reporte`
 --
 ALTER TABLE `deta_reporte`
-  MODIFY `id_deta_reporte` tinyint(4) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_deta_reporte` tinyint(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT de la tabla `entrada_usu`
 --
 ALTER TABLE `entrada_usu`
-  MODIFY `id_entrada` int(5) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=268;
+  MODIFY `id_entrada` int(5) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=286;
 
 --
 -- AUTO_INCREMENT de la tabla `formacion`
@@ -804,7 +870,13 @@ ALTER TABLE `marca_herra`
 -- AUTO_INCREMENT de la tabla `prestamo_herra`
 --
 ALTER TABLE `prestamo_herra`
-  MODIFY `id_presta` tinyint(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id_presta` tinyint(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+
+--
+-- AUTO_INCREMENT de la tabla `reporte`
+--
+ALTER TABLE `reporte`
+  MODIFY `id_reporte` tinyint(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT de la tabla `tp_herra`
