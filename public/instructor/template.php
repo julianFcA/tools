@@ -133,7 +133,7 @@ $nit = $_SESSION['nit_empre'];
                             <li><a class="waves-effect waves-dark" href="regis_marca.php"><i class="icon-arrow-right"></i> Registrar Marca de Herramienta</a></li>
                             <li><a class="waves-effect waves-dark" href="registro_herra.php"><i class="icon-arrow-right"></i> Registrar Herramienta</a></li>
                             <li><a class="waves-effect waves-dark" href="herramienta.php"><i class="icon-arrow-right"></i> Herramienta</a></li>
-                            <li><a class="waves-effect waves-dark" href="prestamo_apren.php"><i class="icon-arrow-right"></i> Prestamos Activos </a></li>
+                            <li><a class="waves-effect waves-dark" href="prestamo_apren.php"><i class="icon-arrow-right"></i> Actividad de Prestamos  </a></li>
                             <li><a class="waves-effect waves-dark" href="reporte.php"><i class="icon-arrow-right"></i> Reporte de Aprendices</a></li>
                             <li><a class="waves-effect waves-dark" href="ingreso_apren.php"><i class="icon-arrow-right"></i> Entrada de Aprendices</a></li>
                         </ul>

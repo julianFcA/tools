@@ -32,18 +32,20 @@ $tablas = array("usuario");
 // Itera sobre cada tabla
 foreach ($tablas as $tabla) {
     // Consulta los datos de la tabla actual
-    $sql = "SELECT usuario.nombre, usuario.apellido, usuario.documento, usuario.correo, usuario.codigo_barras, usuario.fecha_registro, formacion.nom_forma, jornada.tp_jornada, tp_docu.nom_tp_docu, deta_ficha.ficha, prestamo_herra.*, detalle_prestamo.*, herramienta.*
-FROM usuario 
-INNER JOIN rol ON usuario.id_rol = rol.id_rol 
-INNER JOIN deta_ficha ON deta_ficha.documento = usuario.documento 
-INNER JOIN ficha ON ficha.ficha = deta_ficha.ficha 
-INNER JOIN formacion ON ficha.id_forma = formacion.id_forma 
-INNER JOIN jornada ON ficha.id_jornada = jornada.id_jornada  
-INNER JOIN tp_docu ON usuario.id_tp_docu = tp_docu.id_tp_docu 
-INNER JOIN prestamo_herra ON usuario.documento = prestamo_herra.documento 
-INNER JOIN detalle_prestamo ON prestamo_herra.id_presta = detalle_prestamo.id_presta
-INNER JOIN herramienta ON herramienta.codigo_barra_herra = detalle_prestamo.codigo_barra_herra  
-WHERE ficha.ficha >= 1 AND jornada.id_jornada >= 1 AND usuario.id_rol = 3";
+    $sql = "SELECT usuario.nombre, usuario.apellido, usuario.documento, usuario.correo, usuario.codigo_barras, usuario.fecha_registro, formacion.nom_forma, jornada.tp_jornada, tp_docu.nom_tp_docu, deta_ficha.ficha, prestamo_herra.*, detalle_prestamo.*, herramienta.*, reporte.*, deta_reporte.*
+    FROM usuario 
+    INNER JOIN rol ON usuario.id_rol = rol.id_rol 
+    INNER JOIN deta_ficha ON deta_ficha.documento = usuario.documento 
+    INNER JOIN ficha ON ficha.ficha = deta_ficha.ficha 
+    INNER JOIN formacion ON ficha.id_forma = formacion.id_forma 
+    INNER JOIN jornada ON ficha.id_jornada = jornada.id_jornada  
+    INNER JOIN tp_docu ON usuario.id_tp_docu = tp_docu.id_tp_docu 
+    INNER JOIN prestamo_herra ON usuario.documento = prestamo_herra.documento 
+    INNER JOIN detalle_prestamo ON prestamo_herra.id_presta = detalle_prestamo.id_presta
+    INNER JOIN herramienta ON herramienta.codigo_barra_herra = detalle_prestamo.codigo_barra_herra  
+    INNER JOIN reporte ON detalle_prestamo.id_deta_presta = reporte.id_deta_presta
+    INNER JOIN deta_reporte ON deta_reporte.id_reporte = reporte.id_reporte
+    WHERE ficha.ficha >= 1 AND jornada.id_jornada >= 1 AND usuario.id_rol = 3 AND detalle_prestamo.estado_presta = 'reportado'";
     $result = $conn->query($sql);
 
     // Si hay datos en la tabla
@@ -66,7 +68,7 @@ WHERE ficha.ficha >= 1 AND jornada.id_jornada >= 1 AND usuario.id_rol = 3";
 $writer = new Xlsx($spreadsheet);
 
 // Define el nombre del archivo de Excel a exportar
-$filename = 'excel_prestamos.xlsx';
+$filename = 'excel_reporte.xlsx';
 
 // Establece las cabeceras para indicar que se va a descargar un archivo Excel
 header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');

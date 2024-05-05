@@ -174,6 +174,7 @@ $_SESSION['last_activity'] = time();
                             <li><a class="waves-effect waves-dark" href="regis_tp_herra.php"><i class="icon-arrow-right"></i> Registrar Tipo de Herramienta</a></li>
                             <li><a class="waves-effect waves-dark" href="registro_herra.php"><i class="icon-arrow-right"></i> Registrar Herramienta</a></li>
                             <li><a class="waves-effect waves-dark" href="herramienta.php"><i class="icon-arrow-right"></i> Herramienta</a></li>
+                            <li><a class="waves-effect waves-dark" href="prestamo_apren.php"><i class="icon-arrow-right"></i> Actividad de Aprendices</a></li>
                             <li><a class="waves-effect waves-dark" href="reporte.php"><i class="icon-arrow-right"></i> Reporte de Aprendices</a></li>
                             <li><a class="waves-effect waves-dark" href="ingreso_instru.php"><i class="icon-arrow-right"></i> Entrada de Instructores</a></li>
                             <li><a class="waves-effect waves-dark" href="ingreso_apren.php"><i class="icon-arrow-right"></i> Entrada de Aprendices</a></li>
