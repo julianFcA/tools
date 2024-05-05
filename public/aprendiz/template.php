@@ -50,7 +50,7 @@ $_SESSION['last_activity'] = time();
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Index |Administrador <?php echo $_SESSION['nombre'] ?></title>
+    <title>Index |Aprendiz <?php echo $_SESSION['nombre'] ?></title>
     <link rel="icon" href="./../../images/icono.png">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no">
     <!-- Favicon icon -->
@@ -159,8 +159,9 @@ $_SESSION['last_activity'] = time();
                             <li><a class="waves-effect waves-dark" href="herramienta.php"><i class="icon-arrow-right"></i> Herramienta</a></li>
                             <li><a class="waves-effect waves-dark" href="prestamo.php"><i class="icon-arrow-right"></i>Adquirir Herramienta</a></li>
                             <li><a class="waves-effect waves-dark" href="apren.php"><i class="icon-arrow-right"></i> Prestamos </a></li>
+                            <li><a class="waves-effect waves-dark" href="estado_apren.php"><i class="icon-arrow-right"></i> Estado de Prestamos </a></li>
                             <li><a class="waves-effect waves-dark" href="devolucion.php"><i class="icon-arrow-right"></i> Devolucion</a></li>
-                            <li><a class="waves-effect waves-dark" href="sanciones.php"><i class="icon-arrow-right"></i> Reportes</a></li>
+                            <li><a class="waves-effect waves-dark" href="reporte.php"><i class="icon-arrow-right"></i> Reportes</a></li>
                         </ul>
                     </li>
                 </ul>

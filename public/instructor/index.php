@@ -55,7 +55,7 @@ $resultado_pagina = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                                                 <th>Formacion</th>
                                                                 <th>Ficha</th>
                                                                 <th>Jornada</th>
-                                                                <th colspan="2">Acción</th>
+                                                                <th colspan="3">Acción</th>
                                                             </tr>
                                                         </thead>
                                                         <tbody>
@@ -140,6 +140,14 @@ $resultado_pagina = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                                                             value="<?= $entrada["documento"] ?>">
                                                                         <button class="btn btn-orange" type="submit"
                                                                             name="devolv">Devolver Herramienta</button>
+                                                                    </form>
+                                                                </td>
+                                                                <td>
+                                                                    <form method="POST" action="./estado.php">
+                                                                        <input type="hidden" name="documento"
+                                                                            value="<?= $entrada["documento"] ?>">
+                                                                        <button class="btn btn-primary" type="submit"
+                                                                            name="devolv">Activar</button>
                                                                     </form>
                                                                 </td>
 

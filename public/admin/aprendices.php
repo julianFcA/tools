@@ -1,23 +1,24 @@
 <?php
 require_once 'template.php';
 
-$limit = 100; // Número de filas por página
-$page = isset($_GET['page']) ? $_GET['page'] : 1; // Página actual
+// Número de filas por página
+$limit = 20; // Número de filas por página
+
+// Página actual
+$page = isset($_GET['page']) ? $_GET['page'] : 1;
 
 // Calcula el offset basado en la página actual
 $offset = ($page - 1) * $limit;
 
-$query = "SELECT empresa.nit_empre, empresa.nom_empre, empresa.direcc_empre, empresa.telefono, empresa.correo_empre, licencia.fecha_ini, licencia.fecha_fin, licencia.esta_licen, usuario.nombre, usuario.documento, usuario.correo, usuario.codigo_barras,usuario.ficha, usuario.fecha_registro, formacion.nom_forma ,jornada.tp_jornada FROM empresa INNER JOIN licencia ON empresa.nit_empre = licencia.nit_empre LEFT JOIN usuario ON empresa.nit_empre = usuario.nit_empre  INNER JOIN rol ON usuario.id_rol = rol.id_rol INNER JOIN formacion ON usuario.ficha = formacion.ficha INNER JOIN jornada ON formacion.id_jornada = jornada.id_jornada WHERE empresa.nit_empre > 0 AND usuario.id_rol = 2";
+// Consulta para obtener los datos de la página actual
+$query = "SELECT empresa.nit_empre, empresa.nom_empre, empresa.direcc_empre, empresa.telefono, empresa.correo_empre, licencia.fecha_ini, licencia.fecha_fin, licencia.esta_licen, usuario.nombre,usuario.apellido, usuario.documento, usuario.correo, usuario.codigo_barras, usuario.fecha_registro, formacion.nom_forma ,jornada.tp_jornada,  tp_docu.nom_tp_docu, deta_ficha.ficha FROM empresa INNER JOIN licencia ON empresa.nit_empre = licencia.nit_empre LEFT JOIN usuario ON empresa.nit_empre = usuario.nit_empre  INNER JOIN rol ON usuario.id_rol = rol.id_rol INNER JOIN deta_ficha ON deta_ficha.documento = usuario.documento INNER JOIN ficha ON ficha.ficha = deta_ficha.ficha INNER JOIN formacion ON ficha.id_forma = formacion.id_forma INNER JOIN jornada ON ficha.id_jornada = jornada.id_jornada INNER JOIN tp_docu ON usuario.id_tp_docu = tp_docu.id_tp_docu WHERE empresa.nit_empre > 0 AND ficha.ficha >=1 AND jornada.id_jornada >=1 AND usuario.id_rol = 3 LIMIT :limit OFFSET :offset";
 
-$result = $conn->query($query);
-
-// Definir el número de resultados por página y la página actual
-$porPagina = 20; // Puedes ajustar esto según tus necesidades
-$pagina = isset($_GET['pagina']) ? $_GET['pagina'] : 1;
-$empieza = ($pagina - 1) * $porPagina;
-
-// Inicializa la variable $resultado_pagina
-$resultado_pagina = $result->fetchAll(PDO::FETCH_ASSOC);
+// Preparar y ejecutar la consulta
+$stmt = $conn->prepare($query);
+$stmt->bindParam(':limit', $limit, PDO::PARAM_INT);
+$stmt->bindParam(':offset', $offset, PDO::PARAM_INT);
+$stmt->execute();
+$resultado_pagina = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 ?>
 
@@ -37,15 +38,16 @@ $resultado_pagina = $result->fetchAll(PDO::FETCH_ASSOC);
                                     <div class="col-12">
                                         <div class="card">
                                             <div class="card-header">
-                                                <h4 class="card-title">Actividad de Empresas| Estado de Licencia</h4>
+                                                <h4 class="card-title">Actividad de Aprendices</h4>
                                             </div>
                                             <div class="card-body">
                                                 <div class="table-responsive">
                                                     <!-- Tabla HTML para mostrar los resultados -->
-                                                    <table id="example3" class="table table-striped table-bordered" style="width:100%">
+                                                    <table id="example3" class="table table-striped table-bordered"
+                                                        style="width:100%">
                                                         <thead>
                                                             <tr>
-                                                                <th>Nombre de Instructor</th>
+                                                                <th>Nombre de Aprendiz</th>
                                                                 <th>Numero de Identificación</th>
                                                                 <th>Correo de Instructor</th>
                                                                 <th>Codigo de Barras de Administrador</th>
@@ -53,12 +55,12 @@ $resultado_pagina = $result->fetchAll(PDO::FETCH_ASSOC);
                                                                 <th>Formacion</th>
                                                                 <th>Ficha</th>
                                                                 <th>Jornada</th>
-                                                                <th colspan="2">Acción</th>
+                                                                <th >Acción</th>
                                                             </tr>
                                                         </thead>
                                                         <tbody>
                                                             <?php foreach ($resultado_pagina as $entrada) { ?>
-                                                                <?php
+                                                            <?php
                                                                 // Determinar la clase CSS y el estado del botón según el estado_servi
                                                                 $estadoClase = '';
                                                                 $color = '';
@@ -111,29 +113,29 @@ $resultado_pagina = $result->fetchAll(PDO::FETCH_ASSOC);
                                                                     $mensaje = 'activo';
                                                                 }
                                                                 ?>
-                                                                <tr class="<?= $estadoClase ?>" style="color: <?php echo $color; ?>">
-                                                                    <td><?= $entrada["nombre"] ?></td>
-                                                                    <td><?= $entrada["documento"] ?></td>
-                                                                    <td><?= $entrada["correo"] ?></td>
-                                                                    <td><img src="../../images/<?= $entrada["codigo_barras"] ?>.png" style="max-width: 300px; height: auto; border: 2px solid #ffffff;"><?= $entrada["codigo_barras"] ?></td>
-                                                                    <td><?= $entrada["fecha_registro"] ?></td>
-                                                                    <td><?= $entrada["nom_forma"] ?></td>
-                                                                    <td><?= $entrada["ficha"] ?></td>
-                                                                    <td><?= $entrada["tp_jornada"] ?></td>
-                                                                    <!-- revisar bien este form -->
-                                                                    <td>
-                                                                        <form method="GET" action="actu_instru.php">
-                                                                            <input type="hidden" name="documento" value="<?= $entrada["documento"] ?>">
-                                                                            <button class="btn btn-danger" type="submit" name="actu">Actualizar Datos</button>
-                                                                        </form>
-                                                                    </td>
-                                                                    <td>
-                                                                        <form method="GET" action="elim_instru.php">
-                                                                            <input type="hidden" name="documento" value="<?= $entrada["documento"] ?>">
-                                                                            <button class="btn btn-danger" type="submit" name="elimin">Eliminar</button>
-                                                                        </form>
-                                                                    </td>
-                                                                </tr>
+                                                            <tr class="<?= $estadoClase ?>"
+                                                                style="color: <?php echo $color; ?>">
+                                                                <td><?= $entrada["nombre"] ?></td>
+                                                                <td><?= $entrada["documento"] ?></td>
+                                                                <td><?= $entrada["correo"] ?></td>
+                                                                <td><img src="../../images/<?= $entrada["codigo_barras"] ?>.png"
+                                                                        style="max-width: 300px; height: auto; border: 2px solid #ffffff;"><?= $entrada["codigo_barras"] ?>
+                                                                </td>
+                                                                <td><?= $entrada["fecha_registro"] ?></td>
+                                                                <td><?= $entrada["nom_forma"] ?></td>
+                                                                <td><?= $entrada["ficha"] ?></td>
+                                                                <td><?= $entrada["tp_jornada"] ?></td>
+                                                                <!-- revisar bien este form -->
+                                                                <td>
+                                                                    <form method="POST" action="./estado.php">
+                                                                        <input type="hidden" name="documento"
+                                                                            value="<?= $entrada["documento"] ?>">
+                                                                        <button class="btn btn-primary" type="submit"
+                                                                            name="devolv">Activar</button>
+                                                                    </form>
+                                                                </td>
+
+                                                            </tr>
                                                             <?php } ?>
                                                         </tbody>
                                                     </table>
@@ -149,4 +151,20 @@ $resultado_pagina = $result->fetchAll(PDO::FETCH_ASSOC);
             </div>
         </div>
     </div>
+    <section class="d-flex align-items-center">
+        <div class="ml-3">
+            <a href="excel_ap.php" class="mr-2">
+                <img src="../../images/excel1.png" alt="Imagen 2" class="img-fluid" style="max-height: 30px;">
+            </a>
+            <a href="excel_ap.php" class="letra" style="font-size: 14px;">EXCEL</a>
+        </div>
+        <!-- Agregamos un espacio horizontal -->
+        <div style="width: 10px;"></div>
+        <div class="ml-3">
+            <a href="pdf_ap.php" class="mr-2">
+                <img src="../../images/pdf1.png" alt="Imagen 1" class="img-fluid" style="max-height: 30px;">
+            </a>
+            <a href="pdf_ap.php" class="letra" style="font-size: 14px;">PDF</a>
+        </div>
+    </section>
 </div>

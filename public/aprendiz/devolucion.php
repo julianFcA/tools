@@ -1,51 +1,36 @@
 <?php
 require_once 'template.php';
 
-$columnas = [];
+$docu = $_SESSION['documento'];
 
-if (isset($_GET['documento'])) {
-    $consulta_tipo = $conn->prepare("SELECT usuario.nombre, usuario.apellido, usuario.documento, usuario.correo, usuario.codigo_barras, empresa.nit_empre, empresa.nom_empre FROM usuario INNER JOIN empresa ON empresa.nit_empre = usuario.nit_empre WHERE usuario.documento = :documento;");
-    $consulta_tipo->bindParam(':documento', $_GET['documento']);
-    $consulta_tipo->execute();
-    $columnas = $consulta_tipo->fetch(PDO::FETCH_ASSOC);
-}
+$limit = 100; // Número de filas por página
+$page = isset($_POST['page']) ? $_POST['page'] : 1; // Página actual
 
-if (isset($_POST["MM_register"]) && ($_POST["MM_register"] == "formRegister")) {
-    // Imagen debe manejarse como archivo, no como texto plano
-    $documento = $_POST['documento'];
-    $nombre = $_POST['nombre'];
-    $apellido = $_POST['apellido'];
-    $correo = $_POST['correo'];
+// Calcula el offset basado en la página actual
+$offset = ($page - 1) * $limit;
 
-    // Validación de campos vacíos
-    if (empty($documento) || empty($nombre) || empty($apellido) || empty($correo)) {
-        echo '<script>alert("Existen datos vacíos");</script>';
-        echo '<script>window.location="actu_admin.php"</script>';
-    } else {
-        // Actualización de registros
-        $actu_update = $conn->prepare("UPDATE usuario SET documento = :nuevo_documento, nombre = :nombre, apellido = :apellido,  correo = :correo WHERE documento = :documento");
+    $query = "SELECT 
+        herramienta.*, 
+        tp_herra.nom_tp_herra, 
+        marca_herra.nom_marca, 
+        prestamo_herra.*, 
+        detalle_prestamo.* 
+    FROM herramienta 
+    INNER JOIN tp_herra ON herramienta.id_tp_herra = tp_herra.id_tp_herra
+    INNER JOIN marca_herra ON herramienta.id_marca = marca_herra.id_marca 
+    INNER JOIN detalle_prestamo ON herramienta.codigo_barra_herra = detalle_prestamo.codigo_barra_herra  
+    INNER JOIN prestamo_herra ON detalle_prestamo.id_presta = prestamo_herra.id_presta
+    WHERE prestamo_herra.documento = :documento AND
+          herramienta.id_tp_herra >= 1 AND 
+          marca_herra.id_marca >= 1 AND detalle_prestamo.estado_presta = 'prestado' or detalle_prestamo.estado_presta = 'incompleto'";
 
-        $actu_update->bindParam(':nuevo_documento', $documento);
-        $actu_update->bindParam(':nombre', $nombre);
-        $actu_update->bindParam(':apellido', $apellido);
-        $actu_update->bindParam(':correo', $correo);
-        $actu_update->bindParam(':documento', $_POST['documento']); // Se mantiene como $_POST['documento']
-
-        try {
-            $actu_update->execute();
-            echo '<script>alert("Actualización Exitosa ");</script>';
-            echo '<script>window.location="./index.php"</script>';
-            exit;
-        } catch (PDOException $e) {
-            echo "Error al ejecutar la consulta: " . $e->getMessage();
-        }
-    }
-}
+    // Preparar y ejecutar la consulta
+    $stmt = $conn->prepare($query);
+    $stmt->bindParam(':documento', $docu);
+    $result = $stmt->execute();
+    $resultado_pagina = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 ?>
-
-
-
 
 <div class="content-wrapper">
     <!-- Container-fluid starts -->
@@ -56,61 +41,76 @@ if (isset($_POST["MM_register"]) && ($_POST["MM_register"] == "formRegister")) {
             <div class="row">
                 <div class="col-lg-12 p-0">
                     <div class="card-header">
-
                         <div class="content-body container-table">
                             <div class="container-fluid">
                                 <div class="row">
                                     <div class="col-12">
-                                        <div class="registro_container">
-                                            <!-- Formulario de Registro -->
-                                            <form class="registro_form" name="formRegister" autocomplete="off" method="POST" id="formulario" enctype="multipart/form-data">
+                                        <div class="card">
+                                            <div class="card-header">
+                                                <h4 class="card-title">Prestamo de Herramienta</h4>
+                                            </div>
+                                            <div class="card-body">
+                                                <form action="termino_devo.php" method="post">
+                                                    <div class="table-responsive">
+                                                        <!-- Tabla HTML para mostrar los resultados -->
+                                                        <table id="example3" class="table table-striped table-bordered"
+                                                            style="width:100%">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th>Codigo De Barras</th>
+                                                                    <th>Tipo de Herramienta</th>
+                                                                    <th>Nombre De Herramienta</th>
+                                                                    <th>Marca</th>
+                                                                    <th>Imagen</th>
+                                                                    <th>Fecha de Adquisición</th>
+                                                                    <th>Cantidad</th>
+                                                                    <th>Dias</th>
+                                                                    <th>Fecha de Entrega</th>
+                                                                    <th>Seleccionar</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                <?php
 
+                                                                foreach ($resultado_pagina as $entrada) {
 
-                                                <h1>Actualizar Datos de Administrador de Empresa</h1>
+                                                                    ?>
+                                                                    <tr style="background-color: <?= $colorFondo ?>;">
+                                                                        <td><?= $entrada["codigo_barra_herra"] ?></td>
+                                                                        <td><?= $entrada["nom_tp_herra"] ?></td>
+                                                                        <td><?= $entrada["nombre_herra"] ?></td>
+                                                                        <td><?= $entrada["nom_marca"] ?></td>
+                                                                        <td class="image-container">
+                                                                            <?php
+
+                                                                            $imageUrl = '../../images/' . $entrada["imagen"];
+                                                                            ?>
+                                                                            <img src="<?= $imageUrl ?>"
+                                                                                alt="Imagen de herramienta"
+                                                                                style="max-width: 300px; height: auto; border: 2px solid #ffffff;">
+                                                                        </td>
+                                                                        <td><?= $entrada["fecha_adqui"] ?></td>
+                                                                        <td><?= $entrada["cant_herra"] ?></td>
+                                                                        <td><?= $entrada["dias"] ?></td>
+                                                                        <td><?= $entrada["fecha_entrega"] ?></td>    
+                                                                        <td><input type="checkbox" name="id_deta_presta[]"
+                                                                                value="<?= $entrada['id_deta_presta'] ?>"
+                                                                                onclick="checkLimit()"></td>
+                                                                        </td>
+                                                                    </tr>
+                                                                <?php }
+                                                                ; ?>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                    <br>
+                                                    <button type="submit" class="btn btn-orange" style="width: 50%;"
+                                                        name="documento" value="<?php echo $documento_usuario ?>"
+                                                        onclick="prepareAndRedirect()">Devolver Herramientas</button>
+                                                </form>
                                                 <br>
-                                                <div class="form-group">
-                                                    <label>Nit de Empresa</label>
-                                                    <input type="varchar" placeholder="Ingrese Nit de Empresa" class="form-control" value="<?php echo $columnas['nit_empre'] ?>" name="nit_empre" required readonly>
-                                                </div>
-
-                                                <div class="form-group">
-                                                    <label>Nombre de Empresa</label>
-                                                    <input type="text" placeholder="" class="form-control" value="<?php echo $columnas['nom_empre'] ?>" name="nom_empre" readonly>
-                                                </div>
-
-                                                <div class="form-group">
-                                                    <label>Nombre de Administrador</label>
-                                                    <input type="text" placeholder="" class="form-control" value="<?php echo $columnas['nombre'] ?>" name="nombre" title="Debe ser de 15 letras" required oninput="validarLetras(this)" minlength="6" maxlength="12" readonly>
-                                                </div>
-
-                                                <div class="form-group">
-                                                    <label>Apellido de Administrador</label>
-                                                    <input type="text" placeholder="" class="form-control" value="<?php echo $columnas['apellido'] ?>" name="apellido" title="Debe ser de 15 letras" required oninput="validarLetras(this)" minlength="6" maxlength="12" readonly>
-                                                </div>
-
-                                                <div class="form-group">
-                                                    <label>Numero de Documento de Administrador</label>
-                                                    <input type="text" placeholder="Ingrese Documento de Administrador" class="form-control" value="<?php echo $columnas['documento'] ?>" name="documento" title="Debe ser de 10 dígitos" required onkeyup="espacios(this)" minlength="7" maxlength="10" readonly>
-                                                </div>
-
-                                                <div class="form-group">
-                                                    <label> Correo de Administrador</label>
-                                                    <input type="email" placeholder="" class="form-control" value="<?php echo $columnas['correo'] ?>" name="correo" required onkeyup="espacios(this)" minlength="6" maxlength="25">
-                                                </div>
-
-                                                <div class="form-group">
-                                                    <label>Codigo de Barras</label>
-                                                    <img src="./../../images/<?= $columnas["codigo_barras"] ?>.png" style="max-width: 300px; height: auto; border: 2px solid #ffffff;">
-                                                    <input type="varchar" placeholder="" class="form-control" value="<?php echo $columnas['codigo_barras'] ?>" name="codigo_barras" required readonly>
-                                                </div>
-
-                                                <input type="submit" name="MM_register" value="Actualizar" class="btn-primary"></input>
-                                                <input type="hidden" name="MM_register" value="formRegister">
-
-                                                <div class="redirecciones">
-                                                    <a href="./index.php" class="link return">Regresar</a>
-                                                </div>
-                                            </form>
+                                                <a href="./index.php" class="btn btn-warning btn-sm mt-2" style="width: 10%;">Volver</a>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -122,3 +122,25 @@ if (isset($_POST["MM_register"]) && ($_POST["MM_register"] == "formRegister")) {
         </div>
     </div>
 </div>
+
+<script>
+    function prepareAndRedirect() {
+        const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+        const selectedToolIds = [];
+        const selectedToolQuantities = [];
+
+        checkboxes.forEach(checkbox => {
+            if (checkbox.checked) {
+                selectedToolIds.push(checkbox.value);
+                const quantityInput = document.querySelector(
+                    `input[name="cantidades[]"][value="${checkbox.value}"]`);
+                selectedToolQuantities.push(quantityInput.value);
+            }
+        });
+
+        const toolsInput = document.querySelector('input[name="herramienta_ids"]');
+        const quantitiesInput = document.querySelector('input[name="cantidades"]');
+        toolsInput.value = selectedToolIds.join(',');
+        quantitiesInput.value = selectedToolQuantities.join(',');
+    }
+</script>

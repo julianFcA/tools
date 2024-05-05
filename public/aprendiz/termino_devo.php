@@ -1,6 +1,8 @@
 <?php
 require_once 'template.php';
 
+$docu = $_SESSION['documento'];
+
 // Verifica si se ha enviado un formulario POST y si se han seleccionado herramientas
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id_deta_presta']) && is_array($_POST['id_deta_presta'])) {
     // Almacena las herramientas seleccionadas en la variable de sesión
@@ -9,7 +11,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id_deta_presta']) && 
     redirectToPrestamoPage("Debes seleccionar al menos una herramienta del inventario.");
     echo '<script>window.location="./index.php"</script>';
 }
-$documento = $_POST['documento'];
 // Consulta para recuperar los detalles de las herramientas seleccionadas
 $query = "SELECT herramienta.*, 
                  tp_herra.nom_tp_herra, 
@@ -21,7 +22,7 @@ $query = "SELECT herramienta.*,
           INNER JOIN marca_herra ON herramienta.id_marca = marca_herra.id_marca 
           INNER JOIN detalle_prestamo ON herramienta.codigo_barra_herra = detalle_prestamo.codigo_barra_herra  
           INNER JOIN prestamo_herra ON detalle_prestamo.id_presta = prestamo_herra.id_presta 
-          WHERE prestamo_herra.documento = $documento AND detalle_prestamo.id_deta_presta IN (";
+          WHERE prestamo_herra.documento = $docu AND detalle_prestamo.id_deta_presta IN (";
 // Construye la parte dinámica de la consulta con marcadores de posición
 $placeholders = implode(',', array_fill(0, count($_SESSION['id_presta']), '?'));
 // Completa la consulta

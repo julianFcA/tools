@@ -26,13 +26,13 @@ $nit = $_SESSION['nit_empre'];
 
 
 // Verifica si hay una marca de tiempo de última actividad
-if(isset($_SESSION['last_activity'])){
+if (isset($_SESSION['last_activity'])) {
     // Obtiene la diferencia de tiempo en segundos
     $inactive = 300; // 5 minutos en segundos
     $session_life = time() - $_SESSION['last_activity'];
 
     // Si ha pasado el tiempo de inactividad, cierra la sesión
-    if($session_life > $inactive){
+    if ($session_life > $inactive) {
         session_unset();     // Elimina todas las variables de sesión
         session_destroy();   // Finaliza la sesión actual
         header("Location: ../../index.php"); // Redirige a la página de inicio de sesión
@@ -157,15 +157,19 @@ $_SESSION['last_activity'] = time();
             </nav>
         </header>
         <!-- Side-Nav-->
-        <aside class="main-sidebar hidden-print ">
-            <section class="sidebar" id="sidebar-scroll">
+        <aside class="main-sidebar hidden-print">
+            <section class="sidebar" id="sidebar-scroll" style="max-height: 600px; overflow-y: auto;">
                 <!-- Sidebar Menu-->
                 <ul class="sidebar-menu">
 
-                    <li class="active treeview"><a style="background-color:rgba(255, 165, 0, 0.8);" class="waves-effect waves-dark" href="#!"><i class="icon-briefcase" href="#!"></i><span>MENÚ</span><i class="icon-arrow-down"></i></a>
+                    <li class="active treeview">
+                        <a style="background-color:rgba(255, 165, 0, 0.8);" class="waves-effect waves-dark" href="#!">
+                            <i class="icon-briefcase" href="#!"></i><span>MENÚ</span><i class="icon-arrow-down"></i>
+                        </a>
 
                         <ul class="treeview-menu">
                             <li><a class="waves-effect waves-dark" href="index.php"><i class="icon-arrow-right"></i>Instructores</a></li>
+                            <li><a class="waves-effect waves-dark" href="aprendices.php"><i class="icon-arrow-right"></i>Aprendices</a></li>
                             <li><a class="waves-effect waves-dark" href="formacion.php"><i class="icon-arrow-right"></i>Formaciones</a></li>
                             <li><a class="waves-effect waves-dark" href="registro_forma.php"><i class="icon-arrow-right"></i> Registrar Formación</a></li>
                             <li><a class="waves-effect waves-dark" href="formacion_asig.php"><i class="icon-arrow-right"></i>Formaciones Asignadas</a></li>
@@ -183,76 +187,76 @@ $_SESSION['last_activity'] = time();
                 </ul>
             </section>
         </aside>
-    </div>
-
-
-    <section class="container-fluid footer_section">
-        <p>
-            Sena. Ibagué - Tolima
-            <a href="https://centrodeindustria.blogspot.com/"> Centro de Industria y Construcción</a>
-        </p>
-    </section>
-
-    <!-- Required Jqurey -->
-    <script src="./../../assets/plugins/Jquery/dist/jquery.min.js"></script>
-    <script src="./../../assets/plugins/jquery-ui/jquery-ui.min.js"></script>
-    <script src="./../../assets/plugins/tether/dist/js/tether.min.js"></script>
-
-    <!-- Required Fremwork -->
-    <script src="./../../assets/plugins/bootstrap/js/bootstrap.min.js"></script>
-
-    <!-- Scrollbar JS-->
-    <script src="./../../assets/plugins/jquery-slimscroll/jquery.slimscroll.js"></script>
-    <script src="./../../assets/plugins/jquery.nicescroll/jquery.nicescroll.min.js"></script>
-
-    <!--classic JS-->
-    <script src="./../../assets/plugins/classie/classie.js"></script>
-
-    <!-- notification -->
-    <script src="./../../assets/plugins/notification/js/bootstrap-growl.min.js"></script>
-
-    <!-- Sparkline charts -->
-    <script src="./../../assets/plugins/jquery-sparkline/dist/jquery.sparkline.js"></script>
-
-    <!-- Counter js  -->
-    <script src="./../../assets/plugins/waypoints/jquery.waypoints.min.js"></script>
-    <script src="./../../assets/plugins/countdown/js/jquery.counterup.js"></script>
-
-    <!-- Echart js -->
-    <script src="./../..assets/plugins/charts/echarts/js/echarts-all.js"></script>
-
-    <script src="https://code.highcharts.com/highcharts.js"></script>
-    <script src="https://code.highcharts.com/modules/exporting.js"></script>
-    <script src="https://code.highcharts.com/highcharts-3d.js"></script>
-
-    <!-- custom js -->
-    <script type="text/javascript" src="./../../assets/js/main.min.js"></script>
-    <script type="text/javascript" src="./../../assets/pages/dashboard.js"></script>
-    <script type="text/javascript" src="./../../assets/pages/elements.js"></script>
-    <script src="./../../assets/js/menu.min.js"></script>
-
-    <script src="./../../js/public.js"></script>
-
-    <!-- Bootstrap JS y otros scripts -->
-
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.0.7/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-
-
-    <!-- Tus scripts personalizados -->
-    <script src="../assets/js/register.js"></script>
 
 
 
+        <section class="container-fluid footer_section">
+            <p>
+                Sena. Ibagué - Tolima
+                <a href="https://centrodeindustria.blogspot.com/"> Centro de Industria y Construcción</a>
+            </p>
+        </section>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3" crossorigin="anonymous"></script>
-    <!-- jQuery -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-    <!-- DataTable -->
-    <script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
-    <script src="https://cdn.datatables.net/1.12.1/js/dataTables.bootstrap5.min.js"></script>
-    <!-- Custom JS -->
-   
+        <!-- Required Jqurey -->
+        <script src="./../../assets/plugins/Jquery/dist/jquery.min.js"></script>
+        <script src="./../../assets/plugins/jquery-ui/jquery-ui.min.js"></script>
+        <script src="./../../assets/plugins/tether/dist/js/tether.min.js"></script>
+
+        <!-- Required Fremwork -->
+        <script src="./../../assets/plugins/bootstrap/js/bootstrap.min.js"></script>
+
+        <!-- Scrollbar JS-->
+        <script src="./../../assets/plugins/jquery-slimscroll/jquery.slimscroll.js"></script>
+        <script src="./../../assets/plugins/jquery.nicescroll/jquery.nicescroll.min.js"></script>
+
+        <!--classic JS-->
+        <script src="./../../assets/plugins/classie/classie.js"></script>
+
+        <!-- notification -->
+        <script src="./../../assets/plugins/notification/js/bootstrap-growl.min.js"></script>
+
+        <!-- Sparkline charts -->
+        <script src="./../../assets/plugins/jquery-sparkline/dist/jquery.sparkline.js"></script>
+
+        <!-- Counter js  -->
+        <script src="./../../assets/plugins/waypoints/jquery.waypoints.min.js"></script>
+        <script src="./../../assets/plugins/countdown/js/jquery.counterup.js"></script>
+
+        <!-- Echart js -->
+        <script src="./../..assets/plugins/charts/echarts/js/echarts-all.js"></script>
+
+        <script src="https://code.highcharts.com/highcharts.js"></script>
+        <script src="https://code.highcharts.com/modules/exporting.js"></script>
+        <script src="https://code.highcharts.com/highcharts-3d.js"></script>
+
+        <!-- custom js -->
+        <script type="text/javascript" src="./../../assets/js/main.min.js"></script>
+        <script type="text/javascript" src="./../../assets/pages/dashboard.js"></script>
+        <script type="text/javascript" src="./../../assets/pages/elements.js"></script>
+        <script src="./../../assets/js/menu.min.js"></script>
+
+        <script src="./../../js/public.js"></script>
+
+        <!-- Bootstrap JS y otros scripts -->
+
+        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.0.7/dist/umd/popper.min.js"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+
+        <!-- Tus scripts personalizados -->
+        <script src="../assets/js/register.js"></script>
+
+
+
+
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3" crossorigin="anonymous"></script>
+        <!-- jQuery -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+        <!-- DataTable -->
+        <script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
+        <script src="https://cdn.datatables.net/1.12.1/js/dataTables.bootstrap5.min.js"></script>
+        <!-- Custom JS -->
+
 
 
 </body>

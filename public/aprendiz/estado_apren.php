@@ -9,7 +9,7 @@ $page = isset($_GET['page']) ? $_GET['page'] : 1; // Página actual
 // Calcula el offset basado en la página actual
 $offset = ($page - 1) * $limit;
 
-$query = "SELECT usuario.nombre, usuario.apellido, usuario.documento, usuario.correo, usuario.codigo_barras, usuario.fecha_registro, formacion.nom_forma, jornada.tp_jornada, tp_docu.nom_tp_docu, deta_ficha.ficha, prestamo_herra.*, detalle_prestamo.*, herramienta.*, reporte.*, deta_reporte.*
+$query = "SELECT usuario.nombre, usuario.apellido, usuario.documento, usuario.correo, usuario.codigo_barras, usuario.fecha_registro, formacion.nom_forma, jornada.tp_jornada, tp_docu.nom_tp_docu, deta_ficha.ficha, prestamo_herra.*, detalle_prestamo.*, herramienta.*
 FROM usuario 
 INNER JOIN rol ON usuario.id_rol = rol.id_rol 
 INNER JOIN deta_ficha ON deta_ficha.documento = usuario.documento 
@@ -20,9 +20,7 @@ INNER JOIN tp_docu ON usuario.id_tp_docu = tp_docu.id_tp_docu
 INNER JOIN prestamo_herra ON usuario.documento = prestamo_herra.documento 
 INNER JOIN detalle_prestamo ON prestamo_herra.id_presta = detalle_prestamo.id_presta
 INNER JOIN herramienta ON herramienta.codigo_barra_herra = detalle_prestamo.codigo_barra_herra  
-INNER JOIN reporte ON detalle_prestamo.id_deta_presta = reporte.id_deta_presta
-INNER JOIN deta_reporte ON deta_reporte.id_reporte = reporte.id_reporte
-WHERE usuario.documento = '$docu' AND ficha.ficha >= 1 AND jornada.id_jornada >= 1 AND usuario.id_rol = 3 AND detalle_prestamo.estado_presta = 'reportado'";
+WHERE usuario.documento= '$docu' AND ficha.ficha >= 1 AND jornada.id_jornada >= 1 AND usuario.id_rol = 3";
 
 
 $result = $conn->query($query);
@@ -107,8 +105,6 @@ $userdata = json_encode($resultado_pagina);
                     <td>${json_data.dias}</td>
                     <td>${json_data.fecha_entrega}</td>
                     <td>${json_data.estado_presta}</td>
-                    <td>${json_data.cant_herra}</td>
-                    <td>${json_data.descripcion}</td>
                 </tr>`;
             });
             document.getElementById('tableBody_users').innerHTML = content;
@@ -139,7 +135,7 @@ $userdata = json_encode($resultado_pagina);
                                     <div class="col-12">
                                         <div class="card">
                                             <div class="card-header">
-                                                <h4 class="card-title">Actividad | Reporte de Aprendices</h4>
+                                                <h4 class="card-title">Actividad | Estado de prestamos</h4>
                                             </div>
                                             <div class="container my-4">
                                                 <div class="row">
@@ -160,8 +156,6 @@ $userdata = json_encode($resultado_pagina);
                                                                         <th class="centered">Dias de Prestamo</th>
                                                                         <th class="centered">Fecha de Entrega</th>
                                                                         <th class="centered">Estado de Prestamo</th>
-                                                                        <th class="centered">Cantidad Prestada</th>
-                                                                        <th class="centered">Descripción</th>
                                                                     </tr>
                                                                 </thead>
                                                                 <tbody id="tableBody_users">
@@ -171,18 +165,18 @@ $userdata = json_encode($resultado_pagina);
                                                     </div>
                                                     <section class="d-flex align-items-center">
                                                         <div class="ml-3">
-                                                            <a href="excel_reporte.php" class="mr-2">
+                                                            <a href="excel_presta.php" class="mr-2">
                                                                 <img src="../../images/excel1.png" alt="Imagen 2" class="img-fluid" style="max-height: 30px;">
                                                             </a>
-                                                            <a href="excel_reporte.php" class="letra" style="font-size: 14px;">EXCEL</a>
+                                                            <a href="excel_presta.php" class="letra" style="font-size: 14px;">EXCEL</a>
                                                         </div>
                                                         <!-- Agregamos un espacio horizontal -->
                                                         <div style="width: 10px;"></div>
                                                         <div class="ml-3">
-                                                            <a href="pdf_reporte.php" class="mr-2">
+                                                            <a href="pdf_presta.php" class="mr-2">
                                                                 <img src="../../images/pdf1.png" alt="Imagen 1" class="img-fluid" style="max-height: 30px;">
                                                             </a>
-                                                            <a href="pdf_reporte.php" class="letra" style="font-size: 14px;">PDF</a>
+                                                            <a href="pdf_presta.php" class="letra" style="font-size: 14px;">PDF</a>
                                                         </div>
                                                     </section>
                                                 </div>
