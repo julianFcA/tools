@@ -11,69 +11,7 @@ $page = isset($_GET['page']) ? $_GET['page'] : 1;
 $offset = ($page - 1) * $limit;
 
 // Consulta para obtener los datos de la página actual
-$query ="SELECT 
-empresa.nit_empre, 
-empresa.nom_empre, 
-empresa.direcc_empre, 
-empresa.telefono, 
-empresa.correo_empre, 
-licencia.fecha_ini, 
-licencia.fecha_fin, 
-licencia.esta_licen, 
-usuario.nombre, 
-usuario.apellido, 
-usuario.documento, 
-usuario.correo, 
-usuario.codigo_barras, 
-usuario.fecha_registro, 
-formacion.nom_forma, 
-jornada.tp_jornada,  
-tp_docu.nom_tp_docu, 
-deta_ficha.ficha, 
-MAX(prestamo_herra.id_presta) AS max_id_presta,
-MAX(detalle_prestamo.id_deta_presta) AS max_id_deta_presta,
-MAX(herramienta.codigo_barra_herra) AS max_codigo_barra_herra,
-MAX(reporte.id_reporte) AS max_id_reporte,
-MAX(deta_reporte.id_deta_reporte) AS max_id_deta_reporte
-FROM 
-empresa 
-INNER JOIN 
-licencia ON empresa.nit_empre = licencia.nit_empre 
-LEFT JOIN 
-usuario ON empresa.nit_empre = usuario.nit_empre  
-LEFT JOIN  
-rol ON usuario.id_rol = rol.id_rol 
-INNER JOIN 
-deta_ficha ON deta_ficha.documento = usuario.documento 
-INNER JOIN 
-ficha ON ficha.ficha = deta_ficha.ficha 
-INNER JOIN 
-formacion ON ficha.id_forma = formacion.id_forma 
-INNER JOIN 
-jornada ON ficha.id_jornada = jornada.id_jornada  
-INNER JOIN 
-tp_docu ON usuario.id_tp_docu = tp_docu.id_tp_docu 
-LEFT JOIN 
-prestamo_herra ON usuario.documento = prestamo_herra.documento 
-LEFT JOIN 
-detalle_prestamo ON prestamo_herra.id_presta = detalle_prestamo.id_presta
-LEFT JOIN 
-herramienta ON herramienta.codigo_barra_herra = detalle_prestamo.codigo_barra_herra  
-LEFT JOIN 
-reporte ON detalle_prestamo.id_deta_presta = reporte.id_deta_presta
-LEFT JOIN 
-deta_reporte ON deta_reporte.id_reporte = reporte.id_reporte
-WHERE 
-empresa.nit_empre > 0 
-AND ficha.ficha >= 1 
-AND jornada.id_jornada >= 1 
-AND usuario.id_rol = 3 
-AND detalle_prestamo.estado_presta = 'reportado'
-GROUP BY
-empresa.nit_empre, 
-usuario.documento
-LIMIT 
-:limit OFFSET :offset"; // Agregar los marcadores de posición de límite y desplazamiento
+$query = "SELECT empresa.nit_empre, empresa.nom_empre, empresa.direcc_empre, empresa.telefono, empresa.correo_empre, licencia.fecha_ini, licencia.fecha_fin, licencia.esta_licen, usuario.nombre,usuario.apellido, usuario.documento, usuario.correo, usuario.codigo_barras, usuario.fecha_registro, formacion.nom_forma ,jornada.tp_jornada,  tp_docu.nom_tp_docu, deta_ficha.ficha, estado_usu. * FROM empresa INNER JOIN licencia ON empresa.nit_empre = licencia.nit_empre LEFT JOIN usuario ON empresa.nit_empre = usuario.nit_empre  INNER JOIN rol ON usuario.id_rol = rol.id_rol INNER JOIN deta_ficha ON deta_ficha.documento = usuario.documento INNER JOIN estado_usu ON estado_usu.id_esta_usu = usuario.id_esta_usu INNER JOIN ficha ON ficha.ficha = deta_ficha.ficha INNER JOIN formacion ON ficha.id_forma = formacion.id_forma INNER JOIN jornada ON ficha.id_jornada = jornada.id_jornada INNER JOIN tp_docu ON usuario.id_tp_docu = tp_docu.id_tp_docu WHERE empresa.nit_empre > 0 AND ficha.ficha >=1 AND jornada.id_jornada >=1 AND usuario.id_rol = 3 LIMIT :limit OFFSET :offset"; // Agregar los marcadores de posición de límite y desplazamiento
 
 // Preparar y ejecutar la consulta
 $stmt = $conn->prepare($query);
@@ -105,8 +43,7 @@ $resultado_pagina = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                             <div class="card-body">
                                                 <div class="table-responsive">
                                                     <!-- Tabla HTML para mostrar los resultados -->
-                                                    <table id="example3" class="table table-striped table-bordered"
-                                                        style="width:100%">
+                                                    <table id="example3" class="table table-striped table-bordered" style="width:100%">
                                                         <thead>
                                                             <tr>
                                                                 <th>Nombre de Aprendiz</th>
@@ -122,98 +59,59 @@ $resultado_pagina = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                                         </thead>
                                                         <tbody>
                                                             <?php foreach ($resultado_pagina as $entrada) { ?>
-                                                            <?php
-                                                                // Determinar la clase CSS y el estado del botón según el estado_servi
+                                                                <?php
+                                                                // Inicializar variables
                                                                 $estadoClase = '';
                                                                 $color = '';
                                                                 $mensaje = '';
-                                                                $botonInactivo = '';
-                                                                $botonCancelar = '';
-                                                                $activo = '';
+                                                                $botonActivar = '';
 
-                                                                $horaFinalizacionPasada = ($entrada["estado_presta"]) ;
-
-                                                                if ($entrada["esta_licen"] == 'inactivo' || $horaFinalizacionPasada) {
-                                                                    $estadoClase = 'table-warning';
-                                                                    $botonInactivo = 'disabled';
-                                                                    $color = 'orange';
-                                                                    $mensaje = 'Bloqueado';
-
-                                                                    // Actualizar el estado en la base de datos
-                                                                    if ($horaFinalizacionPasada) {
-                                                                        $updateEstado = $conn->prepare("UPDATE licencia SET esta_licen = 'inactivo' WHERE licencia = :licencia");
-                                                                        $updateEstado->bindParam(':licencia', $entrada["licencia"], PDO::PARAM_INT);
-                                                                        $updateEstado->execute();
-                                                                    } else {
-                                                                        // Si la hora de finalización no ha pasado, pero el estado es 'inactivo', cambia a 'activo'
-                                                                        $updateEstado = $conn->prepare("UPDATE licencia SET esta_licen = 'activo' WHERE licencia = :licencia");
-                                                                        $updateEstado->bindParam(':licencia', $entrada["licencia"], PDO::PARAM_INT);
-                                                                        $updateEstado->execute();
-                                                                    }
-
-                                                                    // Actualiza las variables para reflejar el nuevo estado
+                                                                // Verificar el estado del usuario
+                                                                if ($entrada["id_esta_usu"] == 1) {
+                                                                    // Usuario inactivo, bloquear el botón de activar
+                                                                    $estadoClase = '';
+                                                                    $color = 'green';
+                                                                    $mensaje = 'Activo';
+                                                                    $botonActivar = 'disabled';
+                                                                } else {
+                                                                    // Usuario en cualquier otro estado, habilitar el botón de activar
                                                                     $estadoClase = 'table-success';
-                                                                    $activo = 'Activo';
-                                                                    $color = 'green';
-                                                                    $mensaje = 'Disponible';
-                                                                }
-
-                                                                if ($entrada["esta_licen"] == 'inactivo') {
-                                                                    $estadoClase = '';
-                                                                    $botonInactivo = 'disabled';
                                                                     $color = 'orange';
-                                                                    $mensaje = 'Esta inactivo';
-                                                                } elseif ($entrada["esta_licen"] == 'cancelado') {
-                                                                    $estadoClase = '';
-                                                                    $botonCancelar = 'disabled';
-                                                                    $color = 'red';
-                                                                    $mensaje = 'Esta cancelado';
-                                                                } elseif ($entrada["esta_licen"] == 'activo') {
-                                                                    $estadoClase = '';
-                                                                    $activo = 'disabled';
-                                                                    $color = 'green';
-                                                                    $mensaje = 'activo';
+                                                                    $mensaje = 'Inactivo';
+                                                                    $botonActivar = '';
                                                                 }
                                                                 ?>
-                                                            <tr class="<?= $estadoClase ?>"
-                                                                style="color: <?php echo $color; ?>">
-                                                                <td><?= $entrada["nombre"] ?></td>
-                                                                <td><?= $entrada["documento"] ?></td>
-                                                                <td><?= $entrada["correo"] ?></td>
-                                                                <td><img src="../../images/<?= $entrada["codigo_barras"] ?>.png"
-                                                                        style="max-width: 300px; height: auto; border: 2px solid #ffffff;"><?= $entrada["codigo_barras"] ?>
-                                                                </td>
-                                                                <td><?= $entrada["fecha_registro"] ?></td>
-                                                                <td><?= $entrada["nom_forma"] ?></td>
-                                                                <td><?= $entrada["ficha"] ?></td>
-                                                                <td><?= $entrada["tp_jornada"] ?></td>
-                                                                <!-- revisar bien este form -->
-                                                                <td>
-                                                                    <form method="post" action="./prestamo.php">
-                                                                        <input type="hidden" name="documento"
-                                                                            value="<?= $entrada["documento"] ?>">
-                                                                        <button class="btn btn-success" type="submit"
-                                                                            name="prest">Prestar Herramienta</button>
-                                                                    </form>
-                                                                </td>
-                                                                <td>
-                                                                    <form method="POST" action="./devolucion.php">
-                                                                        <input type="hidden" name="documento"
-                                                                            value="<?= $entrada["documento"] ?>">
-                                                                        <button class="btn btn-orange" type="submit"
-                                                                            name="devolv">Devolver Herramienta</button>
-                                                                    </form>
-                                                                </td>
-                                                                <td>
-                                                                    <form method="POST" action="./estado.php">
-                                                                        <input type="hidden" name="documento"
-                                                                            value="<?= $entrada["documento"] ?>">
-                                                                        <button class="btn btn-primary" type="submit"
-                                                                            name="devolv">Activar</button>
-                                                                    </form>
-                                                                </td>
+                                                                <tr class="<?= $estadoClase ?>" style="color: <?php echo $color; ?>">
+                                                                    <td><?= $entrada["nombre"] ?></td>
+                                                                    <td><?= $entrada["documento"] ?></td>
+                                                                    <td><?= $entrada["correo"] ?></td>
+                                                                    <td><img src="../../images/<?= $entrada["codigo_barras"] ?>.png" style="max-width: 300px; height: auto; border: 2px solid #ffffff;"><?= $entrada["codigo_barras"] ?>
+                                                                    </td>
+                                                                    <td><?= $entrada["fecha_registro"] ?></td>
+                                                                    <td><?= $entrada["nom_forma"] ?></td>
+                                                                    <td><?= $entrada["ficha"] ?></td>
+                                                                    <td><?= $entrada["tp_jornada"] ?></td>
+                                                                    <!-- revisar bien este form -->
+                                                                    <td>
+                                                                        <form method="post" action="./prestamo.php">
+                                                                            <input type="hidden" name="documento" value="<?= $entrada["documento"] ?>">
+                                                                            <button class="btn btn-success" type="submit" name="prest">Prestar Herramienta</button>
+                                                                        </form>
+                                                                    </td>
+                                                                    <td>
+                                                                        <form method="POST" action="./devolucion.php">
+                                                                            <input type="hidden" name="documento" value="<?= $entrada["documento"] ?>">
+                                                                            <button class="btn btn-orange" type="submit" name="devolv">Devolver Herramienta</button>
+                                                                        </form>
+                                                                    </td>
+                                                                    <td>
+                                                                        <form method="POST" action="./estado.php">
+                                                                            <input type="hidden" name="documento" value="<?= $entrada["documento"] ?>">
+                                                                            <button class="btn btn-primary" type="submit" name="activar" <?= $botonActivar ?>>Activar</button>
+                                                                        </form>
+                                                                    </td>
 
-                                                            </tr>
+                                                                </tr>
                                                             <?php } ?>
                                                         </tbody>
                                                     </table>
