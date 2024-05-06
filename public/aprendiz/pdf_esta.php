@@ -27,6 +27,8 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
+$docu= $_SESSION['documento'];
+
 // Consulta SQL
 $sql ="SELECT usuario.nombre, usuario.apellido, usuario.documento, usuario.correo, usuario.codigo_barras, usuario.fecha_registro, formacion.nom_forma, jornada.tp_jornada, tp_docu.nom_tp_docu, deta_ficha.ficha, prestamo_herra.*, detalle_prestamo.*, herramienta.*
 FROM usuario 
@@ -39,7 +41,7 @@ INNER JOIN tp_docu ON usuario.id_tp_docu = tp_docu.id_tp_docu
 INNER JOIN prestamo_herra ON usuario.documento = prestamo_herra.documento 
 INNER JOIN detalle_prestamo ON prestamo_herra.id_presta = detalle_prestamo.id_presta
 INNER JOIN herramienta ON herramienta.codigo_barra_herra = detalle_prestamo.codigo_barra_herra  
-WHERE usuario.documento = '$docu' AND ficha.ficha >= 1 AND jornada.id_jornada >= 1 AND usuario.id_rol = 3";
+WHERE usuario.documento= '$docu' AND ficha.ficha >= 1 AND jornada.id_jornada >= 1 AND usuario.id_rol = 3";
 
 // Ejecuta la consulta
 $result = $conn->query($sql);

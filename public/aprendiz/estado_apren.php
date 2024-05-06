@@ -165,18 +165,18 @@ $userdata = json_encode($resultado_pagina);
                                                     </div>
                                                     <section class="d-flex align-items-center">
                                                         <div class="ml-3">
-                                                            <a href="excel_presta.php" class="mr-2">
+                                                            <a href="excel_esta.php" class="mr-2">
                                                                 <img src="../../images/excel1.png" alt="Imagen 2" class="img-fluid" style="max-height: 30px;">
                                                             </a>
-                                                            <a href="excel_presta.php" class="letra" style="font-size: 14px;">EXCEL</a>
+                                                            <a href="excel_esta.php" class="letra" style="font-size: 14px;">EXCEL</a>
                                                         </div>
                                                         <!-- Agregamos un espacio horizontal -->
                                                         <div style="width: 10px;"></div>
                                                         <div class="ml-3">
-                                                            <a href="pdf_presta.php" class="mr-2">
+                                                            <a href="pdf_esta.php" class="mr-2">
                                                                 <img src="../../images/pdf1.png" alt="Imagen 1" class="img-fluid" style="max-height: 30px;">
                                                             </a>
-                                                            <a href="pdf_presta.php" class="letra" style="font-size: 14px;">PDF</a>
+                                                            <a href="pdf_esta.php" class="letra" style="font-size: 14px;">PDF</a>
                                                         </div>
                                                     </section>
                                                 </div>

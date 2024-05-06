@@ -3,6 +3,15 @@
 require '../../vendor/autoload.php';
 // ini_set('extension', 'zip');
 
+session_start(); // Inicia la sesión si no está iniciada
+
+// Verifica si el documento está definido en la sesión
+if (!isset($_SESSION['documento'])) {
+    die("Error: No se ha proporcionado un documento en la sesión.");
+}
+
+$docu = $_SESSION['documento'];
+
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
@@ -43,7 +52,7 @@ foreach ($tablas as $tabla) {
     INNER JOIN prestamo_herra ON usuario.documento = prestamo_herra.documento 
     INNER JOIN detalle_prestamo ON prestamo_herra.id_presta = detalle_prestamo.id_presta
     INNER JOIN herramienta ON herramienta.codigo_barra_herra = detalle_prestamo.codigo_barra_herra  
-    WHERE ficha.ficha >= 1 AND jornada.id_jornada >= 1 AND usuario.id_rol = 3";;
+    WHERE usuario.documento = '$docu' AND ficha.ficha >= 1 AND jornada.id_jornada >= 1 AND usuario.id_rol = 3";
     $result = $conn->query($sql);
 
     // Si hay datos en la tabla

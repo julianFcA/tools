@@ -3,17 +3,6 @@
 require '../../vendor/autoload.php';
 // ini_set('extension', 'zip');
 
-session_start(); // Inicia la sesión si no está iniciada
-
-// Verifica si el documento está definido en la sesión
-if (!isset($_SESSION['documento'])) {
-    die("Error: No se ha proporcionado un documento en la sesión.");
-}
-
-$documento = $_SESSION['documento'];
-
-
-
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
@@ -28,7 +17,6 @@ $servername = "localhost";
 $username = "root";
 $password = "123456";
 $dbname = "herramientas";
-$documento = $_SESSION['documento'] ;
 
 // Crea una conexión
 $conn = new mysqli($servername, $username, $password, $dbname);
@@ -39,35 +27,12 @@ if ($conn->connect_error) {
 }
 
 // Define las tablas que deseas exportar a Excel
-$tablas = array("usuario");
-
+$tablas = array(8);
 
 // Itera sobre cada tabla
 foreach ($tablas as $tabla) {
     // Consulta los datos de la tabla actual
-    $sql ="SELECT usuario.nombre,
-    usuario.apellido,
-    usuario.documento,
-    usuario.correo,
-    usuario.codigo_barras,
-    usuario.fecha_registro,
-    formacion.nom_forma,
-    jornada.tp_jornada,
-    deta_ficha.ficha,
-    deta_ficha.id_deta_ficha,
-    tp_docu.nom_tp_docu
-    FROM usuario
-    INNER JOIN tp_docu ON usuario.id_tp_docu = tp_docu.id_tp_docu
-    INNER JOIN rol ON usuario.id_rol = rol.id_rol
-    INNER JOIN deta_ficha ON deta_ficha.documento = usuario.documento
-    INNER JOIN ficha ON deta_ficha.ficha = ficha.ficha
-    INNER JOIN formacion ON formacion.id_forma = ficha.id_forma
-    INNER JOIN jornada ON ficha.id_jornada = jornada.id_jornada
-    WHERE ficha.ficha > 0
-    AND jornada.id_jornada > 1
-    AND deta_ficha.id_deta_ficha >= 1
-    AND usuario.id_rol = 3 
-    AND usuario.documento = $documento";
+    $sql ="SELECT herramienta.* , tp_herra.nom_tp_herra, marca_herra.nom_marca FROM herramienta INNER JOIN tp_herra ON herramienta.id_tp_herra = tp_herra.id_tp_herra INNER JOIN marca_herra ON marca_herra.id_marca = herramienta.id_marca  WHERE herramienta.id_tp_herra >= 1 AND marca_herra.id_marca >= 1";
     $result = $conn->query($sql);
 
     // Si hay datos en la tabla
@@ -86,11 +51,12 @@ foreach ($tablas as $tabla) {
     }
 }
 
+
 // Crea un objeto Writer para escribir el archivo
 $writer = new Xlsx($spreadsheet);
 
 // Define el nombre del archivo de Excel a exportar
-$filename = 'reporte_excel.xlsx';
+$filename = 'reporte_excel_herra.xlsx';
 
 // Establece las cabeceras para indicar que se va a descargar un archivo Excel
 header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');

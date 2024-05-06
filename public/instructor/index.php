@@ -11,7 +11,69 @@ $page = isset($_GET['page']) ? $_GET['page'] : 1;
 $offset = ($page - 1) * $limit;
 
 // Consulta para obtener los datos de la página actual
-$query = "SELECT empresa.nit_empre, empresa.nom_empre, empresa.direcc_empre, empresa.telefono, empresa.correo_empre, licencia.fecha_ini, licencia.fecha_fin, licencia.esta_licen, usuario.nombre,usuario.apellido, usuario.documento, usuario.correo, usuario.codigo_barras, usuario.fecha_registro, formacion.nom_forma ,jornada.tp_jornada,  tp_docu.nom_tp_docu, deta_ficha.ficha FROM empresa INNER JOIN licencia ON empresa.nit_empre = licencia.nit_empre LEFT JOIN usuario ON empresa.nit_empre = usuario.nit_empre  INNER JOIN rol ON usuario.id_rol = rol.id_rol INNER JOIN deta_ficha ON deta_ficha.documento = usuario.documento INNER JOIN ficha ON ficha.ficha = deta_ficha.ficha INNER JOIN formacion ON ficha.id_forma = formacion.id_forma INNER JOIN jornada ON ficha.id_jornada = jornada.id_jornada INNER JOIN tp_docu ON usuario.id_tp_docu = tp_docu.id_tp_docu WHERE empresa.nit_empre > 0 AND ficha.ficha >=1 AND jornada.id_jornada >=1 AND usuario.id_rol = 3 LIMIT :limit OFFSET :offset";
+$query ="SELECT 
+empresa.nit_empre, 
+empresa.nom_empre, 
+empresa.direcc_empre, 
+empresa.telefono, 
+empresa.correo_empre, 
+licencia.fecha_ini, 
+licencia.fecha_fin, 
+licencia.esta_licen, 
+usuario.nombre, 
+usuario.apellido, 
+usuario.documento, 
+usuario.correo, 
+usuario.codigo_barras, 
+usuario.fecha_registro, 
+formacion.nom_forma, 
+jornada.tp_jornada,  
+tp_docu.nom_tp_docu, 
+deta_ficha.ficha, 
+MAX(prestamo_herra.id_presta) AS max_id_presta,
+MAX(detalle_prestamo.id_deta_presta) AS max_id_deta_presta,
+MAX(herramienta.codigo_barra_herra) AS max_codigo_barra_herra,
+MAX(reporte.id_reporte) AS max_id_reporte,
+MAX(deta_reporte.id_deta_reporte) AS max_id_deta_reporte
+FROM 
+empresa 
+INNER JOIN 
+licencia ON empresa.nit_empre = licencia.nit_empre 
+LEFT JOIN 
+usuario ON empresa.nit_empre = usuario.nit_empre  
+LEFT JOIN  
+rol ON usuario.id_rol = rol.id_rol 
+INNER JOIN 
+deta_ficha ON deta_ficha.documento = usuario.documento 
+INNER JOIN 
+ficha ON ficha.ficha = deta_ficha.ficha 
+INNER JOIN 
+formacion ON ficha.id_forma = formacion.id_forma 
+INNER JOIN 
+jornada ON ficha.id_jornada = jornada.id_jornada  
+INNER JOIN 
+tp_docu ON usuario.id_tp_docu = tp_docu.id_tp_docu 
+LEFT JOIN 
+prestamo_herra ON usuario.documento = prestamo_herra.documento 
+LEFT JOIN 
+detalle_prestamo ON prestamo_herra.id_presta = detalle_prestamo.id_presta
+LEFT JOIN 
+herramienta ON herramienta.codigo_barra_herra = detalle_prestamo.codigo_barra_herra  
+LEFT JOIN 
+reporte ON detalle_prestamo.id_deta_presta = reporte.id_deta_presta
+LEFT JOIN 
+deta_reporte ON deta_reporte.id_reporte = reporte.id_reporte
+WHERE 
+empresa.nit_empre > 0 
+AND ficha.ficha >= 1 
+AND jornada.id_jornada >= 1 
+AND usuario.id_rol = 3 
+AND detalle_prestamo.estado_presta = 'reportado'
+GROUP BY
+empresa.nit_empre, 
+usuario.documento
+LIMIT 
+:limit OFFSET :offset"; // Agregar los marcadores de posición de límite y desplazamiento
 
 // Preparar y ejecutar la consulta
 $stmt = $conn->prepare($query);
@@ -69,7 +131,7 @@ $resultado_pagina = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                                                 $botonCancelar = '';
                                                                 $activo = '';
 
-                                                                $horaFinalizacionPasada = strtotime($entrada["fecha_fin"]) > strtotime("now");
+                                                                $horaFinalizacionPasada = ($entrada["estado_presta"]) ;
 
                                                                 if ($entrada["esta_licen"] == 'inactivo' || $horaFinalizacionPasada) {
                                                                     $estadoClase = 'table-warning';

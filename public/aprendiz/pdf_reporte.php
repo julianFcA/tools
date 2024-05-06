@@ -1,6 +1,16 @@
 <?php
 require_once('./../../vendor/autoload.php');
 
+session_start(); // Inicia la sesión si no está iniciada
+
+// Verifica si el documento está definido en la sesión
+if (!isset($_SESSION['documento'])) {
+    die("Error: No se ha proporcionado un documento en la sesión.");
+}
+
+$docu = $_SESSION['documento'];
+
+
 // Incluye la clase que necesitamos del espacio de nombres
 use Spipu\Html2Pdf\Html2Pdf;
 
@@ -32,7 +42,7 @@ INNER JOIN detalle_prestamo ON prestamo_herra.id_presta = detalle_prestamo.id_pr
 INNER JOIN herramienta ON herramienta.codigo_barra_herra = detalle_prestamo.codigo_barra_herra  
 INNER JOIN reporte ON detalle_prestamo.id_deta_presta = reporte.id_deta_presta
 INNER JOIN deta_reporte ON deta_reporte.id_reporte = reporte.id_reporte
-WHERE ficha.ficha >= 1 AND jornada.id_jornada >= 1 AND usuario.id_rol = 3 AND detalle_prestamo.estado_presta = 'reportado'";
+WHERE usuario.documento = '$docu' AND ficha.ficha >= 1 AND jornada.id_jornada >= 1 AND usuario.id_rol = 3 AND detalle_prestamo.estado_presta = 'reportado'";
 
 // Ejecuta la consulta
 $result = $conn->query($sql);

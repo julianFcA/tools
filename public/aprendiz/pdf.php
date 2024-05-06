@@ -1,6 +1,15 @@
 <?php
 require_once('./../../vendor/autoload.php');
 
+session_start(); // Inicia la sesión si no está iniciada
+
+// Verifica si el documento está definido en la sesión
+if (!isset($_SESSION['documento'])) {
+    die("Error: No se ha proporcionado un documento en la sesión.");
+}
+
+$documento = $_SESSION['documento'];
+
 // Incluye la clase que necesitamos del espacio de nombres
 use Spipu\Html2Pdf\Html2Pdf;
 
@@ -9,9 +18,11 @@ $servername = "localhost";
 $username = "root";
 $password = "123456";
 $dbname = "herramientas";
+$documento = $_SESSION['documento'] ;
 
 // Crea una conexión
 $conn = new mysqli($servername, $username, $password, $dbname);
+
 
 // Verifica la conexión
 if ($conn->connect_error) {
@@ -19,7 +30,29 @@ if ($conn->connect_error) {
 }
 
 // Consulta SQL
-$sql ="SELECT usuario.nombre,usuario.apellido, usuario.documento, usuario.correo, usuario.codigo_barras, usuario.fecha_registro, formacion.nom_forma ,jornada.tp_jornada, deta_ficha.ficha FROM empresa INNER JOIN licencia ON empresa.nit_empre = licencia.nit_empre LEFT JOIN usuario ON empresa.nit_empre = usuario.nit_empre  INNER JOIN rol ON usuario.id_rol = rol.id_rol INNER JOIN deta_ficha ON deta_ficha.documento = usuario.documento INNER JOIN ficha ON deta_ficha.ficha = ficha.ficha INNER JOIN formacion ON formacion.id_forma = ficha.id_forma  INNER JOIN jornada ON ficha.id_jornada = jornada.id_jornada  WHERE empresa.nit_empre > 0 AND ficha.ficha > 0 AND jornada.id_jornada > 1 AND usuario.id_rol = 2";
+$sql ="SELECT usuario.nombre,
+usuario.apellido,
+usuario.documento,
+usuario.correo,
+usuario.codigo_barras,
+usuario.fecha_registro,
+formacion.nom_forma,
+jornada.tp_jornada,
+deta_ficha.ficha,
+deta_ficha.id_deta_ficha,
+tp_docu.nom_tp_docu
+FROM usuario
+INNER JOIN tp_docu ON usuario.id_tp_docu = tp_docu.id_tp_docu
+INNER JOIN rol ON usuario.id_rol = rol.id_rol
+INNER JOIN deta_ficha ON deta_ficha.documento = usuario.documento
+INNER JOIN ficha ON deta_ficha.ficha = ficha.ficha
+INNER JOIN formacion ON formacion.id_forma = ficha.id_forma
+INNER JOIN jornada ON ficha.id_jornada = jornada.id_jornada
+WHERE ficha.ficha > 0
+AND jornada.id_jornada > 1
+AND deta_ficha.id_deta_ficha >= 1
+AND usuario.id_rol = 3 
+AND usuario.documento = $documento";
 
 // Ejecuta la consulta
 $result = $conn->query($sql);
