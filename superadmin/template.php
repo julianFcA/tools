@@ -31,33 +31,6 @@ if(isset($_SESSION['last_activity'])){
 // Actualiza la marca de tiempo de última actividad
 $_SESSION['last_activity'] = time();
 
-
-
-// // Verificar si se recibió un código
-// $GLOBALS['codigo_valido'] = false;
-
-// // Verificar si se recibió un código
-// if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['codigo'])) {
-//     $codigo_correcto = "101214"; // Código correcto
-//     $codigo_ingresado = $_POST['codigo'];
-
-//     // Ciframos el código correcto
-//     $codigo_correcto_cifrado = hash('sha256', $codigo_correcto);
-    
-//     if ($codigo_ingresado === $codigo_correcto_cifrado) {
-//         $_SESSION['codigo_valido'] = true; // Establecer la variable de sesión
-//         $GLOBALS['codigo_valido'] = true; // Establecer la variable global como verdadera
-//         echo "valido"; // Devolver respuesta "valido"
-//     } else {
-//         echo "invalido"; // Devolver respuesta "invalido"
-//     }
-// } else {
-//     // Si no se recibió un código, devolver respuesta "invalido"
-//     echo "invalido";
-// }
-
-
-
 ?>
 
 <!DOCTYPE html>
@@ -103,6 +76,15 @@ $_SESSION['last_activity'] = time();
 
 
 </head>
+
+<div class="modal" id="modal">
+  <div class="modal-content">
+    <span >&times;</span>
+    <h2>Ingrese su Contraseña de Confirmación:</h2>
+    <input type="password" id="passwordInput" placeholder="Contraseña">
+    <button onclick="validarCodigo()">Aceptar</button>
+  </div>
+</div>
 
 <body>
   <div class="hero_area">

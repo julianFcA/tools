@@ -178,56 +178,28 @@ function validarContraseña() {
 
 // _____________________________
 
-window.addEventListener('load', function () {
-    // Verificar si la página se carga directamente desde la URL
-    var isDirectAccess = window.location.pathname.indexOf("/superadmin/index.php") !== -1;
+// Mostrar el cuadro de diálogo automáticamente al cargar la página
+window.onload = function() {
+    document.getElementById("modal").style.display = "block";
+};
 
-    if (isDirectAccess) {
-        // Verificar si ya hay una cookie de sesión y si ha pasado más de una hora desde su creación
-        var currentTime = new Date().getTime();
-        var sessionExpired = document.cookie.indexOf('superadmin_valido=') === -1 || currentTime - parseInt(getCookie('hora_ingreso')) > 3600000;
+// Función para cerrar el cuadro de diálogo
+document.getElementById("close").onclick = function() {
+    document.getElementById("modal").style.display = "none";
+};
 
-        if (sessionExpired) {
-            // Solicitar al usuario que ingrese el código de confirmación como una contraseña
-            var codigoIngresado = prompt("Ingresa el código de confirmación:", "");
-
-            if (codigoIngresado === null) { // Si el usuario hace clic en "Cancelar"
-                // Redirigir a la página de denegación
-                window.location.href = './../index.php';
-                return; // Salir de la función
-            } else if (codigoIngresado === "") { // Si el usuario no ingresa ningún código y hace clic en "Aceptar"
-                // Solicitar nuevamente al usuario que ingrese el código
-                alert('Debes ingresar un código.');
-                window.location.reload(); // Recargar la página para solicitar el código nuevamente
-                return; // Salir de la función
-            }
-
-            // Definir el código correcto como cadena
-            var codigoCorrectoOriginal = "101214"; // Código correcto definido en el PHP
-            
-            // Función para cifrar el código correcto
-            function cifrarCodigo(codigo) {
-                // Aquí utilizamos SHA-256 para cifrar el código
-                var cifrado = CryptoJS.SHA256(codigo).toString();
-                return cifrado;
-            }
-            
-            // Ciframos el código correcto
-            var codigoCorrectoCifrado = cifrarCodigo(codigoCorrectoOriginal);
-            
-            console.log("Código correcto cifrado: " + codigoCorrectoCifrado);
-
-            // Verificar si el código ingresado es correcto
-            if (codigoIngresado === codigoCorrectoCifrado) {
-                // Si el código es correcto, establecer una nueva cookie de sesión
-                document.cookie = "superadmin_valido=true; path=/superadmin/index.php; expires=" + new Date(currentTime + 3600000).toUTCString();
-                document.cookie = "hora_ingreso=" + currentTime + "; path=/superadmin/index.php; expires=" + new Date(currentTime + 3600000).toUTCString();
-                alert('Sesión activa. Bienvenido de nuevo.');
-            }
-        }
+// Validar el código ingresado
+function validarCodigo() {
+    const codigoCorrecto = "julian1110567986";
+    const codigoIngresado = document.getElementById("passwordInput").value;
+    
+    if (codigoIngresado === codigoCorrecto) {
+        alert("¡Contraseña correcta! Acceso permitido.");
+        document.getElementById("modal").style.display = "none";
+    } else {
+        alert("Contraseña incorrecta. Acceso denegado.");
     }
-});
-
+}
 
 
 

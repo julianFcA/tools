@@ -1,8 +1,6 @@
 <?php
 require_once 'template.php';
 
-
-
 // Número de filas por página
 $porPagina = 10; // Puedes ajustar esto según tus necesidades
 // Página actual
