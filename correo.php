@@ -4,7 +4,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $correo = $_POST['correo'];
     $paracorreo = $correo;
     $titulo = "Recuperacion de contraseña";
-    $msj = "Para cambiar tu contraseña, haz clic en el siguiente enlace: http://localhost/tools/recuperacion.html";
+    $msj = "Para cambiar tu contraseña, haz clic en el siguiente enlace: http://localhost/tools/recuperacion.html , e ingrese en el cuadro de confirmación donde dice 'Ingrese Codiogo de Confirmacion' el siguiente codigo: Tools_Usuario2024" ;
     $tucorreo = "From: jfcalderona16@gmail.com";
     if (mail($paracorreo, $titulo, $msj, $tucorreo)) {
         echo '<script>alert("Correo enviado con éxito");</script>';
@@ -26,6 +26,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 <head>
     <title>Recuperar contraseña</title>
     <meta charset="utf-8">
+    <link rel="icon" href="images/icono.png">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">

@@ -10,6 +10,7 @@ session_start();
 
 <head>
     <title>Nueva Contraseña</title>
+    <link rel="icon" href="../images/icono.png">
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css">
