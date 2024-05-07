@@ -20,6 +20,25 @@ if (isset($_POST['btncerrar'])) {
 
 $nit = $_SESSION['nit_empre'];
 
+// Verifica si hay una marca de tiempo de última actividad
+if(isset($_SESSION['last_activity'])){
+    // Obtiene la diferencia de tiempo en segundos
+    $inactive = 300; // 5 minutos en segundos
+    $session_life = time() - $_SESSION['last_activity'];
+
+    // Si ha pasado el tiempo de inactividad, cierra la sesión
+    if($session_life > $inactive){
+        session_unset();     // Elimina todas las variables de sesión
+        session_destroy();   // Finaliza la sesión actual
+        header("Location: ../../index.php"); // Redirige a la página de inicio de sesión
+        exit();
+    }
+}
+
+// Actualiza la marca de tiempo de última actividad
+$_SESSION['last_activity'] = time();
+
+
 ?>
 
 <!DOCTYPE html>

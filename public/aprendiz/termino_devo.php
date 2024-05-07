@@ -43,8 +43,8 @@ function redirectToPrestamoPage($message)
 <div class="modal" id="modal">
   <div class="modal-content">
     <span >&times;</span>
-    <h2>Ingrese su contraseña:</h2>
-    <input type="password" id="passwordInput" placeholder="Contraseña">
+    <h2>Ingrese Codigo de Confirmación</h2>
+    <input type="password" id="passwordInput" placeholder="Por Favor Instructor Verifique estado de Herramientas">
     <button onclick="validarCodigo()">Aceptar</button>
   </div>
 </div>
@@ -160,7 +160,7 @@ document.getElementById("close").onclick = function() {
 
 // Validar el código ingresado
 function validarCodigo() {
-    const codigoCorrecto = "instructordeturno24";
+    const codigoCorrecto = "instructordeturno2024";
     const codigoIngresado = document.getElementById("passwordInput").value;
     
     if (codigoIngresado === codigoCorrecto) {
