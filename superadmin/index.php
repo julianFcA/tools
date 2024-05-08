@@ -170,9 +170,9 @@ $resultado_pagina = $userEntry->fetchAll(PDO::FETCH_ASSOC);
                                             <td><?= $entrada["esta_licen"] ?></td>
                                             <!-- revisar bien este form -->
                                             <td>
-                                                <form method="GET" action="activar_licencia.php">
-                                                    <input type="hidden" name="licencia" value="<?= $entrada["licencia"] ?>">
-                                                    <button class="btn btn-success" type="submit" name="acti" <?= $activo ?>>Activar</button>
+                                                <form method="GET" action="renovar.php">
+                                                    <input type="hidden" name="nit_empre" value="<?= $entrada["nit_empre"] ?>">
+                                                    <button class="btn btn-success" type="submit" name="acti" <?= $activo ?>>Renovar</button>
                                                 </form>
                                             </td>
                                             <td>

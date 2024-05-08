@@ -77,7 +77,7 @@ $consult = $consulta7->fetch(PDO::FETCH_ASSOC);
 
         <div class="form-group">
             <label>Documento</label>
-            <input type="number" placeholder="Ingrese Documento" class="form-control" name="documento" id="documento" title="Debe ser de 10 dígitos" required minlength="7" maxlength="10">
+            <input type="number" placeholder="Ingrese Documento" class="form-control" name="documento" id="documento" title="Debe ser de 8 a 10 dígitos" required minlength="7" maxlength="10">
             <p id="mensaje"></p>
         </div>
 
