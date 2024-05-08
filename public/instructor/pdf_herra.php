@@ -19,7 +19,7 @@ if ($conn->connect_error) {
 }
 
 // Consulta SQL
-$sql ="SELECT herramienta.* , tp_herra.nom_tp_herra, marca_herra.nom_marca FROM herramienta INNER JOIN tp_herra ON herramienta.id_tp_herra = tp_herra.id_tp_herra INNER JOIN marca_herra ON marca_herra.id_marca = herramienta.id_marca  WHERE herramienta.id_tp_herra >= 1 AND marca_herra.id_marca >= 1";
+$query ="SELECT herramienta.* , tp_herra.nom_tp_herra, marca_herra.nom_marca FROM herramienta INNER JOIN tp_herra ON herramienta.id_tp_herra = tp_herra.id_tp_herra INNER JOIN marca_herra ON marca_herra.id_marca = herramienta.id_marca  WHERE herramienta.id_tp_herra >= 1 AND marca_herra.id_marca >= 1";
 
 // Ejecuta la consulta
 $result = $conn->query($query);

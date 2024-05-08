@@ -2,61 +2,66 @@
 require_once 'template.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // Verificamos que se haya enviado un formulario POST
+
     $action = $_POST['action'];
+
+    // Comprobamos la acción que se está realizando
     switch ($action) {
         case 'Devolver Herramienta':
-            if (isset($_POST['cantidad'])) {
+            // Verificamos que se hayan especificado tanto 'cantidad' como 'herramienta'
+            if (isset($_POST['cantidad'], $_POST['herramienta'])) {
                 foreach ($_POST['cantidad'] as $id_deta_presta => $cantidad_devuelta) {
-                    // Obtener el código de barras de la herramienta devuelta
                     $codigo_herramienta = $_POST['herramienta'][$id_deta_presta];
-
-                    // Resto del código para devolver la herramienta
+                    
+                    // Obtenemos la cantidad prestada de la herramienta
                     $query_cantidad_prestada = "SELECT cant_herra FROM detalle_prestamo WHERE id_deta_presta = ?";
                     $stmt_cantidad_prestada = $conn->prepare($query_cantidad_prestada);
                     $stmt_cantidad_prestada->execute([$id_deta_presta]);
                     $cantidad_prestada = $stmt_cantidad_prestada->fetchColumn();
 
+                    // Calculamos la nueva cantidad prestada después de la devolución
                     $nueva_cantidad_prestada = $cantidad_prestada - $cantidad_devuelta;
 
-                    // Actualizar la cantidad de herramientas en la tabla 'herramienta'
+                    // Actualizamos la cantidad de herramientas en la tabla 'herramienta'
                     $query_actualizar_herramienta = "UPDATE herramienta SET cantidad = cantidad + ? WHERE codigo_barra_herra = ?";
                     $stmt_actualizar_herramienta = $conn->prepare($query_actualizar_herramienta);
                     $stmt_actualizar_herramienta->execute([$cantidad_devuelta, $codigo_herramienta]);
 
-                    // Actualizar la cantidad devuelta y el estado en la tabla 'detalle_prestamo'
+                    // Actualizamos la cantidad devuelta y el estado en la tabla 'detalle_prestamo'
                     $query_actualizar_detalle_prestamo = "UPDATE detalle_prestamo SET cant_devolucion = ?, cant_herra = ?, estado_presta = ? WHERE id_deta_presta = ?";
                     $estado = ($nueva_cantidad_prestada == 0) ? 'devuelto' : 'incompleto';
                     $stmt_actualizar_detalle_prestamo = $conn->prepare($query_actualizar_detalle_prestamo);
                     $stmt_actualizar_detalle_prestamo->execute([$cantidad_devuelta, $nueva_cantidad_prestada, $estado, $id_deta_presta]);
                 }
-
                 redirectToPrestamoPage("Herramientas devueltas con éxito.");
             } else {
                 redirectToPrestamoPage("Error: No se han especificado herramientas para devolver o no se ha proporcionado el código de barras de la herramienta.");
             }
             break;
-        case 'Reportar Herramienta':
-            $codigo_herramienta = $_POST['herramienta'];
-            $documento = $_POST['documento'];
-            $motivo = $_POST['motivo'];
-            if (isset($_POST['motivo']) && isset($_POST['cantidad'])) {
-
-
-                foreach ($_POST['cantidad'] as $id_deta_presta => $cantidad_devuelta) {
-                    $query_insert_reporte = "INSERT INTO reporte (id_deta_presta, descripcion,documento, fecha) VALUES (?, ?,?, NOW())";
-                    $stmt_insert_reporte = $conn->prepare($query_insert_reporte);
-                    $stmt_insert_reporte->execute([$id_deta_presta, $motivo, $documento]);
-
-                    $id_reporte = $conn->lastInsertId();
-
-                    $query_update_detalle_prestamo = "UPDATE detalle_prestamo SET estado_presta = 'reportado' WHERE id_deta_presta = ?";
-                    $stmt_update_detalle_prestamo = $conn->prepare($query_update_detalle_prestamo);
-                    $stmt_update_detalle_prestamo->execute([$id_deta_presta]);
-
-                    $query_insert_detalle_reporte = "INSERT INTO deta_reporte (id_reporte, codigo_barra_herra) VALUES (?, ?)";
-                    $stmt_insert_detalle_reporte = $conn->prepare($query_insert_detalle_reporte);
-                    $stmt_insert_detalle_reporte->execute([$id_reporte, $codigo_herramienta]);
-
+            case 'Reportar Herramienta':
+                if (isset($_POST['motivo'], $_POST['cantidad'])) {
+                    $codigo_herramienta = $_POST['herramienta'];
+                    $documento = $_POST['documento'];
+                    $motivo = $_POST['motivo'];
+            
+                    foreach ($_POST['cantidad'] as $id_deta_presta => $cantidad_devuelta) {
+                        $query_insert_reporte = "INSERT INTO reporte (id_deta_presta, descripcion, documento, fecha) VALUES (?, ?, ?, NOW())";
+                        $stmt_insert_reporte = $conn->prepare($query_insert_reporte);
+                        $stmt_insert_reporte->execute([$id_deta_presta, $motivo, $documento]);
+            
+                        $nueva_cantidad = $cantidad_devuelta;
+            
+                        $id_reporte = $conn->lastInsertId();
+            
+                        $query_update_detalle_prestamo = "UPDATE detalle_prestamo SET estado_presta = 'reportado' WHERE id_deta_presta = ?";
+                        $stmt_update_detalle_prestamo = $conn->prepare($query_update_detalle_prestamo);
+                        $stmt_update_detalle_prestamo->execute([$id_deta_presta]);
+            
+                        $query_insert_detalle_reporte = "INSERT INTO deta_reporte (id_reporte, codigo_barra_herra) VALUES (?, ?)";
+                        $stmt_insert_detalle_reporte = $conn->prepare($query_insert_detalle_reporte);
+                        $stmt_insert_detalle_reporte->execute([$id_reporte, $codigo_herramienta]);
+                   
                     redirectToPrestamoPage("Herramienta reportada con éxito.");
                 }
             } else {

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 06-05-2024 a las 09:09:00
+-- Tiempo de generación: 08-05-2024 a las 11:44:39
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -67,12 +67,19 @@ CREATE TABLE `deta_reporte` (
 --
 
 CREATE TABLE `empresa` (
-  `nit_empre` varchar(10) NOT NULL,
+  `nit_empre` varchar(12) NOT NULL,
   `nom_empre` text NOT NULL,
   `direcc_empre` varchar(30) NOT NULL,
-  `telefono` varchar(10) NOT NULL,
+  `telefono` varchar(14) NOT NULL,
   `correo_empre` varchar(30) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `empresa`
+--
+
+INSERT INTO `empresa` (`nit_empre`, `nom_empre`, `direcc_empre`, `telefono`, `correo_empre`) VALUES
+('899999034-1', 'Sena centro de aprendizaje', ' Calle 57, 8-69, Bogotá', '018000910270', 'servicioalciudadano@sena.edu.c');
 
 -- --------------------------------------------------------
 
@@ -177,8 +184,15 @@ CREATE TABLE `licencia` (
   `esta_licen` enum('activo','inactivo','','') NOT NULL,
   `fecha_ini` date NOT NULL,
   `fecha_fin` date NOT NULL,
-  `nit_empre` varchar(10) NOT NULL
+  `nit_empre` varchar(12) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `licencia`
+--
+
+INSERT INTO `licencia` (`licencia`, `esta_licen`, `fecha_ini`, `fecha_fin`, `nit_empre`) VALUES
+('663a8ab354b06', 'activo', '2024-05-07', '2025-05-07', '899999034-1');
 
 -- --------------------------------------------------------
 
@@ -282,68 +296,10 @@ CREATE TABLE `tri_contra` (
   `nombre` text NOT NULL,
   `apellido` text NOT NULL,
   `contrasena` varchar(255) NOT NULL,
-  `correo` varchar(40) NOT NULL,
-  `id_rol` tinyint(4) NOT NULL,
   `fecha` datetime NOT NULL,
   `nit_empre` varchar(10) NOT NULL,
   `accion_usu` varchar(20) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Volcado de datos para la tabla `tri_contra`
---
-
-INSERT INTO `tri_contra` (`documento`, `id_tp_docu`, `nombre`, `apellido`, `contrasena`, `correo`, `id_rol`, `fecha`, `nit_empre`, `accion_usu`) VALUES
-(123456788, 2, 'plinio', 'noruega', '$2y$10$EE/26/srinuQhFp16k.iq.7SHL/y76kl43Qg7QkanhoiPxBeRLMkS', 'pliniojose1@gmail.com', 2, '2024-04-14 15:47:40', '89999034-1', 'Actualización'),
-(1110567986, 2, 'julian', 'calderon', '$2y$12$wy2R1CV9ZfaR1j.XSDtGKed6fqHSF2vmSlRTMwomLwdTgkPdPReqm', 'jfcalderona16@gmail.com', 1, '2024-04-20 00:47:02', '0', 'Actualización'),
-(1110567986, 2, 'julian', 'calderon', '$2y$12$wy2R1CV9ZfaR1j.XSDtGKed6fqHSF2vmSlRTMwomLwdTgkPdPReqm', 'jfcalderona16@gmail.com', 1, '2024-04-20 00:47:03', '0', 'Actualización'),
-(1110567986, 2, 'julian', 'calderon', '$2y$12$wy2R1CV9ZfaR1j.XSDtGKed6fqHSF2vmSlRTMwomLwdTgkPdPReqm', 'jfcalderona16@gmail.com', 1, '2024-04-20 00:47:13', '0', 'Actualización'),
-(1110567986, 2, 'julian', 'calderon', '$2y$12$wy2R1CV9ZfaR1j.XSDtGKed6fqHSF2vmSlRTMwomLwdTgkPdPReqm', 'jfcalderona16@gmail.com', 1, '2024-04-20 00:47:21', '0', 'Actualización'),
-(2147483647, 2, 'gilberto', 'atuesta', '$2y$10$cBE6bpGjjuufKylhYQjvpeza0yYhdH5hAo9SDIh0KVbXnva4oPLDi', 'gilbertoatuesta@gmail.com', 3, '2024-04-20 00:52:03', '89999034-1', 'Actualización'),
-(1234567890, 2, 'felipe', 'calderon aguirre', '$2y$12$Wo2Hipe2aOaKaKvGG8/dXeZMjOaTNkKc/bsosCOSj9wd6oER.BlLO', 'jfcalderon62@gmai.com', 4, '2024-04-20 00:52:12', '89999034-1', 'Actualización'),
-(1023456789, 2, 'fabricio', 'herrera', '$2y$10$pmFzUAo0BM5zeL3ahA6VlutADajIIQIwfs//Jdnn6VMLY3T3zP/ta', 'frabricio123@gmail.com', 4, '2024-04-20 00:52:20', '89999034-1', 'Actualización'),
-(123456788, 2, 'plinio', 'noruega', '$2y$12$9El79WRIjfrbd3R7GqA.gOT/LlHFC8bQbJpWZPz8GnHRjG4pRU7iy', 'pliniojose1@gmail.com', 2, '2024-04-20 00:52:28', '89999034-1', 'Actualización'),
-(123456788, 2, 'plinio', 'noruega', '$2y$12$9El79WRIjfrbd3R7GqA.gOT/LlHFC8bQbJpWZPz8GnHRjG4pRU7iy', 'pliniojose1@gmail.com', 1, '2024-04-20 00:57:14', '89999034-1', 'Actualización'),
-(123456788, 2, 'plinio', 'noruega', '$2y$12$9El79WRIjfrbd3R7GqA.gOT/LlHFC8bQbJpWZPz8GnHRjG4pRU7iy', 'jfcalderona16@gmail.com', 1, '2024-04-20 02:08:18', '89999034-1', 'Actualización'),
-(123456788, 2, 'julian', 'noruega', '$2y$12$9El79WRIjfrbd3R7GqA.gOT/LlHFC8bQbJpWZPz8GnHRjG4pRU7iy', 'jfcalderona16@gmail.com', 1, '2024-04-20 02:08:25', '89999034-1', 'Actualización'),
-(1234565432, 2, 'BKKKNKNNKNKN', 'nknkknknknkn', '$2y$10$6mWv2jbUr5jGchTrLcu1cOuck/3sJ1/OzPS0b7IBaIWAMGyXgnVw6', 'nkknknkn@gmail.com', 1, '2024-04-23 17:42:49', '1234567-8', 'Actualización'),
-(1234565432, 2, 'BKKKNKNNKNKN', 'nknkknknknkn', '$2y$10$6mWv2jbUr5jGchTrLcu1cOuck/3sJ1/OzPS0b7IBaIWAMGyXgnVw6', 'kjkjkjjjjjj@gmail.com', 1, '2024-04-23 17:54:38', '1234567-8', 'Actualización'),
-(123456788, 2, 'julian', 'calderon', '$2y$12$9El79WRIjfrbd3R7GqA.gOT/LlHFC8bQbJpWZPz8GnHRjG4pRU7iy', 'jfcalderona16@gmail.com', 1, '2024-04-23 22:02:36', '89999034-1', 'Actualización'),
-(123456788, 2, 'julian', 'calderon', '$2y$12$0praf7d.jWvA/4Wm8QthhOcIqqjMA9q7FB0N/sdeLZXOwqCnNeFSS', 'jfcalderona16@gmail.com', 1, '2024-04-23 22:04:43', '89999034-1', 'Actualización'),
-(123456788, 2, 'JKAJJAAJJ', 'kjajkajjak', '$2y$12$0praf7d.jWvA/4Wm8QthhOcIqqjMA9q7FB0N/sdeLZXOwqCnNeFSS', 'jfcalderona@gmail.com', 1, '2024-04-23 22:08:54', '89999034-1', 'Actualización'),
-(2147483647, 2, 'gilberto', 'atuesta', '$2y$10$cBE6bpGjjuufKylhYQjvpeza0yYhdH5hAo9SDIh0KVbXnva4oPLDi', 'gilbertoatuesta@gmail.com', 2, '2024-04-23 22:09:50', '89999034-1', 'Actualización'),
-(2147483647, 2, 'GILBERTO', 'aranazazu', '$2y$10$cBE6bpGjjuufKylhYQjvpeza0yYhdH5hAo9SDIh0KVbXnva4oPLDi', 'gilberto@gmail.com', 2, '2024-04-23 22:11:50', '89999034-1', 'Actualización'),
-(2147483647, 2, 'GILBERTO', 'aranazazu', '$2y$10$cBE6bpGjjuufKylhYQjvpeza0yYhdH5hAo9SDIh0KVbXnva4oPLDi', 'gilberto@gmail.com', 2, '2024-04-23 22:14:06', '89999034-1', 'Actualización'),
-(123456788, 2, 'JULIAN', 'calderon', '$2y$12$0praf7d.jWvA/4Wm8QthhOcIqqjMA9q7FB0N/sdeLZXOwqCnNeFSS', 'jfcalderona16@gmail.com', 1, '2024-04-23 22:31:01', '89999034-1', 'Actualización'),
-(123456788, 2, 'JULIAN', 'calderon', '$2y$12$F.WTge3XIFQ5G.fpOGO8Buri3.nBJ/5usXDQVbBVjJPS73t6mfuQm', 'jfcalderona16@gmail.com', 1, '2024-04-23 22:32:04', '89999034-1', 'Actualización'),
-(123456788, 2, 'JULIAN', 'calderon', '$2y$12$xDjM7fFr9M2FppDbNrdoO.8DIB3BUGgPzq6g0rY7kMbncRlI/uWEm', 'jfcalderona16@gmail.com', 1, '2024-04-23 22:33:23', '89999034-1', 'Actualización'),
-(101022233, 2, 'lkalkallaklk', 'klkslklsklsk', '$2y$10$nOy4tWueIsWJ/nbHVFnjeeuiBGb1xr.qTJLD8U0dkVQ9b6Lq0eus2', 'lklslsklslk@gmail.com', 2, '2024-04-24 09:00:38', '89999034-1', 'Actualización'),
-(101022233, 2, 'lkalkallaklk', 'klkslklsklsk', '$2y$10$nOy4tWueIsWJ/nbHVFnjeeuiBGb1xr.qTJLD8U0dkVQ9b6Lq0eus2', 'jfcalderona16@gmail.com', 2, '2024-04-24 09:02:14', '89999034-1', 'Actualización'),
-(101022233, 2, 'lkalkallaklk', 'klkslklsklsk', '$2y$12$lVhjq5w89iYk2L.ncD.VN.77EZQwyCBQGGIhCbVq7IRFMvZc21p6O', 'jfcalderona16@gmail.com', 2, '2024-04-24 10:54:58', '89999034-1', 'Actualización'),
-(1234567890, 2, 'felipe', 'calderon aguirre', '$2y$12$Wo2Hipe2aOaKaKvGG8/dXeZMjOaTNkKc/bsosCOSj9wd6oER.BlLO', 'jfcalderon62@gmai.com', 3, '2024-04-25 03:32:45', '89999034-1', 'Actualización'),
-(1110456214, 2, 'yareth', 'nombreraro', '$2y$10$nRBz7qsQc8Nv4ESbxWLz/.HWpVX6938IOJtnilyOTOqjPj6scvg66', 'lklklklklklkl@gmail.com', 2, '2024-04-25 13:41:34', '89999034-1', 'Actualización'),
-(1110456214, 2, 'yareth', 'nombreraro', '$2y$10$nRBz7qsQc8Nv4ESbxWLz/.HWpVX6938IOJtnilyOTOqjPj6scvg66', 'yarethl@gmail.com', 2, '2024-04-25 13:42:47', '89999034-1', 'Actualización'),
-(123456788, 2, 'julian', 'calderon', '$2y$12$xDjM7fFr9M2FppDbNrdoO.8DIB3BUGgPzq6g0rY7kMbncRlI/uWEm', 'jfcalderona16@gmail.com', 1, '2024-04-28 23:26:43', '89999034-1', 'Actualización'),
-(123456788, 2, 'julian', 'calderon', '$2y$12$xDjM7fFr9M2FppDbNrdoO.8DIB3BUGgPzq6g0rY7kMbncRlI/uWEm', 'jfcalderona@gmail.com', 1, '2024-04-28 23:29:44', '89999034-1', 'Actualización'),
-(123456788, 2, 'julian', 'calderon', '$2y$12$q0rOmwIN4Wy5WGMhui1anuA3d04aQHVsKzueg9FuvEwnjnZ4CECEC', 'jfcalderona@gmail.com', 1, '2024-04-28 23:30:52', '89999034-1', 'Actualización'),
-(123456788, 2, 'julian', 'calderon', '$2y$12$q0rOmwIN4Wy5WGMhui1anuA3d04aQHVsKzueg9FuvEwnjnZ4CECEC', 'jfcalderona16@gmail.com', 1, '2024-04-28 23:36:03', '89999034-1', 'Actualización'),
-(123456788, 2, 'julian', 'calderon', '$2y$12$5ddkSuMQ4HKSgUEDn9TUjObOGE3tBnygEikX0Q71mhcOvP9p9KuOC', 'jfcalderona16@gmail.com', 1, '2024-04-30 09:06:53', '89999034-1', 'Actualización'),
-(123456788, 2, 'julian', 'calderon', '$2y$12$.tyMu8b2lELs3DvbO6zl5OiiOZwQ6cpDVX6WAK7ciUHx1iiMLrEWe', 'jfcalderona16@gmail.com', 1, '2024-04-30 09:09:00', '89999034-1', 'Actualización'),
-(123456788, 2, 'julian', 'calderon', '$2y$12$rRi6dHwLqFC5LvftAP81fOByG60kP6e4K7/JKdnhK1roIQCf1nqIy', 'jfcalderona16@gmail.com', 1, '2024-04-30 09:09:49', '89999034-1', 'Actualización'),
-(123456788, 2, 'julian', 'calderon', '$2y$12$EmvIPuF5.ozU3y9ON7YgoOJ0LYk74tF7absyYQyGmtteMn0CC/EW.', 'jfcalderona16@gmail.com', 1, '2024-05-01 20:46:18', '89999034-1', 'Actualización'),
-(123456788, 2, 'julian', 'calderon', '$2y$12$Aqa9UrPQ5Q2stdO4UjMWaeRdRhu/jv4FMEf6sP2IC5li7Ar/OABJu', 'jfcalderona16@gmail.com', 1, '2024-05-01 20:46:49', '89999034-1', 'Actualización'),
-(123456788, 2, 'julian', 'calderon', '$2y$12$uhDkL8tNi/cPZNzTI04ite9QIV92hFWJAD1kqZMaEZlcIr9P8rj8O', 'jfcalderona16@gmail.com', 1, '2024-05-01 20:55:41', '89999034-1', 'Actualización'),
-(123456788, 2, 'julian', 'calderon', '$2y$12$G6l9V0MxlnxEqJPYNMub9OKku6unvG0FDYRhWYezm.Q2Ma1kLljfu', 'jfcalderona16@gmail.com', 1, '2024-05-01 20:58:35', '89999034-1', 'Actualización'),
-(123456788, 2, 'julian', 'calderon', '$2y$12$5ZXRpE8k0iAs/dMGBrGnmuJV1QOo3nHYuxSwC1ZoTL1wIeTXmIOV6', 'jfcalderona16@gmail.com', 1, '2024-05-01 20:59:20', '89999034-1', 'Actualización'),
-(123456788, 2, 'julian', 'calderon', '$2y$12$68sIlwdLSY8nnwGfKBgwgOpUG1eicKxmoLI3rFXRqDKDMVqG.B.U.', 'jfcalderona16@gmail.com', 1, '2024-05-01 21:00:42', '89999034-1', 'Actualización'),
-(123456788, 2, 'julian', 'calderon', '$2y$12$jilHcN2WxMLGjsCU3Ojpm.U5BScqjWMdKaTVzlxieAgkoQYecqZR2', 'jfcalderona16@gmail.com', 1, '2024-05-01 21:01:35', '89999034-1', 'Actualización'),
-(123456788, 2, 'julian', 'calderon', '$2y$12$pbpHfAlWjsc5c0A6IdtOfeUCzRUXrrLxKFyNAqpw66arTGirK8iv2', 'jfcalderona16@gmail.com', 1, '2024-05-05 12:55:33', '89999034-1', 'Actualización'),
-(1110567986, 1, 'felipe', 'aguirre', '$2y$10$eQHe7zZ8fOoVlvIvZYoN7O1oFdpO6yiNESuVXbUSIsjE9hYp02H2e', 'aguirre@gmail.com', 3, '2024-05-05 15:06:01', '89999034-1', 'Actualización'),
-(1110567986, 1, 'felipe', 'aguirre', '$2y$10$eQHe7zZ8fOoVlvIvZYoN7O1oFdpO6yiNESuVXbUSIsjE9hYp02H2e', 'aguirre@gmail.com', 3, '2024-05-05 15:07:08', '89999034-1', 'Actualización'),
-(1110567986, 1, 'felipe', 'aguirre', '$2y$10$eQHe7zZ8fOoVlvIvZYoN7O1oFdpO6yiNESuVXbUSIsjE9hYp02H2e', 'aguirre@gmail.com', 3, '2024-05-05 15:10:21', '89999034-1', 'Actualización'),
-(1110567986, 1, 'felipe', 'aguirre', '$2y$10$nRBz7qsQc8Nv4ESbxWLz/.HWpVX6938IOJtnilyOTOqjPj6scvg66', 'aguirre@gmail.com', 3, '2024-05-05 15:27:11', '89999034-1', 'Actualización'),
-(1234567890, 2, 'mauricio', 'calderon ', '$2y$12$Wo2Hipe2aOaKaKvGG8/dXeZMjOaTNkKc/bsosCOSj9wd6oER.BlLO', 'jfcalderon62@gmai.com', 3, '2024-05-06 01:44:59', '89999034-1', 'Actualización'),
-(1234567890, 2, 'mauricio', 'calderon ', '$2y$12$Wo2Hipe2aOaKaKvGG8/dXeZMjOaTNkKc/bsosCOSj9wd6oER.BlLO', 'jfcalderon62@gmai.com', 3, '2024-05-06 01:45:43', '89999034-1', 'Actualización');
 
 -- --------------------------------------------------------
 
@@ -363,8 +319,15 @@ CREATE TABLE `usuario` (
   `terminos` enum('si','no','','') NOT NULL,
   `id_rol` tinyint(4) NOT NULL,
   `id_esta_usu` tinyint(4) NOT NULL,
-  `nit_empre` varchar(10) NOT NULL
+  `nit_empre` varchar(12) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `usuario`
+--
+
+INSERT INTO `usuario` (`documento`, `id_tp_docu`, `nombre`, `apellido`, `contrasena`, `correo`, `codigo_barras`, `fecha_registro`, `terminos`, `id_rol`, `id_esta_usu`, `nit_empre`) VALUES
+(1110567986, 2, 'julian', 'calderon', '$2y$10$EunVbBlJM2wDOs/pT7j9W.mnaagWO.npxmW2qHYIsIi1bm4e8LDw2', 'jfcalderona16@gmail.com', '663a8b1184a483100', '2024-05-07', 'si', 1, 1, '899999034-1');
 
 --
 -- Disparadores `usuario`
@@ -375,8 +338,8 @@ CREATE TRIGGER `actualizar_contrasena` AFTER UPDATE ON `usuario` FOR EACH ROW BE
     DECLARE count_existing_passwords INT;
 
     SET old_password = OLD.contrasena;
-    INSERT INTO tri_contra (documento, id_tp_docu, nombre, apellido, contrasena, correo, id_rol, fecha, nit_empre, accion_usu)
-    VALUES (OLD.documento, OLD.id_tp_docu, OLD.nombre, OLD.apellido, old_password, OLD.correo, OLD.id_rol, NOW(), OLD.nit_empre, 'Actualización');
+    INSERT INTO tri_contra (documento, id_tp_docu, nombre, apellido, contrasena, fecha, nit_empre, accion_usu)
+    VALUES (OLD.documento, OLD.id_tp_docu, OLD.nombre, OLD.apellido, old_password,  NOW(), OLD.nit_empre, 'Actualización');
 
     SELECT COUNT(*) INTO count_existing_passwords FROM tri_contra WHERE contrasena = NEW.contrasena;
 
@@ -515,8 +478,8 @@ ALTER TABLE `usuario`
   ADD PRIMARY KEY (`documento`),
   ADD KEY `usuario_ibfk_1` (`id_tp_docu`),
   ADD KEY `usuario_ibfk_3` (`id_rol`),
-  ADD KEY `usuario_ibfk_5` (`nit_empre`),
-  ADD KEY `id_esta_usu` (`id_esta_usu`);
+  ADD KEY `id_esta_usu` (`id_esta_usu`),
+  ADD KEY `nit_empre` (`nit_empre`);
 
 --
 -- AUTO_INCREMENT de las tablas volcadas
@@ -526,25 +489,25 @@ ALTER TABLE `usuario`
 -- AUTO_INCREMENT de la tabla `detalle_prestamo`
 --
 ALTER TABLE `detalle_prestamo`
-  MODIFY `id_deta_presta` tinyint(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
+  MODIFY `id_deta_presta` tinyint(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=88;
 
 --
 -- AUTO_INCREMENT de la tabla `deta_ficha`
 --
 ALTER TABLE `deta_ficha`
-  MODIFY `id_deta_ficha` tinyint(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `id_deta_ficha` tinyint(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 
 --
 -- AUTO_INCREMENT de la tabla `deta_reporte`
 --
 ALTER TABLE `deta_reporte`
-  MODIFY `id_deta_reporte` tinyint(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id_deta_reporte` tinyint(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
 
 --
 -- AUTO_INCREMENT de la tabla `entrada_usu`
 --
 ALTER TABLE `entrada_usu`
-  MODIFY `id_entrada` int(5) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=308;
+  MODIFY `id_entrada` int(5) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=341;
 
 --
 -- AUTO_INCREMENT de la tabla `formacion`
@@ -562,25 +525,25 @@ ALTER TABLE `jornada`
 -- AUTO_INCREMENT de la tabla `marca_herra`
 --
 ALTER TABLE `marca_herra`
-  MODIFY `id_marca` tinyint(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id_marca` tinyint(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT de la tabla `prestamo_herra`
 --
 ALTER TABLE `prestamo_herra`
-  MODIFY `id_presta` tinyint(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
+  MODIFY `id_presta` tinyint(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=86;
 
 --
 -- AUTO_INCREMENT de la tabla `reporte`
 --
 ALTER TABLE `reporte`
-  MODIFY `id_reporte` tinyint(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `id_reporte` tinyint(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
 
 --
 -- AUTO_INCREMENT de la tabla `tp_herra`
 --
 ALTER TABLE `tp_herra`
-  MODIFY `id_tp_herra` tinyint(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id_tp_herra` tinyint(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- Restricciones para tablas volcadas
@@ -652,8 +615,8 @@ ALTER TABLE `reporte`
 ALTER TABLE `usuario`
   ADD CONSTRAINT `usuario_ibfk_1` FOREIGN KEY (`id_tp_docu`) REFERENCES `tp_docu` (`id_tp_docu`),
   ADD CONSTRAINT `usuario_ibfk_3` FOREIGN KEY (`id_rol`) REFERENCES `rol` (`id_rol`),
-  ADD CONSTRAINT `usuario_ibfk_5` FOREIGN KEY (`nit_empre`) REFERENCES `empresa` (`nit_empre`),
-  ADD CONSTRAINT `usuario_ibfk_7` FOREIGN KEY (`id_esta_usu`) REFERENCES `estado_usu` (`id_esta_usu`);
+  ADD CONSTRAINT `usuario_ibfk_7` FOREIGN KEY (`id_esta_usu`) REFERENCES `estado_usu` (`id_esta_usu`),
+  ADD CONSTRAINT `usuario_ibfk_8` FOREIGN KEY (`nit_empre`) REFERENCES `empresa` (`nit_empre`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

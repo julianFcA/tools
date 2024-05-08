@@ -89,7 +89,7 @@ $_SESSION['last_activity'] = time();
 
     <div class="wrapper">
         <!-- Navbar-->
-        <header class="main-header-top hidden-print" style="background-color: #ff7c02">
+        <header class="main-header-top hidden-print" style="background-color: #ff7c02 ">
             <a class="logo" href="./index.php">
                 <span>
                     Instructor
