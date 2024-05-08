@@ -22,6 +22,8 @@ INNER JOIN reporte ON detalle_prestamo.id_deta_presta = reporte.id_deta_presta
 INNER JOIN deta_reporte ON deta_reporte.id_reporte = reporte.id_reporte
 WHERE ficha.ficha >= 1 AND jornada.id_jornada >= 1 AND usuario.id_rol = 3 AND detalle_prestamo.estado_presta = 'reportado'";
 
+$result =$conn->query($query); 
+
 // Definir el número de resultados por página y la página actual
 $porPagina = 20; // Puedes ajustar esto según tus necesidades
 $pagina = isset($_GET['pagina']) ? $_GET['pagina'] : 1;
@@ -32,9 +34,30 @@ $resultado_pagina = $result->fetchAll(PDO::FETCH_ASSOC);
 
 $userdata = json_encode($resultado_pagina);
 
-?>
+try {
+    // Consulta SQL para actualizar el estado de los préstamos
+    $sql = "UPDATE detalle_prestamo AS dp
+            INNER JOIN prestamo_herra AS ph ON dp.id_presta = ph.id_presta
+            SET dp.estado_presta = 'reportado'
+            WHERE ph.fecha_entrega < NOW() AND dp.estado_presta = 'prestado'";
+    
+    // Preparar la consulta
+    $stmt = $conn->prepare($sql);
+    
+    // Ejecutar la consulta
+    $stmt->execute();
+    
+    // Obtener el número de filas afectadas
+    $rowCount = $stmt->rowCount();
+    
+    echo "Se han actualizado $rowCount registros correctamente.";
+} catch (PDOException $e) {
+    echo "Error al ejecutar la consulta: " . $e->getMessage();
+}
+
 
 ?>
+
 <script>
     let dataTable;
     let dataTableIsInitialized = false;
