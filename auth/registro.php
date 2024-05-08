@@ -83,12 +83,12 @@ $consult = $consulta7->fetch(PDO::FETCH_ASSOC);
 
         <div class="form-group">
             <label>Nombre</label>
-            <input type="text" placeholder="Ingrese Primer Nombre" class="form-control" name="nombre" title="Debe ser de 15 letras" required minlength="3" maxlength="12">
+            <input type="text" placeholder="Ingrese Primer Nombre" class="form-control" name="nombre" title="Debe ser de 15 letras" required oninput="validarFormulario(this)"minlength="3" maxlength="12">
         </div>
 
         <div class="form-group">
             <label>Apellido</label>
-            <input type="text" placeholder="Ingrese Primer Apellido" class="form-control" name="apellido" title="Debe ser de 15 letras" required minlength="6" maxlength="12">
+            <input type="text" placeholder="Ingrese Primer Apellido" class="form-control" name="apellido" title="Debe ser de 15 letras" required minlength="3" maxlength="15">
         </div>
 
         <div class="form-group">

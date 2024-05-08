@@ -511,8 +511,13 @@
                   </a>
                 </li>
                 <li>
-                  <a href="#contactenos">
-                    Contactenos
+                  <a href="#usuarios">
+                    Usuarios
+                  </a>
+                </li>
+                <li>
+                  <a href="#recomendacion">
+                    Recomendaciones
                   </a>
                 </li>
               </ul>
@@ -560,11 +565,6 @@
                 <li>
                   <a href="./auth/registro.php">
                     Registro
-                  </a>
-                </li>
-                <li>
-                  <a href="#contactenos">
-                    Contactenos
                   </a>
                 </li>
               </ul>

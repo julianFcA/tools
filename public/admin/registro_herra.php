@@ -115,7 +115,7 @@ if (isset($_POST["MM_register"]) && $_POST["MM_register"] == "formRegister") {
                                             <h1>Registro de Herramienta</h1>
                                             <br>
                                             <div class="form-group">
-                                                <label>Tipo de Herramienta <a href="./regis_herra.php" style="color: orange;">Crear Tipo de Herramienta</a></label>
+                                                <label>Tipo de Herramienta <a href="./regis_tp_herra.php" style="color: orange;">Crear Tipo de Herramienta</a></label>
                                                 <select class="form-control" name="id_tp_herra" required>
                                                     <?php foreach ($consull as $row) : ?>
                                                         <option value="<?php echo $row['id_tp_herra']; ?>"><?php echo $row['nom_tp_herra']; ?></option>

@@ -29,8 +29,8 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         // Ejemplo de validación para el nombre
-        if (nombre.length < 6 || nombre.length > 12) {
-            showError('Nombre debe tener entre 6 y 12 caracteres');
+        if (nombre.length < 3 || nombre.length > 12) {
+            showError('Nombre debe tener entre 3 y 12 caracteres');
             return false;
         }
 
@@ -51,11 +51,6 @@ document.addEventListener('DOMContentLoaded', function() {
         return regex.test(email);
     }
 
-    // Función que convierte el texto a mayúsculas
-    // function mayuscula(input) {
-    //     input.value = input.value.toUpperCase();
-    // }
-
     // Función que elimina espacios en blanco
     function eliminarEspacios(input) {
         input.value = input.value.replace(/\s/g, '');
@@ -68,6 +63,14 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
+function validarLetrasConEspacios(nom_empre, direcc_empre) {
+    input.setCustomValidity('');
+    let regex = /^[a-zA-Z\s]{6,20}$/;
+    if (!regex.test(nom_empre.value, direcc_empre.value)) {
+        input.setCustomValidity('El nombre de la empresa debe contener solo letras y espacios, y tener entre 6 y 20 caracteres.');
+    }
+}
+
 // Función para abrir el overlay de términos
 function openOverlayTerminos() {
     document.getElementById('overlay-terminos').style.display = 'flex';
@@ -77,7 +80,6 @@ function openOverlayTerminos() {
 function closeOverlayTerminos() {
     document.getElementById('overlay-terminos').style.display = 'none';
 }
-
 
 
 
@@ -109,6 +111,12 @@ function validateForm() {
     // Ejemplo de validación para el correo
     if (!validateEmail(correo_empre)) {
         showError('Correo electrónico no válido');
+        return false;
+    }
+
+    var direccionRegex = /^[a-zA-Z0-9\s\-,.#áéíóúÁÉÍÓÚñÑ]+$/;
+    if (!direccionRegex.test(direcc_empre) || direcc_empre.length < 6 || direcc_empre.length > 50) {
+        showError('La dirección ingresada no es válida. Debe contener letras, números y espacios, y tener entre 6 y 100 caracteres.');
         return false;
     }
 
@@ -171,7 +179,6 @@ function validarContraseña() {
     }
     return true;
 }
-
 
 
 

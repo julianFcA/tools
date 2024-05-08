@@ -33,22 +33,22 @@ if (isset($_POST["MM_register"]) && $_POST["MM_register"] == "formRegister") {
             <h1>Registro de Empresa</h1>
             <div class="form-group">
                 <label>Nit de Empresa</label>
-                <input type="varchar" placeholder="Ingrese Nit de Empresa" class="form-control" name="nit_empre" title="Debe ser de 10 dígitos" required onkeyup="espacios(this)" minlength="7" maxlength=" 9 a 10" required>
+                <input type="varchar" placeholder="Ingrese Nit de Empresa" class="form-control" name="nit_empre" title="Debe ser de 10 dígitos" required onkeyup="espacios(this)" minlength="7" maxlength="12" required>
             </div>
 
             <div class="form-group">
                 <label>Nombre de Empresa</label>
-                <input type="text" placeholder="Ingrese Nombre de Empresa" class="form-control" name="nom_empre" title="Debe ser de 15 letras" required oninput="validarLetras(this)" minlength="6" maxlength="12">
+                <input type="text" placeholder="Ingrese Nombre de Empresa" class="form-control" name="nom_empre" title="Debe ser de 40 letras" required oninput="validarLetrasConEspacios(this)" required oninput="validarLetras(this)" minlength="6" maxlength="50">
             </div>
 
             <div class="form-group">
                 <label>Direeción de Empresa</label>
-                <input type="varchar" placeholder="Ingrese Direccion de Empresa" class="form-control" name="direcc_empre" title="Debe ser de 30 letras" required oninput="validarLetras(this)" minlength="6" maxlength="30">
+                <input type="varchar" placeholder="Ingrese Direccion de Empresa" class="form-control" name="direcc_empre" title="Debe ser de 30 letras" required oninput="validateForm(this)" required oninput="validarLetrasConEspacios(this)" required oninput="validarLetras(this)" minlength="6" maxlength="30">
             </div>
 
             <div class="form-group">
                 <label> Telefono de Empresa</label>
-                <input type="number" placeholder="Ingrese Telefono de Empresa" class="form-control" name="telefono" required onkeyup="espacios(this)" minlength="8" maxlength="12">
+                <input type="number" placeholder="Ingrese Telefono de Empresa" class="form-control" name="telefono" required onkeyup="espacios(this)" minlength="8" maxlength="14">
             </div>
 
             <div class="form-group">

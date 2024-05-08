@@ -26,43 +26,46 @@ document.addEventListener('DOMContentLoaded', function() {
     // Función para validar el primer formulario
     function validateForm() {
         var documento = form['documento'].value;
-        var nombre = form['nombre'].value;
+        var nombre = document.getElementsByName('nombre')[0].value;
+        var apellido = document.getElementsByName('apellido')[0].value;
         var correo = form['correo'].value;
-
+    
         // Aplica las funciones de validación específicas
         minuscula(form['nombre']); 
+        minuscula(form['apellido']); 
         eliminarEspacios(form['documento']); // Elimina espacios en el documento
-
+    
         // Realiza tus validaciones aquí y muestra mensajes de error si es necesario
-
+    
         // Ejemplo de validación para el documento
         if (documento.length !== 10 || isNaN(documento)) {
             showError('Documento debe tener 10 dígitos numéricos');
             return false;
         }
-
+    
         // Ejemplo de validación para el nombre
         if (nombre.length < 3 || nombre.length > 12) {
             showError('Nombre debe tener entre 3 y 12 caracteres');
             return false;
         }
-
+    
+        // Ejemplo de validación para el apellido
+        if (apellido.length < 3 || apellido.length > 15) {
+            showError('El apellido debe tener entre 3 y 15 caracteres');
+            return false;
+        }
+    
         // Ejemplo de validación para el correo
         if (!validateEmail(correo)) {
             showError('Correo electrónico no válido');
             return false;
         }
-
+    
         // Más validaciones según sea necesario...
-
+    
         return true; // Si todas las validaciones pasan, retorna true
     }
-
-
-    // Función que convierte el texto a mayúsculas
-    function minuscula(input) {
-        input.value = input.value.toLowerCase();
-    }
+    
 
     // Función que elimina espacios en blanco
     function eliminarEspacios(input) {
@@ -84,7 +87,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // Validaciones del segundo formulario
 document.addEventListener('DOMContentLoaded', function() {
-    var form = document.forms['formRegister2'];
+    var form = document.forms['formRegister'];
 
     // Agrega un evento de escucha al formulario
     form.addEventListener('submit', function(event) {
@@ -142,6 +145,8 @@ function maxlengthNumber(obj) {
         alert("Debe ingresar solo el número de dígitos requeridos");
     }
 }
+
+//validacion de cambio de contraseña
 
 function validarContraseña() {
     var contraseña = document.getElementById("contrasena","cont","conta").value;

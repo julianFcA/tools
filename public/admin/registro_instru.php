@@ -103,8 +103,11 @@ if (isset($_POST["MM_register"]) && $_POST["MM_register"] == "formRegister") {
     if (strlen($documento) !== 10 || !is_numeric($documento)) {
         echo '<script>alert("Documento debe tener 10 dígitos numéricos.");</script>';
         echo '<script>window.location = "./registro_instru.php";</script>';
-    } elseif (strlen($nombre) < 6 || strlen($nombre) > 12) {
-        echo '<script>alert("Nombre debe tener entre 6 y 12 caracteres.");</script>';
+    } elseif (strlen($nombre) < 3 || strlen($nombre) > 12) {
+        echo '<script>alert("Nombre debe tener entre 3 y 12 caracteres.");</script>';
+        echo '<script>window.location = "./registro_instru.php";</script>';
+    } elseif (strlen($apellido) < 3 || strlen($apellido) > 15) {
+        echo '<script>alert("El apellido debe tener entre 3 y 15 caracteres.");</script>';
         echo '<script>window.location = "./registro_instru.php";</script>';
     } elseif (!filter_var($correo, FILTER_VALIDATE_EMAIL)) {
         echo '<script>alert("Correo electrónico no válido.");</script>';
@@ -194,12 +197,12 @@ if (isset($_POST["MM_register"]) && $_POST["MM_register"] == "formRegister") {
 
                                 <div class="form-group">
                                     <label>Nombre</label>
-                                    <input type="text" placeholder="Ingrese primer nombre" class="form-control" name="nombre" title="Debe ser de 3 a 12 letras" required minlength="3" maxlength="12">
+                                    <input type="text" placeholder="Ingrese primer nombre" class="form-control" name="nombre" title="Debe ser de 3 a 12 letras" required oninput="validateForm(this)" minlength="3" maxlength="12">
                                 </div>
 
                                 <div class="form-group">
                                     <label>Apellido</label>
-                                    <input type="text" placeholder="Ingrese primer apellido" class="form-control" name="apellido" title="Debe ser de 6 a 15 letras" required minlength="6" maxlength="12">
+                                    <input type="text" placeholder="Ingrese primer apellido" class="form-control" name="apellido" title="Debe ser de 3 a 15 letras" required oninput="validateForm(this)"  minlength="3" maxlength="15">
                                 </div>
 
                                 <div class="form-group">
@@ -276,7 +279,8 @@ if (isset($_POST["MM_register"]) && $_POST["MM_register"] == "formRegister") {
                                                 <li><strong>Responsabilidad:</strong> La aplicación y sus desarrolladores no se hacen responsables de cualquier daño o pérdida resultante del uso de la aplicación o de las herramientas prestadas.</li>
                                             </ol>
                                             <p>Al utilizar esta aplicación, aceptas cumplir con estos términos y condiciones. Si no estás de acuerdo con estos términos, por favor, no utilices la aplicación.</p>
-                                            <input type="checkbox" class="form-control" id="checkboxTerminos" name="terminos" <?php echo ($consult && $consult['terminos'] == '1') ? 'checked' : ''; ?> required>
+                                            <input type="checkbox" id="checkboxTerminos" name="terminos" <?php echo (isset($consult['terminos']) && $consult['terminos'] == '1') ? 'checked' : ''; ?> required>
+
                                         </div>
                                     </div>
                                     <br>

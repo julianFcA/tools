@@ -50,8 +50,11 @@ if (isset($_POST["MM_register"]) && $_POST["MM_register"] == "formRegister") {
             if (strlen($documento) !== 10 || !is_numeric($documento)) {
                 echo '<script>alert("Documento debe tener 10 dígitos numéricos.");</script>';
                 echo '<script>window.location = "../auth/registro.php";</script>';
-            } elseif (strlen($nombre) < 6 || strlen($nombre) > 12) {
-                echo '<script>alert("Nombre debe tener entre 6 y 12 caracteres.");</script>';
+            } elseif (strlen($nombre) < 3 || strlen($nombre) > 12) {
+                echo '<script>alert("El nombre debe tener entre 3 y 12 caracteres.");</script>';
+                echo '<script>window.location = "../auth/registro.php";</script>';
+            } elseif (strlen($apellido) < 3 || strlen($apellido) > 15) {
+                echo '<script>alert("El apellido debe tener entre 3 y 15 caracteres.");</script>';
                 echo '<script>window.location = "../auth/registro.php";</script>';
             } elseif (!filter_var($correo, FILTER_VALIDATE_EMAIL)) {
                 echo '<script>alert("Correo electrónico no válido.");</script>';
