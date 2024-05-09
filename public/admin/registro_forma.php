@@ -33,6 +33,19 @@ if (isset($_POST["MM_register"]) && $_POST["MM_register"] == "formRegister") {
         $stmtCheckJornada->execute();
         $resultCheckJornada = $stmtCheckJornada->fetch(PDO::FETCH_ASSOC);
 
+         // Prepara y ejecuta la consulta para verificar si el documento ya existe
+         $stmtCheck = $conn->prepare("SELECT ficha FROM ficha WHERE ficha = ?");
+         $stmtCheck->bindParam(1, $ficha, PDO::PARAM_STR);
+         $stmtCheck->execute();
+         $resultCheck = $stmtCheck->fetch(PDO::FETCH_ASSOC);
+ 
+         // Verificar si el documento ya existe en la base de datos
+         if ($resultCheck) {
+             // El documento ya existe en la base de datos, mostrar mensaje emergente con JavaScript
+             echo '<script>alert("El ficha ya esta registrada.");</script>';
+             echo '<script>window.location = "./registro_forma.php";</script>';
+         } 
+
         // Verificar si la jornada y la formación existen
         if (!$resultCheckJornada || !$resultCheckFormacion) {
             echo '<script>alert("La jornada o la formación no existe.");</script>';

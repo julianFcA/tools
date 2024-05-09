@@ -59,7 +59,6 @@
         }
 
 
-
         .modal {
         display: none;
         position: fixed;
@@ -70,41 +69,52 @@
         height: 100%;
         overflow: auto;
         background-color: rgba(0, 0, 0, 0.4);
-        }
+    }
 
-        .modal-content {
+    .modal-content {
         background-color: #fefefe;
         margin: 15% auto;
         padding: 20px;
         border: 1px solid #888;
-        width: 40%;
-        }
+        width: 50%;
+        max-width: 500px;
+        text-align: center; /* Para centrar el contenido */
+        position: relative; /* Añadido */
+    }
 
-        .close {
+    .close {
         color: #aaaaaa;
-        float: right;
         font-size: 28px;
         font-weight: bold;
-        }
+        position: absolute; /* Añadido */
+        top: 10px; /* Añadido */
+        right: 10px; /* Añadido */
+    }
 
-        .close:hover,
-        .close:focus {
+    .close:hover,
+    .close:focus {
         color: #000;
         text-decoration: none;
         cursor: pointer;
-}
+    }
+
+    .input-container {
+        margin-bottom: 20px;
+    }
     </style>
 </head>
 <div class="modal" id="modal">
     <div class="modal-content">
-      <span >&times;</span>
-      <h2>Ingrese Codigo de Confirmación</h2>
-      <br>
-      <input type="password" id="passwordInput" placeholder="Ingrese Codigo de Confirmación">
-      <button onclick="validarCodigo()" style="background-color: orange; width: 505px;">Aceptar</button>
-
+        <span id="close" class="close">&times;</span>
+        <h2>Ingrese Código de Confirmación</h2>
+        <br>
+        <div class="input-container">
+            <input type="password" id="passwordInput" placeholder="Ingrese Código de Confirmación" style="width: calc(100% - 10px); padding: 10px;">
+        </div>
+        <button onclick="validarCodigo()" class="accept-button" style="background-color: orange; width: calc(100% - 10px); padding: 10px; margin-top: 10px;">Aceptar</button>
     </div>
-  </div>
+</div>
+
 
 <body>
     <div class="login-container">
@@ -140,29 +150,31 @@
 
 
 <script>
+    // Función para cerrar el cuadro de diálogo y redirigir a la página principal
+    document.getElementById("close").onclick = function() {
+        document.getElementById("modal").style.display = "none";
+        window.location.href = "./index.php"; // Reemplaza "pagina_principal.html" con la URL de tu página principal
+    };
+
+    // Función para validar el código ingresado
+    function validarCodigo() {
+        const codigoCorrecto = "Tools_Usuario2024";
+        const codigoIngresado = document.getElementById("passwordInput").value;
+
+        if (codigoIngresado === codigoCorrecto) {
+            alert("¡Código de Confirmación Correcto! Acceso permitido.");
+            document.getElementById("modal").style.display = "none";
+        } else {
+            alert("Código incorrecto. Acceso denegado.");
+        }
+    }
+
     // Mostrar el cuadro de diálogo automáticamente al cargar la página
     window.onload = function() {
         document.getElementById("modal").style.display = "block";
     };
-    
-    // Función para cerrar el cuadro de diálogo
-    document.getElementById("close").onclick = function() {
-        document.getElementById("modal").style.display = "none";
-    };
-    
-    // Validar el código ingresado
-    function validarCodigo() {
-        const codigoCorrecto = "Tools_Usuario2024";
-        const codigoIngresado = document.getElementById("passwordInput").value;
-        
-        if (codigoIngresado === codigoCorrecto) {
-            alert("¡Codigo de Confirmacion Correcto! Acceso permitido.");
-            document.getElementById("modal").style.display = "none";
-        } else {
-            alert("Codigo incorrecto. Acceso denegado.");
-        }
-    }
-    </script>
+</script>
+
 
 </body>
 </html>

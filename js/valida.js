@@ -89,6 +89,8 @@ function validateForm() {
     var correo_empre = document.forms["formRegister"]["correo_empre"].value;
     var direcc_empre = document.forms["formRegister"]["direcc_empre"].value;
     var telefono = document.forms["formRegister"]["telefono"].value;
+    var nom_tp_herra = document.forms["formRegister"]["nom_tp_herra"].value;
+    var nom_marca = document.forms["formRegister"]["nom_marca"].value;
 
     // Aplica las funciones de validación específicas
     mayuscula(form['nom_empre']); // Convierte a mayúsculas el nombre
@@ -105,6 +107,16 @@ function validateForm() {
     // Ejemplo de validación para el nombre
     if (nom_empre.length < 3 || nom_empre.length > 15) {
         showError('Nombre debe tener entre 3 y 15 caracteres');
+        return false;
+    }
+
+    if (nom_tp_herra.length < 3 || nom_tp_herra.length > 15) {
+        showError('El tipo de herramienta debe tener entre 3 y 12 caracteres');
+        return false;
+    }
+
+    if (nom_marca.length < 3 || nom_marca.length > 15) {
+        showError('Nombre de marca debe tener entre 3 y 12 caracteres');
         return false;
     }
 
@@ -186,29 +198,29 @@ function validarContraseña() {
 // _____________________________
 
 // Mostrar el cuadro de diálogo automáticamente al cargar la página
-window.onload = function() {
-    document.getElementById("modal").style.display = "block";
-};
 
-// Función para cerrar el cuadro de diálogo
-document.getElementById("close").onclick = function() {
-    document.getElementById("modal").style.display = "none";
-};
-
-// Validar el código ingresado
 function validarCodigo() {
     const codigoCorrecto = "julian1110567986";
     const codigoIngresado = document.getElementById("passwordInput").value;
-    
+
     if (codigoIngresado === codigoCorrecto) {
-        alert("¡Contraseña correcta! Acceso permitido.");
+        alert("¡Código de Confirmación Correcto! Acceso permitido.");
         document.getElementById("modal").style.display = "none";
     } else {
-        alert("Contraseña incorrecta. Acceso denegado.");
+        alert("Código incorrecto. Acceso denegado.");
     }
 }
 
+// Mostrar el cuadro de diálogo automáticamente al cargar la página
+window.onload = function() {
+    document.getElementById("modal").style.display = "block";
 
+    // Asignar evento al botón de cierre después de que el DOM esté completamente cargado
+    document.getElementById("close").onclick = function() {
+        document.getElementById("modal").style.display = "none";
+        window.location.href = "./../index.php"; // Redirigir a la página principal
+    };
+};
 
 
 

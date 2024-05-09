@@ -84,7 +84,7 @@ $userdata = json_encode($resultado_pagina);
                     <td>${json_data.nombre}</td>
                     <td>${json_data.apellido}</td>
                     <td>${json_data.documento}</td>
-                    <td>${json_data.codigo_barras}</td>
+                    <td><img src="../../images/${json_data.codigo_barras}.png" style="max-width: 300px; height: auto; border: 2px solid #ffffff;"></td>
                     <td>${json_data.fecha_registro}</td>
                     <td>${json_data.nom_forma}</td>
                     <td>${json_data.ficha}</td>
