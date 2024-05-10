@@ -75,3 +75,41 @@ if (isset($_POST["inicio"])) {
 }
 
 ?>
+
+
+<script>
+    function validarContraseña() {
+        var contraseña = document.getElementById('cont').value;
+        var confirmarContraseña = document.getElementById('conta').value;
+
+        if (contraseña !== confirmarContraseña) {
+            alert('Las contraseñas no coinciden');
+            return false; // Detener el envío del formulario
+        }
+        return true; // Permitir el envío del formulario si las contraseñas coinciden
+    }
+
+
+
+    function validarContra() {
+    var contraseña = document.getElementById("contrasena","cont","conta").value;
+    var mayusculaRegex = /[A-Z]/;
+    var numeroRegex = /[0-9]/;
+    var signoRegex = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/;
+
+    if (!mayusculaRegex.test(contraseña)) {
+        alert("La contraseña debe contener al menos una letra mayúscula.");
+        return false;
+    }
+    if (!numeroRegex.test(contraseña)) {
+        alert("La contraseña debe contener al menos un número.");
+        return false;
+    }
+    if (!signoRegex.test(contraseña)) {
+        alert("La contraseña debe contener al menos un signo.");
+        return false;
+    }
+    return true;
+}
+
+</script>

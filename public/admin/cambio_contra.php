@@ -41,14 +41,15 @@ if ((isset($_POST["MM_update"])) && ($_POST["MM_update"] == "form1")) {
                                     <div class="login-container">
                                         <div class="row">
                                             <div class="col-md-12 form-left">
-                                                <form method="POST" name="form1" id="form1" autocomplete="off" onsubmit="return validarContraseña()">
+                                                <form method="POST" name="form1" id="form1" autocomplete="off" onsubmit="return validarContraseña()"  onsubmit="return validarContra()">
                                                     <h3>CAMBIO DE CONTRASEÑA</h3>
 
                                                     <div class="form-group">
                                                         <label for="cont">NUEVA CONTRASEÑA<span class="text-danger">*</span></label>
                                                         <div class="input-group">
                                                             <div class="input-group-text"><i class="bi bi-person-fill"></i></div>
-                                                            <input type="password" name="cont" id="cont" placeholder="Nueva clave" minlength="6" class="form-control" maxlength="20" oninput="maxlengthNumber(this);">
+                                                            <input type="password" name="cont" id="cont" placeholder="Nueva clave" minlength="6" class="form-control" maxlength="20" oninput="maxlengthNumber(this);"
+                                                            oninput="ValidarContra(this);">
                                                         </div>
                                                     </div>
 
@@ -56,7 +57,7 @@ if ((isset($_POST["MM_update"])) && ($_POST["MM_update"] == "form1")) {
                                                         <label for="conta">CONFIRMACION DE CONTRASEÑA<span class="text-danger">*</span></label>
                                                         <div class="input-group">
                                                             <div class="input-group-text"><i class="bi bi-lock-fill"></i></div>
-                                                            <input type="password" name="conta" id="conta" placeholder="Confirme clave" minlength="8" class="form-control" maxlength="20" oninput="maxlengthNumber(this);">
+                                                            <input type="password" name="conta" id="conta" placeholder="Confirme clave" minlength="8" class="form-control" maxlength="20" oninput="maxlengthNumber(this);" oninput="ValidarContra(this);">
                                                         </div>
                                                     </div>
 
@@ -77,3 +78,41 @@ if ((isset($_POST["MM_update"])) && ($_POST["MM_update"] == "form1")) {
         </div>
     </div>
 </div>
+
+<script>
+    function validarContraseña() {
+        var contraseña = document.getElementById('cont').value;
+        var confirmarContraseña = document.getElementById('conta').value;
+
+        if (contraseña !== confirmarContraseña) {
+            alert('Las contraseñas no coinciden');
+            return false; // Detener el envío del formulario
+        }
+        return true; // Permitir el envío del formulario si las contraseñas coinciden
+    }
+
+
+
+
+    function validarContra() {
+    var contraseña = document.getElementById("contrasena","cont","conta").value;
+    var mayusculaRegex = /[A-Z]/;
+    var numeroRegex = /[0-9]/;
+    var signoRegex = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/;
+
+    if (!mayusculaRegex.test(contraseña)) {
+        alert("La contraseña debe contener al menos una letra mayúscula.");
+        return false;
+    }
+    if (!numeroRegex.test(contraseña)) {
+        alert("La contraseña debe contener al menos un número.");
+        return false;
+    }
+    if (!signoRegex.test(contraseña)) {
+        alert("La contraseña debe contener al menos un signo.");
+        return false;
+    }
+    return true;
+}
+
+</script>
