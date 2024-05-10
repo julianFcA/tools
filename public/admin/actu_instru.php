@@ -77,12 +77,14 @@ if (isset($_POST["MM_register"]) && ($_POST["MM_register"] == "formRegister")) {
 
                                             <div class="form-group">
                                                 <label>Nombre de Instructor
-                                                    <input type="text" placeholder="" class="form-control" value="<?php echo $columnas['nombre'] ?>" name="nombre" title="Debe ser de 15 letras" required oninput="validarLetras(this)" minlength="6" maxlength="12">
+                                                    <input type="text" placeholder="" class="form-control" value="<?php echo $columnas['nombre'] ?>" name="nombre" title="Debe ser de 15 letras"  oninput="validarLetras(this)" required onkeyup="espacios(this)"  minlength="6" maxlength="12" pattern="[A-Za-záéíóúÁÉÍÓÚüÜñÑ\s]*">
+                                                <span id="errorNombre" style="color: red; display: none;">El nombre solo puede contener letras</span>
                                             </div>
 
                                             <div class="form-group">
                                                 <label>Apellido de Instructor</label>
-                                                <input type="text" placeholder="" class="form-control" value="<?php echo $columnas['apellido'] ?>" name="apellido" title="Debe ser de 15 letras" required oninput="validarLetras(this)" minlength="6" maxlength="12">
+                                                <input type="text" placeholder="" class="form-control" value="<?php echo $columnas['apellido'] ?>" name="apellido" title="Debe ser de 15 letras" required oninput="validarLetras(this)" required onkeyup="espacios(this)"  minlength="6" maxlength="12" pattern="[A-Za-záéíóúÁÉÍÓÚüÜñÑ\s]*">
+                                                <span id="errorApellido" style="color: red; display: none;">El apellido solo puede contener letras</span>
                                             </div>
 
                                             <div class="form-group">
@@ -115,3 +117,38 @@ if (isset($_POST["MM_register"]) && ($_POST["MM_register"] == "formRegister")) {
         </div>
     </div>
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+    var nombreInput = document.querySelector('input[name="nombre"]');
+    var apellidoInput = document.querySelector('input[name="apellido"]');
+    var errorNombre = document.getElementById('errorNombre');
+    var errorApellido = document.getElementById('errorApellido');
+
+    nombreInput.addEventListener('input', function() {
+        var nombreValue = nombreInput.value.trim();
+        var letrasValidas = /^[A-Za-záéíóúÁÉÍÓÚüÜñÑ\s]*$/;
+
+        if (!letrasValidas.test(nombreValue)) {
+            errorNombre.style.display = 'block';
+            nombreInput.setCustomValidity('El nombre solo puede contener letras');
+        } else {
+            errorNombre.style.display = 'none';
+            nombreInput.setCustomValidity('');
+        }
+    });
+
+    apellidoInput.addEventListener('input', function() {
+        var apellidoValue = apellidoInput.value.trim();
+        var letrasValidas = /^[A-Za-záéíóúÁÉÍÓÚüÜñÑ\s]*$/;
+
+        if (!letrasValidas.test(apellidoValue)) {
+            errorApellido.style.display = 'block';
+            apellidoInput.setCustomValidity('El apellido solo puede contener letras');
+        } else {
+            errorApellido.style.display = 'none';
+            apellidoInput.setCustomValidity('');
+        }
+    });
+});
+</script>

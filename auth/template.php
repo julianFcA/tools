@@ -89,7 +89,7 @@ date_default_timezone_set('America/Bogota');
 
         <!-- Mis Scripts -->
         <script src="../assets/js/register.js"></script>
-        <script src="../js/auth.js"></script>
+        <script src="./../js/auth.js"></script>
 
         <section class="container-fluid footer_section">
             <p>

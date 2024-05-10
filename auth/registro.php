@@ -77,18 +77,20 @@ $consult = $consulta7->fetch(PDO::FETCH_ASSOC);
 
         <div class="form-group">
             <label>Documento</label>
-            <input type="number" placeholder="Ingrese Documento" class="form-control" name="documento" id="documento" title="Debe ser de 8 a 10 dígitos" required minlength="7" maxlength="10">
-            <p id="mensaje"></p>
+            <input type="number" placeholder="Ingrese Documento" class="form-control" name="documento" id="documento" title="Debe ser de 8 a 10 dígitos" required onkeyup="espacios(this)" minlength="7" maxlength="10" oninput="validarNumeros(this)">
+            <p id="mensaje"></p> <span id="errorDocumento" style="color: red; display: none;">El documento solo puede contener números</span>
         </div>
 
         <div class="form-group">
             <label>Nombre</label>
-            <input type="text" placeholder="Ingrese Primer Nombre" class="form-control" name="nombre" title="Debe ser de 15 letras" required oninput="validarFormulario(this)"minlength="3" maxlength="12">
+            <input type="text" placeholder="Ingrese Primer Nombre" class="form-control" name="nombre" title="Debe ser de 15 letras" required onkeyup="espacios(this)" minlength="3" maxlength="12">
+            <span id="errorNombre" style="color: red; display: none;">El nombre solo puede contener letras</span>
         </div>
-
+    
         <div class="form-group">
             <label>Apellido</label>
-            <input type="text" placeholder="Ingrese Primer Apellido" class="form-control" name="apellido" title="Debe ser de 15 letras" required minlength="3" maxlength="15">
+            <input type="text" placeholder="Ingrese Primer Apellido" class="form-control" name="apellido" title="Debe ser de 15 letras" required onkeyup="espacios(this)" minlength="3" maxlength="15">
+            <span id="errorApellido" style="color: red; display: none;">El apellido solo puede contener letras</span>
         </div>
 
         <div class="form-group">
@@ -255,4 +257,60 @@ $(document).ready(function() {
     });
 });
    
+</script>
+
+<script>
+  
+ function validarNumeros(input) {
+        var documentoValue = input.value.trim();
+        var numerosValidos = /^\d+$/;
+        var errorDocumento = document.getElementById('errorDocumento');
+
+        if (!numerosValidos.test(documentoValue)) {
+            errorDocumento.style.display = 'block';
+            input.setCustomValidity('El documento solo puede contener números');
+        } else {
+            errorDocumento.style.display = 'none';
+            input.setCustomValidity('');
+        }
+    }
+
+
+    document.addEventListener('DOMContentLoaded', function() {
+    var nombreInput = document.querySelector('input[name="nombre"]');
+    var apellidoInput = document.querySelector('input[name="apellido"]');
+    var errorNombre = document.getElementById('errorNombre');
+    var errorApellido = document.getElementById('errorApellido');
+
+    nombreInput.addEventListener('input', function() {
+        var nombreValue = nombreInput.value.trim();
+        var letrasValidas = /^[A-Za-záéíóúÁÉÍÓÚüÜñÑ\s]*$/;
+
+        if (!letrasValidas.test(nombreValue)) {
+            errorNombre.style.display = 'block';
+            nombreInput.setCustomValidity('El nombre solo puede contener letras');
+        } else {
+            errorNombre.style.display = 'none';
+            nombreInput.setCustomValidity('');
+        }
+    });
+
+    apellidoInput.addEventListener('input', function() {
+        var apellidoValue = apellidoInput.value.trim();
+        var letrasValidas = /^[A-Za-záéíóúÁÉÍÓÚüÜñÑ\s]*$/;
+
+        if (!letrasValidas.test(apellidoValue)) {
+            errorApellido.style.display = 'block';
+            apellidoInput.setCustomValidity('El apellido solo puede contener letras');
+        } else {
+            errorApellido.style.display = 'none';
+            apellidoInput.setCustomValidity('');
+        }
+    });
+});
+
+function limpiarNoPermitidos(input) {
+    // Reemplazar todo lo que no sea número o guion con una cadena vacía
+    input.value = input.value.replace(/[^0-9\-]/g, '');
+}
 </script>

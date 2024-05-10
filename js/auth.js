@@ -1,12 +1,8 @@
-// Función que convierte el texto a mayúsculas
-// function mayuscula(e) {
-//     e.value = e.value.toUpperCase();
-// }
 
 // // Función que convierte el texto a minúsculas
-// function minuscula(e) {
-//     e.value = e.value.toLowerCase();
-// }
+function minuscula(e) {
+    e.value = e.value.toLowerCase();
+}
 
 // Función que elimina espacios en blanco
 function eliminarEspacios(e) {
@@ -155,4 +151,4 @@ document.addEventListener('DOMContentLoaded', function() {
             errorNombre.textContent = '';
         }
     });
-
+    

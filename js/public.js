@@ -1,3 +1,13 @@
+function minuscula(e) {
+    e.value = e.value.toLowerCase();
+}
+
+// Función que elimina espacios en blanco
+function eliminarEspacios(e) {
+    e.value = e.value.replace(/\s/g, '');
+}
+
+
 // Función que activa o desactiva la clase 'active' en la barra de navegación dependiendo del desplazamiento de la página
 $(document).ready(function() {
     var $window = $(window);
@@ -217,5 +227,3 @@ $(document).ready(function() {
         }
     });
 });
-
-

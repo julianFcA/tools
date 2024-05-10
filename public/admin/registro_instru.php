@@ -33,7 +33,7 @@ if ($nom_forma !== null) {
     $cadena .= "</select>"; // Cerrar la etiqueta select
     $cadena1 .= "</select>";
     echo $cadena . $cadena1; // Imprime ambas cadenas juntas
-} 
+}
 
 
 
@@ -192,17 +192,20 @@ if (isset($_POST["MM_register"]) && $_POST["MM_register"] == "formRegister") {
 
                                 <div class="form-group">
                                     <label>Documento</label>
-                                    <input type="number" placeholder="Ingrese Documento" class="form-control" name="documento" title="El documento de ser de 8 a 10 dígitos" required minlength="8" maxlength="10">
+                                    <input type="number" placeholder="Ingrese Documento" class="form-control" name="documento" title="El documento de ser de 8 a 10 dígitos" required minlength="8" maxlength="10" required onkeyup="espacios(this)" minlength="7" maxlength="10" oninput="validarNumeros(this)">
+                                    <p id="mensaje"></p><span id="errorDocumento" style="color: red; display: none;">El documento solo puede contener números</span>
                                 </div>
 
                                 <div class="form-group">
                                     <label>Nombre</label>
-                                    <input type="text" placeholder="Ingrese primer nombre" class="form-control" name="nombre" title="Debe ser de 3 a 12 letras" required oninput="validateForm(this)" minlength="3" maxlength="12">
+                                    <input type="text" placeholder="Ingrese primer nombre" class="form-control" name="nombre" title="Debe ser de 3 a 12 letras" required oninput="validateForm(this)" minlength="3" maxlength="12" required onkeyup="espacios(this)" minlength="6" maxlength="12" pattern="[A-Za-záéíóúÁÉÍÓÚüÜñÑ\s]*">
+                                    <span id="errorNombre" style="color: red; display: none;">El nombre solo puede contener letras</span>
                                 </div>
 
                                 <div class="form-group">
                                     <label>Apellido</label>
-                                    <input type="text" placeholder="Ingrese primer apellido" class="form-control" name="apellido" title="Debe ser de 3 a 15 letras" required oninput="validateForm(this)"  minlength="3" maxlength="15">
+                                    <input type="text" placeholder="Ingrese primer apellido" class="form-control" name="apellido" title="Debe ser de 3 a 15 letras" required oninput="validateForm(this)" minlength="3" maxlength="15" required onkeyup="espacios(this)" minlength="6" maxlength="12" pattern="[A-Za-záéíóúÁÉÍÓÚüÜñÑ\s]*">
+                                    <span id="errorApellido" style="color: red; display: none;">El apellido solo puede contener letras</span>
                                 </div>
 
                                 <div class="form-group">
@@ -300,73 +303,126 @@ if (isset($_POST["MM_register"]) && $_POST["MM_register"] == "formRegister") {
 </div>
 
 <script type="text/javascript">
+    $(document).ready(function() {
+        $('#nom_forma').change(function() {
+            var idForma = $(this).val(); // Obtiene el ID de la formación seleccionada
+            $.ajax({
+                type: "POST",
+                url: "./getFichas.php", // Asegúrate de ajustar la ruta al archivo PHP adecuado
+                data: {
+                    id_forma: idForma
+                },
+                dataType: 'json', // Esto le dice a jQuery que espere una respuesta JSON
+                success: function(data) { // 'data' ya es un objeto JavaScript
+                    var fichaSelect = $('#ficha'); // El select de fichas
+                    fichaSelect.empty(); // Limpia las opciones actuales
 
-$(document).ready(function() {
-    $('#nom_forma').change(function() {
-        var idForma = $(this).val();  // Obtiene el ID de la formación seleccionada
-        $.ajax({
-            type: "POST",
-            url: "./getFichas.php",  // Asegúrate de ajustar la ruta al archivo PHP adecuado
-            data: {id_forma: idForma},
-            dataType: 'json',  // Esto le dice a jQuery que espere una respuesta JSON
-            success: function(data) {  // 'data' ya es un objeto JavaScript
-                var fichaSelect = $('#ficha');  // El select de fichas
-                fichaSelect.empty();  // Limpia las opciones actuales
-
-                if (data.length > 0) {
-                    $.each(data, function(index, item) {
+                    if (data.length > 0) {
+                        $.each(data, function(index, item) {
+                            fichaSelect.append($('<option>', {
+                                value: item.ficha,
+                                text: item.ficha
+                            }));
+                        });
+                    } else {
                         fichaSelect.append($('<option>', {
-                            value: item.ficha,
-                            text: item.ficha
+                            value: '',
+                            text: 'No hay fichas disponibles'
                         }));
-                    });
-                } else {
-                    fichaSelect.append($('<option>', {
-                        value: '',
-                        text: 'No hay fichas disponibles'
-                    }));
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error: ' + error);
+                    console.error('Response: ' + xhr.responseText);
                 }
-            },
-            error: function(xhr, status, error) {
-                console.error('Error: ' + error);
-                console.error('Response: ' + xhr.responseText);
-            }
+            });
         });
     });
-});
 
 
-$(document).ready(function() {
-    $('#ficha').change(function() {
-        var idFicha = $(this).val();  // Obtiene el ID de la ficha seleccionada
-        $.ajax({
-            type: "POST",
-            url: "./getJornada.php",  // Asegúrate de ajustar la ruta al archivo PHP adecuado
-            data: {id_ficha: idFicha},
-            dataType: 'json',
-            success: function(data) {
-                var jornadaSelect = $('#tp_jornada');  // El select de jornadas
-                jornadaSelect.empty();  // Limpia las opciones actuales
+    $(document).ready(function() {
+        $('#ficha').change(function() {
+            var idFicha = $(this).val(); // Obtiene el ID de la ficha seleccionada
+            $.ajax({
+                type: "POST",
+                url: "./getJornada.php", // Asegúrate de ajustar la ruta al archivo PHP adecuado
+                data: {
+                    id_ficha: idFicha
+                },
+                dataType: 'json',
+                success: function(data) {
+                    var jornadaSelect = $('#tp_jornada'); // El select de jornadas
+                    jornadaSelect.empty(); // Limpia las opciones actuales
 
-                if (data.length > 0) {
-                    $.each(data, function(index, item) {
+                    if (data.length > 0) {
+                        $.each(data, function(index, item) {
+                            jornadaSelect.append($('<option>', {
+                                value: item.id_jornada,
+                                text: item.tp_jornada
+                            }));
+                        });
+                    } else {
                         jornadaSelect.append($('<option>', {
-                            value: item.id_jornada,
-                            text: item.tp_jornada
+                            value: '',
+                            text: 'No hay jornadas disponibles'
                         }));
-                    });
-                } else {
-                    jornadaSelect.append($('<option>', {
-                        value: '',
-                        text: 'No hay jornadas disponibles'
-                    }));
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error: ' + error);
+                    console.error('Response: ' + xhr.responseText);
                 }
-            },
-            error: function(xhr, status, error) {
-                console.error('Error: ' + error);
-                console.error('Response: ' + xhr.responseText);
+            });
+        });
+    });
+</script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var nombreInput = document.querySelector('input[name="nombre"]');
+        var apellidoInput = document.querySelector('input[name="apellido"]');
+        var errorNombre = document.getElementById('errorNombre');
+        var errorApellido = document.getElementById('errorApellido');
+
+        nombreInput.addEventListener('input', function() {
+            var nombreValue = nombreInput.value.trim();
+            var letrasValidas = /^[A-Za-záéíóúÁÉÍÓÚüÜñÑ\s]*$/;
+
+            if (!letrasValidas.test(nombreValue)) {
+                errorNombre.style.display = 'block';
+                nombreInput.setCustomValidity('El nombre solo puede contener letras');
+            } else {
+                errorNombre.style.display = 'none';
+                nombreInput.setCustomValidity('');
+            }
+        });
+
+        apellidoInput.addEventListener('input', function() {
+            var apellidoValue = apellidoInput.value.trim();
+            var letrasValidas = /^[A-Za-záéíóúÁÉÍÓÚüÜñÑ\s]*$/;
+
+            if (!letrasValidas.test(apellidoValue)) {
+                errorApellido.style.display = 'block';
+                apellidoInput.setCustomValidity('El apellido solo puede contener letras');
+            } else {
+                errorApellido.style.display = 'none';
+                apellidoInput.setCustomValidity('');
             }
         });
     });
-});
+
+
+    function validarNumeros(input) {
+        var documentoValue = input.value.trim();
+        var numerosValidos = /^\d+$/;
+        var errorDocumento = document.getElementById('errorDocumento');
+
+        if (!numerosValidos.test(documentoValue)) {
+            errorDocumento.style.display = 'block';
+            input.setCustomValidity('El documento solo puede contener números');
+        } else {
+            errorDocumento.style.display = 'none';
+            input.setCustomValidity('');
+        }
+    }
 </script>
