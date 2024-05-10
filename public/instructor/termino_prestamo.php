@@ -155,8 +155,8 @@ function redirectToPrestamoPage($message)
                 mensajeError +=
                     "La cantidad ingresada es mayor que la cantidad disponible para la herramienta con código de barras " +
                     herramienta.dataset.codigoBarra + ".\n";
-            } else if (cantidad > 2) {
-                mensajeError += "Solo se permiten cantidades de 1 o 2 para cada herramienta.\n";
+            } else if (cantidad > 15) {
+                mensajeError += "Solo se permiten cantidades 15 para cada herramienta.\n";
             }
         });
 
