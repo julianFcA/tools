@@ -87,30 +87,27 @@ if (isset($_POST["MM_register"]) && ($_POST["MM_register"] == "formRegister")) {
                                             </div>
 
                                             <div class="form-group">
-                                                <label>Formación</label>
-                                                <select class="form-control" name="nom_forma" required>
-                                                    <?php foreach ($consul2 as $row) : ?>
-                                                        <option value="<?php echo ($row['id_forma']); ?>"><?php echo ($row['nom_forma']); ?></option>
-                                                    <?php endforeach; ?>
+                                                <label for="nom_forma">Formación</label>
+                                                <select name="nom_forma" id="nom_forma" class="form-control">
+                                                    <?php
+                                                    // Consulta para obtener las opciones de formación
+                                                    $statement = $conn->prepare("SELECT * FROM formacion WHERE id_forma >= 1");
+                                                    $statement->execute();
+                                                    while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
+                                                        echo "<option value='" . $row['id_forma'] . "'>" . $row['nom_forma'] . "</option>";
+                                                    }
+                                                    ?>
                                                 </select>
                                             </div>
 
-                                            <div class="form-group">
-                                                <label>Ficha</label>
-                                                <select class="form-control" name="ficha" required>
-                                                    <?php foreach ($consul as $row) : ?>
-                                                        <option value="<?php echo ($row['ficha']); ?>"><?php echo ($row['ficha']); ?></option>
-                                                    <?php endforeach; ?>
-                                                </select>
+                                            <div class="form-group" id="ficha-group">
+                                                <label for="ficha" class="form-group">Ficha</label>
+                                                <select name="ficha" id="ficha" class="form-control"></select>
                                             </div>
 
-                                            <div class="form-group">
-                                                <label>Jornada</label>
-                                                <select class="form-control" name="id_jornada" required>
-                                                    <?php foreach ($consul1 as $row) : ?>
-                                                        <option value="<?php echo ($row['id_jornada']); ?>"><?php echo ($row['tp_jornada']); ?></option>
-                                                    <?php endforeach; ?>
-                                                </select>
+                                            <div class="form-group" id="tp_jornada-group">
+                                                <label for="tp_jornada" class="form-group">Jornada</label>
+                                                <select id="tp_jornada" name="tp_jornada" class="form-control"></select>
                                             </div>
 
                                             <input type="submit" name="MM_register" value="Asignar Formación" class="btn-primary">
@@ -127,3 +124,75 @@ if (isset($_POST["MM_register"]) && ($_POST["MM_register"] == "formRegister")) {
         </div>
     </div>
 </div>
+
+<script type="text/javascript">
+
+$(document).ready(function() {
+    $('#nom_forma').change(function() {
+        var idForma = $(this).val();  // Obtiene el ID de la formación seleccionada
+        $.ajax({
+            type: "POST",
+            url: "./getFichas.php",  // Asegúrate de ajustar la ruta al archivo PHP adecuado
+            data: {id_forma: idForma},
+            dataType: 'json',  // Esto le dice a jQuery que espere una respuesta JSON
+            success: function(data) {  // 'data' ya es un objeto JavaScript
+                var fichaSelect = $('#ficha');  // El select de fichas
+                fichaSelect.empty();  // Limpia las opciones actuales
+
+                if (data.length > 0) {
+                    $.each(data, function(index, item) {
+                        fichaSelect.append($('<option>', {
+                            value: item.ficha,
+                            text: item.ficha
+                        }));
+                    });
+                } else {
+                    fichaSelect.append($('<option>', {
+                        value: '',
+                        text: 'No hay fichas disponibles'
+                    }));
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error('Error: ' + error);
+                console.error('Response: ' + xhr.responseText);
+            }
+        });
+    });
+});
+
+
+$(document).ready(function() {
+    $('#ficha').change(function() {
+        var idFicha = $(this).val();  // Obtiene el ID de la ficha seleccionada
+        $.ajax({
+            type: "POST",
+            url: "./getJornada.php",  // Asegúrate de ajustar la ruta al archivo PHP adecuado
+            data: {id_ficha: idFicha},
+            dataType: 'json',
+            success: function(data) {
+                var jornadaSelect = $('#tp_jornada');  // El select de jornadas
+                jornadaSelect.empty();  // Limpia las opciones actuales
+
+                if (data.length > 0) {
+                    $.each(data, function(index, item) {
+                        jornadaSelect.append($('<option>', {
+                            value: item.id_jornada,
+                            text: item.tp_jornada
+                        }));
+                    });
+                } else {
+                    jornadaSelect.append($('<option>', {
+                        value: '',
+                        text: 'No hay jornadas disponibles'
+                    }));
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error('Error: ' + error);
+                console.error('Response: ' + xhr.responseText);
+            }
+        });
+    });
+});
+</script>

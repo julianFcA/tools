@@ -51,7 +51,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["iniciarSesion"])) {
             }
         } else {
             // Autenticación fallida debido a discrepancia en el nombre
-            echo '<script>alert("Esta ingresando algun campo al por favor verifique y vuelva a intentar");</script>';
+            echo '<script>alert("Esta ingresando algun campo mal por favor verifique y vuelva a intentar");</script>';
             echo '<script>window.location="../auth/error.php"</script>';
         }
     } else {

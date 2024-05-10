@@ -32,7 +32,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         $stmt_herramienta->execute([$cantidad_devuelta, $codigo_herramienta]);
                     }
                 }
-
                 redirectToPrestamoPage("Herramientas devueltas con éxito.");
             } else {
                 redirectToPrestamoPage("Error: No se han especificado herramientas para devolver o no se ha proporcionado el código de barras de la herramienta.");

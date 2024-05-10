@@ -16,7 +16,7 @@ if (isset($_POST["MM_register"]) && $_POST["MM_register"] == "formRegister") {
         $stmt->execute([$nom_marca]);
 
         echo '<script>alert("Registro exitoso.");</script>';
-        echo '<script>window.location = "./regis_marca.php";</script>';
+        echo '<script>window.location = "./regis_tp_herra.php";</script>';
     }
 }
 

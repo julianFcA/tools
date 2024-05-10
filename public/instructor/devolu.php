@@ -18,14 +18,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                     $nueva_cantidad_prestada = $cantidad_prestada - $cantidad_devuelta;
 
-                    $query_actualizar_cantidad = "UPDATE detalle_prestamo SET cant_devolucion = ?, cant_herra = ?, estado_presta = ? WHERE id_deta_presta = ?";
-                    $estado = ($nueva_cantidad_prestada == 0) ? 'devuelto' : 'incompleto';
-                    $stmt_actualizar_cantidad = $conn->prepare($query_actualizar_cantidad);
-                    $stmt_actualizar_cantidad->execute([$cantidad_devuelta, $nueva_cantidad_prestada, $estado, $id_deta_presta]);
+                    // Actualizar la cantidad de herramientas en la tabla 'herramienta'
+                    $query_actualizar_herramienta = "UPDATE herramienta SET cantidad = cantidad + ? WHERE codigo_barra_herra = ?";
+                    $stmt_actualizar_herramienta = $conn->prepare($query_actualizar_herramienta);
+                    $stmt_actualizar_herramienta->execute([$cantidad_devuelta, $codigo_herramienta]);
 
-                    $query_herramienta = "UPDATE herramienta SET cantidad = cantidad + ? WHERE codigo_barra_herra = ?";
-                    $stmt_herramienta = $conn->prepare($query_herramienta);
-                    $stmt_herramienta->execute([$cantidad_devuelta, $codigo_herramienta]);
+                    // Actualizar la cantidad devuelta y el estado en la tabla 'detalle_prestamo'
+                    $query_actualizar_detalle_prestamo = "UPDATE detalle_prestamo SET cant_devolucion = ?, cant_herra = ?, estado_presta = ? WHERE id_deta_presta = ?";
+                    $estado = ($nueva_cantidad_prestada == 0) ? 'devuelto' : 'incompleto';
+                    $stmt_actualizar_detalle_prestamo = $conn->prepare($query_actualizar_detalle_prestamo);
+                    $stmt_actualizar_detalle_prestamo->execute([$cantidad_devuelta, $nueva_cantidad_prestada, $estado, $id_deta_presta]);
                 }
 
                 redirectToPrestamoPage("Herramientas devueltas con éxito.");

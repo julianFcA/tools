@@ -45,7 +45,8 @@ function redirectToPrestamoPage($message)
     <span >&times;</span>
     <h2>Ingrese Codigo de Confirmación</h2>
     <input type="password" id="passwordInput" placeholder="Por Favor Instructor Verifique estado de Herramientas">
-    <button onclick="validarCodigo()">Aceptar</button>
+    <button style="background-color: orange; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer;" onclick="validarCodigo()">Aceptar</button>
+
   </div>
 </div>
 

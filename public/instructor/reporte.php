@@ -22,10 +22,6 @@ INNER JOIN reporte ON detalle_prestamo.id_deta_presta = reporte.id_deta_presta
 INNER JOIN deta_reporte ON deta_reporte.id_reporte = reporte.id_reporte
 WHERE ficha.ficha >= 1 AND jornada.id_jornada >= 1 AND usuario.id_rol = 3 AND detalle_prestamo.estado_presta = 'reportado'";
 
-
-
-$result = $conn->query($query);
-
 // Definir el número de resultados por página y la página actual
 $porPagina = 20; // Puedes ajustar esto según tus necesidades
 $pagina = isset($_GET['pagina']) ? $_GET['pagina'] : 1;
@@ -35,6 +31,8 @@ $empieza = ($pagina - 1) * $porPagina;
 $resultado_pagina = $result->fetchAll(PDO::FETCH_ASSOC);
 
 $userdata = json_encode($resultado_pagina);
+
+?>
 
 ?>
 <script>

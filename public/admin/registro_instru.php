@@ -100,8 +100,8 @@ if (isset($_POST["MM_register"]) && $_POST["MM_register"] == "formRegister") {
     $nit_empre = isset($_POST['nit_empre']) ? $_POST['nit_empre'] : "";
 
     // Validaciones adicionales en el lado del servidor
-    if (strlen($documento) !== 10 || !is_numeric($documento)) {
-        echo '<script>alert("Documento debe tener 10 dígitos numéricos.");</script>';
+    if (strlen($documento) < 8 || strlen($documento) > 10 || !is_numeric($documento)) {
+        echo '<script>alert("Documento debe contener de entre 8 a 10 dígitos numéricos.");</script>';
         echo '<script>window.location = "./registro_instru.php";</script>';
     } elseif (strlen($nombre) < 3 || strlen($nombre) > 12) {
         echo '<script>alert("Nombre debe tener entre 3 y 12 caracteres.");</script>';
@@ -192,7 +192,7 @@ if (isset($_POST["MM_register"]) && $_POST["MM_register"] == "formRegister") {
 
                                 <div class="form-group">
                                     <label>Documento</label>
-                                    <input type="number" placeholder="Ingrese Documento" class="form-control" name="documento" title="Debe ser de 10 dígitos" required minlength="7" maxlength="10">
+                                    <input type="number" placeholder="Ingrese Documento" class="form-control" name="documento" title="El documento de ser de 8 a 10 dígitos" required minlength="8" maxlength="10">
                                 </div>
 
                                 <div class="form-group">

@@ -47,8 +47,8 @@ if (isset($_POST["MM_register"]) && $_POST["MM_register"] == "formRegister") {
             $nit_empre = filter_input(INPUT_POST, 'nit_empre', FILTER_SANITIZE_STRING);
 
             // Validaciones adicionales en el lado del servidor
-            if (strlen($documento) !== 10 || !is_numeric($documento)) {
-                echo '<script>alert("Documento debe tener 10 dígitos numéricos.");</script>';
+            if (strlen($documento) < 8 || strlen($documento) > 10 || !is_numeric($documento)) {
+                echo '<script>alert("Documento debe contener de entre 8 a 10 dígitos numéricos.");</script>';
                 echo '<script>window.location = "../auth/registro.php";</script>';
             } elseif (strlen($nombre) < 3 || strlen($nombre) > 12) {
                 echo '<script>alert("El nombre debe tener entre 3 y 12 caracteres.");</script>';

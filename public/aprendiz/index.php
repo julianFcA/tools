@@ -3,49 +3,24 @@ require_once 'template.php';
 
 $documento = $_SESSION['documento'];
 
-$limit = 100; // Número de filas por página
-$page = isset($_GET['page']) ? $_GET['page'] : 1; // Página actual
+// Número de filas por página
+$limit = 20; // Número de filas por página
+
+// Página actual
+$page = isset($_GET['page']) ? $_GET['page'] : 1;
 
 // Calcula el offset basado en la página actual
 $offset = ($page - 1) * $limit;
 
-$documento = $_SESSION['documento'] ;
+// Consulta para obtener los datos de la página actual
+$query = "SELECT empresa.nit_empre, empresa.nom_empre, empresa.direcc_empre, empresa.telefono, empresa.correo_empre, licencia.fecha_ini, licencia.fecha_fin, licencia.esta_licen, usuario.nombre,usuario.apellido, usuario.documento, usuario.correo, usuario.codigo_barras, usuario.fecha_registro, formacion.nom_forma ,jornada.tp_jornada,  tp_docu.nom_tp_docu, deta_ficha.ficha, estado_usu. * FROM empresa INNER JOIN licencia ON empresa.nit_empre = licencia.nit_empre LEFT JOIN usuario ON empresa.nit_empre = usuario.nit_empre  INNER JOIN rol ON usuario.id_rol = rol.id_rol INNER JOIN deta_ficha ON deta_ficha.documento = usuario.documento INNER JOIN estado_usu ON estado_usu.id_esta_usu = usuario.id_esta_usu INNER JOIN ficha ON ficha.ficha = deta_ficha.ficha INNER JOIN formacion ON ficha.id_forma = formacion.id_forma INNER JOIN jornada ON ficha.id_jornada = jornada.id_jornada INNER JOIN tp_docu ON usuario.id_tp_docu = tp_docu.id_tp_docu WHERE empresa.nit_empre > 0 AND ficha.ficha >=1 AND jornada.id_jornada >=1 AND usuario.id_rol = 3 AND usuario.documento='$documento' LIMIT :limit OFFSET :offset"; // Agregar los marcadores de posición de límite y desplazamiento
 
-$query = "SELECT usuario.nombre,
-usuario.apellido,
-usuario.documento,
-usuario.correo,
-usuario.codigo_barras,
-usuario.fecha_registro,
-formacion.nom_forma,
-jornada.tp_jornada,
-deta_ficha.ficha,
-deta_ficha.id_deta_ficha,
-tp_docu.nom_tp_docu
-FROM usuario
-INNER JOIN tp_docu ON usuario.id_tp_docu = tp_docu.id_tp_docu
-INNER JOIN rol ON usuario.id_rol = rol.id_rol
-INNER JOIN deta_ficha ON deta_ficha.documento = usuario.documento
-INNER JOIN ficha ON deta_ficha.ficha = ficha.ficha
-INNER JOIN formacion ON formacion.id_forma = ficha.id_forma
-INNER JOIN jornada ON ficha.id_jornada = jornada.id_jornada
-WHERE ficha.ficha > 0
-AND jornada.id_jornada > 1
-AND deta_ficha.id_deta_ficha >= 1
-AND usuario.id_rol = 3 
-AND usuario.documento = $documento";
-
-
-
-$result = $conn->query($query);
-
-// Definir el número de resultados por página y la página actual
-$porPagina = 20; // Puedes ajustar esto según tus necesidades
-$pagina = isset($_GET['pagina']) ? $_GET['pagina'] : 1;
-$empieza = ($pagina - 1) * $porPagina;
-
-// Inicializa la variable $resultado_pagina
-$resultado_pagina = $result->fetchAll(PDO::FETCH_ASSOC);
+// Preparar y ejecutar la consulta
+$stmt = $conn->prepare($query);
+$stmt->bindParam(':limit', $limit, PDO::PARAM_INT);
+$stmt->bindParam(':offset', $offset, PDO::PARAM_INT);
+$stmt->execute();
+$resultado_pagina = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 
 ?>
@@ -98,28 +73,27 @@ $resultado_pagina = $result->fetchAll(PDO::FETCH_ASSOC);
                                                                 $botonCancelar = '';
                                                                 $activo = '';
 
-                                                                    // Actualiza las variables para reflejar el nuevo estado
-                                                                    $estadoClase = 'table-success';
-                                                                    $activo = 'Activo';
-                                                                    $color = 'green';
-                                                                    $mensaje = 'Disponible';
-                                                                }
+                                                                // Actualiza las variables para reflejar el nuevo estado
+                                                                $estadoClase = 'table-success';
+                                                                $activo = 'Activo';
+                                                                $color = 'green';
+                                                                $mensaje = 'Disponible';
                                                                 ?>
-                                                                <tr class="<?= $estadoClase ?>" style="color: <?php echo $color; ?>">
+                                                                <tr class="<?= $estadoClase ?>" style="color: <?= $color ?>">
                                                                     <td><?= $entrada["nombre"] ?></td>
                                                                     <td><?= $entrada["apellido"] ?></td>
                                                                     <td><?= $entrada["nom_tp_docu"] ?></td>
                                                                     <td><?= $entrada["documento"] ?></td>
                                                                     <td><?= $entrada["correo"] ?></td>
-                                                                    <td><img src="../../images/<?= $entrada["codigo_barras"] ?>.png" style="max-width: 300px; height: auto; border: 2px solid #ffffff;"><?= $entrada["codigo_barras"] ?></td>
+                                                                    <td>
+                                                                        <img src="../../images/<?= $entrada["codigo_barras"] ?>.png" style="max-width: 300px; height: auto; border: 2px solid #ffffff;"><?= $entrada["codigo_barras"] ?>
+                                                                    </td>
                                                                     <td><?= $entrada["fecha_registro"] ?></td>
                                                                     <td><?= $entrada["nom_forma"] ?></td>
                                                                     <td><?= $entrada["ficha"] ?></td>
                                                                     <td><?= $entrada["tp_jornada"] ?></td>
-                                                                    <!-- revisar bien este form -->
-                                                                    
                                                                 </tr>
-                                                            <?php  ?>
+                                                            <?php } ?>
                                                         </tbody>
                                                     </table>
                                                 </div>
