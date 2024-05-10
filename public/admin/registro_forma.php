@@ -33,18 +33,18 @@ if (isset($_POST["MM_register"]) && $_POST["MM_register"] == "formRegister") {
         $stmtCheckJornada->execute();
         $resultCheckJornada = $stmtCheckJornada->fetch(PDO::FETCH_ASSOC);
 
-         // Prepara y ejecuta la consulta para verificar si el documento ya existe
-         $stmtCheck = $conn->prepare("SELECT ficha FROM ficha WHERE ficha = ?");
-         $stmtCheck->bindParam(1, $ficha, PDO::PARAM_STR);
-         $stmtCheck->execute();
-         $resultCheck = $stmtCheck->fetch(PDO::FETCH_ASSOC);
- 
-         // Verificar si el documento ya existe en la base de datos
-         if ($resultCheck) {
-             // El documento ya existe en la base de datos, mostrar mensaje emergente con JavaScript
-             echo '<script>alert("El ficha ya esta registrada.");</script>';
-             echo '<script>window.location = "./registro_forma.php";</script>';
-         } 
+        // Prepara y ejecuta la consulta para verificar si el documento ya existe
+        $stmtCheck = $conn->prepare("SELECT ficha FROM ficha WHERE ficha = ?");
+        $stmtCheck->bindParam(1, $ficha, PDO::PARAM_STR);
+        $stmtCheck->execute();
+        $resultCheck = $stmtCheck->fetch(PDO::FETCH_ASSOC);
+
+        // Verificar si el documento ya existe en la base de datos
+        if ($resultCheck) {
+            // El documento ya existe en la base de datos, mostrar mensaje emergente con JavaScript
+            echo '<script>alert("El ficha ya esta registrada.");</script>';
+            echo '<script>window.location = "./registro_forma.php";</script>';
+        }
 
         // Verificar si la jornada y la formación existen
         if (!$resultCheckJornada || !$resultCheckFormacion) {
@@ -56,7 +56,7 @@ if (isset($_POST["MM_register"]) && $_POST["MM_register"] == "formRegister") {
         // Se procede a insertar la ficha
         $stmtInsertFicha = $conn->prepare("INSERT INTO ficha (ficha, id_forma, id_jornada) VALUES (?, ?, ?)");
         $stmtInsertFicha->execute([$ficha, $id_forma, $id_jornada]);
-        
+
         echo '<script>alert("Registro exitoso.");</script>';
         echo '<script>window.location = "./registro_instru.php";</script>';
         exit; // Salir del script después de la redirección
@@ -82,10 +82,12 @@ if (isset($_POST["MM_register"]) && $_POST["MM_register"] == "formRegister") {
 
                                             <h1>Registro de Formación </h1>
                                             <br>
+
                                             <div class="form-group">
                                                 <label>Ficha</label>
-                                                <input type="number" placeholder="Ingrese Ficha" class="form-control" name="ficha" title="Debe ser de 7 numeros" required minlength="7" maxlength="7">
+                                                <input type="text" placeholder="Ingrese Ficha" class="form-control" name="ficha" title="Debe ser de 7 números" required minlength="7" maxlength="7" oninput="validarNumeros(this)">
                                             </div>
+
 
                                             <div class="form-group">
                                                 <label>Formación</label>
@@ -119,3 +121,9 @@ if (isset($_POST["MM_register"]) && $_POST["MM_register"] == "formRegister") {
         </div>
     </div>
 </div>
+<script>
+    function validarNumeros(input) {
+        // Remover cualquier caracter que no sea un número
+        input.value = input.value.replace(/[^\d]/g, '');
+    }
+</script>

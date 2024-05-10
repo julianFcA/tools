@@ -44,7 +44,7 @@ if (isset($_POST["MM_register"]) && ($_POST["MM_register"] == "formRegister")) {
 
 <div class="registro_container">
     <!-- Formulario de Registro -->
-    <form class="registro_form"  name="formRegister" autocomplete="off" method="POST" id="formulario" enctype="multipart/form-data">
+    <form class="registro_form" name="formRegister" autocomplete="off" method="POST" id="formulario" enctype="multipart/form-data">
 
 
         <h1>Actualizar Datos de Administrador de Empresa</h1>
@@ -61,12 +61,14 @@ if (isset($_POST["MM_register"]) && ($_POST["MM_register"] == "formRegister")) {
 
         <div class="form-group">
             <label>Nombre de Administrador</label>
-            <input type="text" placeholder="" class="form-control" value="<?php echo $columnas['nombre'] ?>" name="nombre" title="Debe ser de 15 letras" required oninput="validarLetras(this)" minlength="6" maxlength="12">
+            <input type="text" placeholder="" class="form-control" value="<?php echo $columnas['nombre'] ?>" name="nombre" title="Debe ser de 15 letras" oninput="validarLetras(this)" required onkeyup="espacios(this)" minlength="6" maxlength="12" pattern="[A-Za-záéíóúÁÉÍÓÚüÜñÑ\s]*">
+            <span id="errorNombre" style="color: red; display: none;">El nombre solo puede contener letras</span>
         </div>
 
         <div class="form-group">
             <label>Apellido de Administrador</label>
-            <input type="text" placeholder="" class="form-control" value="<?php echo $columnas['apellido'] ?>" name="apellido" title="Debe ser de 15 letras" required oninput="validarLetras(this)" minlength="6" maxlength="12">
+            <input type="text" placeholder="" class="form-control" value="<?php echo $columnas['apellido'] ?>" name="apellido" title="Debe ser de 15 letras" required oninput="validarLetras(this)" minlength="6" maxlength="12" pattern="[A-Za-záéíóúÁÉÍÓÚüÜñÑ\s]*">
+            <span id="errorApellido" style="color: red; display: none;">El apellido solo puede contener letras</span>
         </div>
 
         <div class="form-group">

@@ -56,7 +56,7 @@ if (isset($_POST["MM_register"]) && ($_POST["MM_register"] == "formRegister")) {
 
         <div class="form-group">
             <label>Dirección de Empresa</label>
-            <input type="varchar" placeholder="Ingrese Direccion de Empresa" class="form-control" value="<?php echo $columnas['direcc_empre'] ?>" name="direcc_empre" title="Debe ser de 30 letras" required oninput="validarLetras(this)" minlength="6" maxlength="30">
+            <input type="varchar" placeholder="Ingrese Direccion de Empresa" class="form-control" value="<?php echo $columnas['direcc_empre'] ?>" name="direcc_empre" title="Debe ser de 30 letras" required minlength="6" maxlength="30">
         </div>
 
         <div class="form-group">

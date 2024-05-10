@@ -40,9 +40,8 @@ if (isset($_POST["MM_register"]) && $_POST["MM_register"] == "formRegister") {
                                         <div class="form-group">
                                             <label for="empresa"></label>
                                             <div class="form-group">
-                                                <br>
                                                 <label>Marca de Herramientas</label>
-                                                <input type="varchar" placeholder="Ingrese Marca" class="form-control" name="nom_marca" title="Debe ser de 20 letras" required minlength="6" maxlength="20">
+                                                <input type="text" placeholder="Ingrese Marca" class="form-control" name="nom_marca" title="Debe ser de 20 letras" required minlength="6" maxlength="20" oninput="validarLetras(this)" >
                                             </div>
                                             <br>
                                             <input type="submit" name="MM_register" value="Crear Marca de Herramienta" class="btn-primary"></input>
@@ -58,3 +57,9 @@ if (isset($_POST["MM_register"]) && $_POST["MM_register"] == "formRegister") {
         </div>
     </div>
 </div>
+<script>
+    function validarLetras(input) {
+        // Remover cualquier caracter que no sea una letra
+        input.value = input.value.replace(/[^a-zA-Z]/g, '');
+    }
+</script>
