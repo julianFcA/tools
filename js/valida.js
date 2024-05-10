@@ -239,44 +239,41 @@ function getCookie(cookieName) {
     return "";
 }
 
+function limpiarNoPermitidos(input) {
+    // Reemplazar todo lo que no sea número o guion con una cadena vacía
+    input.value = input.value.replace(/[^0-9\-]/g, '');
+}
 
 
-// paginacion
+document.addEventListener('DOMContentLoaded', function() {
+    var nombreInput = document.querySelector('input[name="nombre"]');
+    var apellidoInput = document.querySelector('input[name="apellido"]');
+    var errorNombre = document.getElementById('errorNombre');
+    var errorApellido = document.getElementById('errorApellido');
 
-// $(document).ready(function() {
-//     $('#example3').DataTable({
-//         processing: true,
-//         serverSide: true,
-//         ajax: {
-//             url: './../superadmin/licencia.php',
-//             data: function(data) {
-//                 data.page = $('#example3').DataTable().page.info().page + 1;
-//                 data.searchTerm = $('#searchInput').val();
-//             }
-//         },
-//         language: {
-//             "sProcessing": "Procesando...",
-//             "sLengthMenu": "Mostrar _MENU_ registros",
-//             "sZeroRecords": "No se encontraron resultados",
-//             "sEmptyTable": "Ningún dato disponible en esta tabla",
-//             "sInfo": "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
-//             "sInfoEmpty": "Mostrando registros del 0 al 0 de un total de 0 registros",
-//             "sInfoFiltered": "(filtrado de un total de _MAX_ registros)",
-//             "sInfoPostFix": "",
-//             "sSearch": "Buscar:",
-//             "sUrl": "",
-//             "sInfoThousands": ",",
-//             "sLoadingRecords": "Cargando...",
-//             "oPaginate": {
-//                 "sFirst": "Primero",
-//                 "sLast": "Último",
-//                 "sNext": "Siguiente",
-//                 "sPrevious": "Anterior"
-//             },
-//             "oAria": {
-//                 "sSortAscending": ": Activar para ordenar la columna de manera ascendente",
-//                 "sSortDescending": ": Activar para ordenar la columna de manera descendente"
-//             }
-//         }
-//     });
-// });
+    nombreInput.addEventListener('input', function() {
+        var nombreValue = nombreInput.value.trim();
+        var letrasValidas = /^[A-Za-záéíóúÁÉÍÓÚüÜñÑ\s]*$/;
+
+        if (!letrasValidas.test(nombreValue)) {
+            errorNombre.style.display = 'block';
+            nombreInput.setCustomValidity('El nombre solo puede contener letras');
+        } else {
+            errorNombre.style.display = 'none';
+            nombreInput.setCustomValidity('');
+        }
+    });
+
+    apellidoInput.addEventListener('input', function() {
+        var apellidoValue = apellidoInput.value.trim();
+        var letrasValidas = /^[A-Za-záéíóúÁÉÍÓÚüÜñÑ\s]*$/;
+
+        if (!letrasValidas.test(apellidoValue)) {
+            errorApellido.style.display = 'block';
+            apellidoInput.setCustomValidity('El apellido solo puede contener letras');
+        } else {
+            errorApellido.style.display = 'none';
+            apellidoInput.setCustomValidity('');
+        }
+    });
+});

@@ -125,12 +125,14 @@ if (isset($_POST["MM_register"]) && $_POST["MM_register"] == "formRegister") {
 
         <div class="form-group">
             <label>Nombre</label>
-            <input type="text" placeholder="Ingrese primer nombre" class="form-control" name="nombre" title="Debe ser de 3 a 15 letras" required minlength="3" maxlength="15">
+            <input type="text" placeholder="Ingrese primer nombre" class="form-control" name="nombre" title="Debe ser de 3 a 15 letras" required minlength="3" maxlength="15" pattern="[A-Za-záéíóúÁÉÍÓÚüÜñÑ\s]*">
+            <span id="errorNombre" style="color: red; display: none;">El nombre solo puede contener letras</span>
         </div>
 
         <div class="form-group">
             <label>Apellido</label>
-            <input type="text" placeholder="Ingrese primer apellido" class="form-control" name="apellido" title="Debe ser de 3 a 15 letras" required minlength="3" maxlength="15">
+            <input type="text" placeholder="Ingrese primer apellido" class="form-control" name="apellido" title="Debe ser de 3 a 15 letras" required minlength="3" maxlength="15" pattern="[A-Za-záéíóúÁÉÍÓÚüÜñÑ\s]*">
+            <span id="errorApellido" style="color: red; display: none;">El apellido solo puede contener letras</span>
         </div>
 
         <div class="form-group">
@@ -166,7 +168,7 @@ if (isset($_POST["MM_register"]) && $_POST["MM_register"] == "formRegister") {
         <div class="form-group">
             <label for="contrase"> Contraseña</label>
             <div class="input-group">
-                <input type="password" placeholder="Contraseña" name="contrasena" id="contrasena" class="form-control clave" title="Debe tener de 6 a 12 dígitos" required minlength="6" maxlength="12" >
+                <input type="password" placeholder="Contraseña" name="contrasena" id="contrasena" class="form-control clave" title="Debe tener de 6 a 12 dígitos" required minlength="6" maxlength="12">
             </div>
         </div>
 

@@ -33,7 +33,7 @@ if (isset($_POST["MM_register"]) && $_POST["MM_register"] == "formRegister") {
             <h1>Registro de Empresa</h1>
             <div class="form-group">
                 <label>Nit de Empresa</label>
-                <input type="varchar" placeholder="Ingrese Nit de Empresa" class="form-control" name="nit_empre" title="Debe ser de 10 dígitos" required onkeyup="espacios(this)" minlength="7" maxlength="12" required>
+                <input type="text" placeholder="Ingrese Nit de Empresa" class="form-control" name="nit_empre" title="Debe ser de 10 dígitos" required minlength="7" maxlength="12" pattern="[0-9\-]*" onkeyup="limpiarNoPermitidos(this)">
             </div>
 
             <div class="form-group">
