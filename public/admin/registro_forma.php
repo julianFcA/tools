@@ -58,7 +58,7 @@ if (isset($_POST["MM_register"]) && $_POST["MM_register"] == "formRegister") {
         $stmtInsertFicha->execute([$ficha, $id_forma, $id_jornada]);
         
         echo '<script>alert("Registro exitoso.");</script>';
-        echo '<script>window.location = "./formacion.php";</script>';
+        echo '<script>window.location = "./registro_instru.php";</script>';
         exit; // Salir del script después de la redirección
     }
 }

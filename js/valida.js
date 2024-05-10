@@ -193,14 +193,12 @@ function validarContraseña() {
 }
 
 
-
-
 // _____________________________
 
 // Mostrar el cuadro de diálogo automáticamente al cargar la página
 
 function validarCodigo() {
-    const codigoCorrecto = "julian1110567986";
+    const codigoCorrecto = "Cesar_esquivel2024";
     const codigoIngresado = document.getElementById("passwordInput").value;
 
     if (codigoIngresado === codigoCorrecto) {
