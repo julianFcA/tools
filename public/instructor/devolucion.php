@@ -23,7 +23,7 @@ if (isset($_POST['documento'])) {
     INNER JOIN prestamo_herra ON detalle_prestamo.id_presta = prestamo_herra.id_presta
     WHERE prestamo_herra.documento = :documento AND
           herramienta.id_tp_herra >= 1 AND 
-          marca_herra.id_marca >= 1 AND detalle_prestamo.estado_presta = 'prestado' or detalle_prestamo.estado_presta = 'incompleto'";
+          marca_herra.id_marca >= 1 AND detalle_prestamo.estado_presta = 'prestado' or detalle_prestamo.estado_presta = 'incompleto' or detalle_prestamo.estado_presta = 'Reportado una parte'";
 
     // Preparar y ejecutar la consulta
     $stmt = $conn->prepare($query);
@@ -93,7 +93,7 @@ if (isset($_POST['documento'])) {
                                                                         <td><?= $entrada["fecha_adqui"] ?></td>
                                                                         <td><?= $entrada["cant_herra"] ?></td>
                                                                         <td><?= $entrada["dias"] ?></td>
-                                                                        <td><?= $entrada["fecha_entrega"] ?></td>    
+                                                                        <td><?= $entrada["fecha_entrega"] ?></td>
                                                                         <td><input type="checkbox" name="id_deta_presta[]"
                                                                                 value="<?= $entrada['id_deta_presta'] ?>"
                                                                                 onclick="checkLimit()"></td>
@@ -110,7 +110,8 @@ if (isset($_POST['documento'])) {
                                                         onclick="prepareAndRedirect()">Devolver Herramientas</button>
                                                 </form>
                                                 <br>
-                                                <a href="./index.php" class="btn btn-warning btn-sm mt-2" style="width: 10%;">Volver</a>
+                                                <a href="./index.php" class="btn btn-warning btn-sm mt-2"
+                                                    style="width: 10%;">Volver</a>
                                             </div>
                                         </div>
                                     </div>

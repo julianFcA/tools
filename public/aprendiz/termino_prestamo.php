@@ -123,50 +123,50 @@ function redirectToPrestamoPage($message)
     </div>
 </div>
 <script>
-var select = document.getElementById('dias');
+    var select = document.getElementById('dias');
 
-// Agregar un event listener para el cambio en el select
-select.addEventListener('change', function() {
-    // Obtener el valor seleccionado del select
-    var seleccionado = parseInt(select.value);
+    // Agregar un event listener para el cambio en el select
+    select.addEventListener('change', function () {
+        // Obtener el valor seleccionado del select
+        var seleccionado = parseInt(select.value);
 
-    // Mostrar el número seleccionado
-    var resultadoDiv = document.getElementById('resultado');
-    resultadoDiv.textContent = "Número seleccionado: " + seleccionado;
-});
-
-// Llenar el select con opciones del 1 al 7
-for (var i = 1; i <= 7; i++) {
-    var option = document.createElement('option');
-    option.value = i;
-    option.textContent = i;
-    select.appendChild(option);
-}
-
-function validarFormulario() {
-    var herramientas = document.querySelectorAll('input[name^="cantidad"]');
-    var mensajeError = "";
-
-    herramientas.forEach(function(herramienta) {
-        var cantidad = parseInt(herramienta.value);
-        var cantidadDisponible = parseInt(herramienta.dataset.disponible);
-
-        if (isNaN(cantidad) || cantidad <= 0) {
-            mensajeError += "La cantidad ingresada debe ser mayor que cero.\n";
-        } else if (cantidad > cantidadDisponible) {
-            mensajeError +=
-                "La cantidad ingresada es mayor que la cantidad disponible para la herramienta con código de barras " +
-                herramienta.dataset.codigoBarra + ".\n";
-        } else if (cantidad > 2) {
-            mensajeError += "Solo se permiten cantidades de 1 o 2 para cada herramienta.\n";
-        }
+        // Mostrar el número seleccionado
+        var resultadoDiv = document.getElementById('resultado');
+        resultadoDiv.textContent = "Número seleccionado: " + seleccionado;
     });
 
-    if (mensajeError !== "") {
-        alert(mensajeError);
-        return false; // Evitar el envío del formulario
+    // Llenar el select con opciones del 1 al 7
+    for (var i = 1; i <= 7; i++) {
+        var option = document.createElement('option');
+        option.value = i;
+        option.textContent = i;
+        select.appendChild(option);
     }
 
-    return true; // Permitir el envío del formulario si todas las validaciones pasan
-}
+    function validarFormulario() {
+        var herramientas = document.querySelectorAll('input[name^="cantidad"]');
+        var mensajeError = "";
+
+        herramientas.forEach(function (herramienta) {
+            var cantidad = parseInt(herramienta.value);
+            var cantidadDisponible = parseInt(herramienta.dataset.disponible);
+
+            if (isNaN(cantidad) || cantidad <= 0) {
+                mensajeError += "La cantidad ingresada debe ser mayor que cero.\n";
+            } else if (cantidad > cantidadDisponible) {
+                mensajeError +=
+                    "La cantidad ingresada es mayor que la cantidad disponible para la herramienta con código de barras " +
+                    herramienta.dataset.codigoBarra + ".\n";
+            } else if (cantidad > 10) {
+                mensajeError += "Solo se permiten cantidades 15 para cada herramienta.\n";
+            }
+        });
+
+        if (mensajeError !== "") {
+            alert(mensajeError);
+            return false; // Evitar el envío del formulario
+        }
+
+        return true; // Permitir el envío del formulario si todas las validaciones pasan
+    }
 </script>
