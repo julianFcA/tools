@@ -103,10 +103,7 @@ function redirectToPrestamoPage($message)
                                                         </div>
                                                     </div>
 
-                                                    <input type="submit" name="MM_register" value="Prestar Herramienta"
-                                                        class="btn btn-orange" style="width: 50%;">
-                                                    <input type="hidden" name="MM_register"
-                                                        value="<?php echo $_POST['documento'] ?>">
+                                                    
                                                 </form>
                                             </div>
                                         </div>
