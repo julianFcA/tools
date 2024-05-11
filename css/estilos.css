@@ -83,12 +83,19 @@
     }
 
     .container-terminos {
-        width: 60%;
+        width: 100%;
         background-color: #ffa500;
         /* Naranja */
         padding: 20px;
         box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     }
+
+    .center-content {
+        text-align: center;
+        margin: 0 auto;
+        max-width: 600px; /* Ajusta el valor de acuerdo a tus preferencias */
+    }
+
 
     .close-btn-terminos {
         position: absolute;

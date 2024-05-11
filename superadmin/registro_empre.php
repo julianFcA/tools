@@ -38,7 +38,7 @@ if (isset($_POST["MM_register"]) && $_POST["MM_register"] == "formRegister") {
 
             <div class="form-group">
                 <label>Nombre de Empresa</label>
-                <input type="text" placeholder="Ingrese Nombre de Empresa" class="form-control" name="nom_empre" title="Debe ser de 40 letras" required oninput="validarLetrasConEspacios(this)" required oninput="validarLetras(this)" minlength="6" maxlength="50">
+                <input type="text" placeholder="Ingrese Nombre de Empresa" class="form-control" name="nom_empre" title="Debe ser de 40 letras" required oninput="validarLetrasNumerosGuiones(this)" minlength="6" maxlength="50">
             </div>
 
             <div class="form-group">
@@ -58,4 +58,17 @@ if (isset($_POST["MM_register"]) && $_POST["MM_register"] == "formRegister") {
             <input type="submit" name="MM_register" value="Registro" class="btn-primary"></input>
             <input type="hidden" name="MM_register" value="formRegister">
         </form>
-    </div>
+    </div>   
+</body>
+
+<script>
+    function validarLetrasNumerosGuiones(input) {
+        var valor = input.value.trim();
+        var regex = /^[a-zA-Z0-9\- ]*$/;
+
+        if (!regex.test(valor)) {
+            alert('El nombre de empresa solo puede contener letras, números y guiones.');
+            input.value = valor.replace(/[^a-zA-Z0-9\- ]/g, ''); // Eliminar caracteres no permitidos
+        }
+    }
+</script>

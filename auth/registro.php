@@ -28,7 +28,7 @@ if ($nom_forma !== null) {
     $cadena .= "</select>"; // Cerrar la etiqueta select
     $cadena1 .= "</select>";
     echo $cadena . $cadena1; // Imprime ambas cadenas juntas
-} 
+}
 
 
 
@@ -53,7 +53,6 @@ $consulta7->execute();
 $consult = $consulta7->fetch(PDO::FETCH_ASSOC);
 
 ?>
-
 
 <div class="registro_container">
     <!-- Formulario de Registro -->
@@ -86,7 +85,7 @@ $consult = $consulta7->fetch(PDO::FETCH_ASSOC);
             <input type="text" placeholder="Ingrese Primer Nombre" class="form-control" name="nombre" title="Debe ser de 15 letras" required onkeyup="espacios(this)" minlength="3" maxlength="12">
             <span id="errorNombre" style="color: red; display: none;">El nombre solo puede contener letras</span>
         </div>
-    
+
         <div class="form-group">
             <label>Apellido</label>
             <input type="text" placeholder="Ingrese Primer Apellido" class="form-control" name="apellido" title="Debe ser de 15 letras" required onkeyup="espacios(this)" minlength="3" maxlength="15">
@@ -160,23 +159,26 @@ $consult = $consulta7->fetch(PDO::FETCH_ASSOC);
                 <div class="container-terminos">
                     <span class="close-btn-terminos" onclick="closeOverlayTerminos()">X</span>
                     <h1>Términos y Condiciones</h1>
-                    <p>Estos son los términos y condiciones para el uso de la aplicación de préstamos de herramientas:</p>
-                    <ol>
-                        <li><strong>Uso Aceptable:</strong> Al utilizar esta aplicación, aceptas utilizarla de manera ética y legal. No debes usar la aplicación con fines ilegales o dañinos.</li>
-                        <li><strong>Registro:</strong> Para acceder a la funcionalidad completa de la aplicación, es posible que debas registrarte proporcionando información precisa y actualizada.</li>
-                        <li><strong>Préstamos:</strong> El préstamo de herramientas está sujeto a disponibilidad y a las reglas establecidas por la aplicación. Asegúrate de cumplir con las fechas y condiciones acordadas.</li>
-                        <li><strong>Responsabilidad:</strong> La aplicación y sus desarrolladores no se hacen responsables de cualquier daño o pérdida resultante del uso de la aplicación o de las herramientas prestadas.</li>
-                    </ol>
-                    <p>Al utilizar esta aplicación, aceptas cumplir con estos términos y condiciones. Si no estás de acuerdo con estos términos, por favor, no utilices la aplicación.</p>
+                    <div class="center-content">
+                        <p>Estos son los términos y condiciones para el uso de la aplicación de préstamos de herramientas:</p>
+                        <ol>
+                            <li><strong>Uso Aceptable:</strong> Al utilizar esta aplicación, aceptas utilizarla de manera ética y legal. No debes usar la aplicación con fines ilegales o dañinos.</li>
+                            <li><strong>Registro:</strong> Para acceder a la funcionalidad completa de la aplicación, es posible que debas registrarte proporcionando información precisa y actualizada.</li>
+                            <li><strong>Préstamos:</strong> El préstamo de herramientas está sujeto a disponibilidad y a las reglas establecidas por la aplicación. Asegúrate de cumplir con las fechas y condiciones acordadas.</li>
+                            <li><strong>Responsabilidad:</strong> La aplicación y sus desarrolladores no se hacen responsables de cualquier daño o pérdida resultante del uso de la aplicación o de las herramientas prestadas.</li>
+                        </ol>
+                        <p>Al utilizar esta aplicación, aceptas cumplir con estos términos y condiciones. Si no estás de acuerdo con estos términos, por favor, no utilices la aplicación.</p>
+                    </div>
                     <input type="checkbox" class="form-control" id="checkboxTerminos" name="terminos" <?php echo ($consult && $consult['terminos'] == '1') ? 'checked' : ''; ?> required>
                 </div>
             </div>
             <br>
-            <button type="button" onclick="openOverlayTerminos()">Acepto Términos y Condiciones</button>
+            <button type="button" onclick=" openOverlayTerminos()">Acepto Términos y Condiciones</button>
         </div>
 
+
         <input type="submit" name="MM_register" value="Registrarme" class="btn"></input>
-        <input type="hidden" name="MM_register" value="formRegister">
+        <input type="hidden" name="MM_register" value="formRegister" onclick="if(validarAceptacionTerminos())">
 
         <div class="botones-container">
             <div class="redirecciones">
@@ -187,81 +189,82 @@ $consult = $consulta7->fetch(PDO::FETCH_ASSOC);
 </div>
 
 <script type="text/javascript">
+    $(document).ready(function() {
+        $('#nom_forma').change(function() {
+            var idForma = $(this).val(); // Obtiene el ID de la formación seleccionada
+            $.ajax({
+                type: "POST",
+                url: "./getFichas.php", // Asegúrate de ajustar la ruta al archivo PHP adecuado
+                data: {
+                    id_forma: idForma
+                },
+                dataType: 'json', // Esto le dice a jQuery que espere una respuesta JSON
+                success: function(data) { // 'data' ya es un objeto JavaScript
+                    var fichaSelect = $('#ficha'); // El select de fichas
+                    fichaSelect.empty(); // Limpia las opciones actuales
 
-$(document).ready(function() {
-    $('#nom_forma').change(function() {
-        var idForma = $(this).val();  // Obtiene el ID de la formación seleccionada
-        $.ajax({
-            type: "POST",
-            url: "./getFichas.php",  // Asegúrate de ajustar la ruta al archivo PHP adecuado
-            data: {id_forma: idForma},
-            dataType: 'json',  // Esto le dice a jQuery que espere una respuesta JSON
-            success: function(data) {  // 'data' ya es un objeto JavaScript
-                var fichaSelect = $('#ficha');  // El select de fichas
-                fichaSelect.empty();  // Limpia las opciones actuales
-
-                if (data.length > 0) {
-                    $.each(data, function(index, item) {
+                    if (data.length > 0) {
+                        $.each(data, function(index, item) {
+                            fichaSelect.append($('<option>', {
+                                value: item.ficha,
+                                text: item.ficha
+                            }));
+                        });
+                    } else {
                         fichaSelect.append($('<option>', {
-                            value: item.ficha,
-                            text: item.ficha
+                            value: '',
+                            text: 'No hay fichas disponibles'
                         }));
-                    });
-                } else {
-                    fichaSelect.append($('<option>', {
-                        value: '',
-                        text: 'No hay fichas disponibles'
-                    }));
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error: ' + error);
+                    console.error('Response: ' + xhr.responseText);
                 }
-            },
-            error: function(xhr, status, error) {
-                console.error('Error: ' + error);
-                console.error('Response: ' + xhr.responseText);
-            }
+            });
         });
     });
-});
 
 
-$(document).ready(function() {
-    $('#ficha').change(function() {
-        var idFicha = $(this).val();  // Obtiene el ID de la ficha seleccionada
-        $.ajax({
-            type: "POST",
-            url: "./getJornada.php",  // Asegúrate de ajustar la ruta al archivo PHP adecuado
-            data: {id_ficha: idFicha},
-            dataType: 'json',
-            success: function(data) {
-                var jornadaSelect = $('#tp_jornada');  // El select de jornadas
-                jornadaSelect.empty();  // Limpia las opciones actuales
+    $(document).ready(function() {
+        $('#ficha').change(function() {
+            var idFicha = $(this).val(); // Obtiene el ID de la ficha seleccionada
+            $.ajax({
+                type: "POST",
+                url: "./getJornada.php", // Asegúrate de ajustar la ruta al archivo PHP adecuado
+                data: {
+                    id_ficha: idFicha
+                },
+                dataType: 'json',
+                success: function(data) {
+                    var jornadaSelect = $('#tp_jornada'); // El select de jornadas
+                    jornadaSelect.empty(); // Limpia las opciones actuales
 
-                if (data.length > 0) {
-                    $.each(data, function(index, item) {
+                    if (data.length > 0) {
+                        $.each(data, function(index, item) {
+                            jornadaSelect.append($('<option>', {
+                                value: item.id_jornada,
+                                text: item.tp_jornada
+                            }));
+                        });
+                    } else {
                         jornadaSelect.append($('<option>', {
-                            value: item.id_jornada,
-                            text: item.tp_jornada
+                            value: '',
+                            text: 'No hay jornadas disponibles'
                         }));
-                    });
-                } else {
-                    jornadaSelect.append($('<option>', {
-                        value: '',
-                        text: 'No hay jornadas disponibles'
-                    }));
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error: ' + error);
+                    console.error('Response: ' + xhr.responseText);
                 }
-            },
-            error: function(xhr, status, error) {
-                console.error('Error: ' + error);
-                console.error('Response: ' + xhr.responseText);
-            }
+            });
         });
     });
-});
-   
 </script>
 
 <script>
-  
- function validarNumeros(input) {
+    function validarNumeros(input) {
         var documentoValue = input.value.trim();
         var numerosValidos = /^\d+$/;
         var errorDocumento = document.getElementById('errorDocumento');
@@ -277,40 +280,78 @@ $(document).ready(function() {
 
 
     document.addEventListener('DOMContentLoaded', function() {
-    var nombreInput = document.querySelector('input[name="nombre"]');
-    var apellidoInput = document.querySelector('input[name="apellido"]');
-    var errorNombre = document.getElementById('errorNombre');
-    var errorApellido = document.getElementById('errorApellido');
+        var nombreInput = document.querySelector('input[name="nombre"]');
+        var apellidoInput = document.querySelector('input[name="apellido"]');
+        var errorNombre = document.getElementById('errorNombre');
+        var errorApellido = document.getElementById('errorApellido');
 
-    nombreInput.addEventListener('input', function() {
-        var nombreValue = nombreInput.value.trim();
-        var letrasValidas = /^[A-Za-záéíóúÁÉÍÓÚüÜñÑ\s]*$/;
+        nombreInput.addEventListener('input', function() {
+            var nombreValue = nombreInput.value.trim();
+            var letrasValidas = /^[A-Za-záéíóúÁÉÍÓÚüÜñÑ\s]*$/;
 
-        if (!letrasValidas.test(nombreValue)) {
-            errorNombre.style.display = 'block';
-            nombreInput.setCustomValidity('El nombre solo puede contener letras');
-        } else {
-            errorNombre.style.display = 'none';
-            nombreInput.setCustomValidity('');
-        }
+            if (!letrasValidas.test(nombreValue)) {
+                errorNombre.style.display = 'block';
+                nombreInput.setCustomValidity('El nombre solo puede contener letras');
+            } else {
+                errorNombre.style.display = 'none';
+                nombreInput.setCustomValidity('');
+            }
+        });
+
+        apellidoInput.addEventListener('input', function() {
+            var apellidoValue = apellidoInput.value.trim();
+            var letrasValidas = /^[A-Za-záéíóúÁÉÍÓÚüÜñÑ\s]*$/;
+
+            if (!letrasValidas.test(apellidoValue)) {
+                errorApellido.style.display = 'block';
+                apellidoInput.setCustomValidity('El apellido solo puede contener letras');
+            } else {
+                errorApellido.style.display = 'none';
+                apellidoInput.setCustomValidity('');
+            }
+        });
     });
 
-    apellidoInput.addEventListener('input', function() {
-        var apellidoValue = apellidoInput.value.trim();
-        var letrasValidas = /^[A-Za-záéíóúÁÉÍÓÚüÜñÑ\s]*$/;
+    function limpiarNoPermitidos(input) {
+        // Reemplazar todo lo que no sea número o guion con una cadena vacía
+        input.value = input.value.replace(/[^0-9\-]/g, '');
+    }
 
-        if (!letrasValidas.test(apellidoValue)) {
-            errorApellido.style.display = 'block';
-            apellidoInput.setCustomValidity('El apellido solo puede contener letras');
-        } else {
-            errorApellido.style.display = 'none';
-            apellidoInput.setCustomValidity('');
+    function validarContraseña() {
+        var contraseña = document.getElementById("contrasena").value;
+        var mayusculaRegex = /[A-Z]/;
+        var numeroRegex = /[0-9]/;
+        var signoRegex = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/;
+
+        if (!mayusculaRegex.test(contraseña)) {
+            alert("La contraseña debe contener al menos una letra mayúscula.");
+            return false;
         }
-    });
-});
+        if (!numeroRegex.test(contraseña)) {
+            alert("La contraseña debe contener al menos un número.");
+            return false;
+        }
+        if (!signoRegex.test(contraseña)) {
+            alert("La contraseña debe contener al menos un signo.");
+            return false;
+        }
+        return true;
+    }
 
-function limpiarNoPermitidos(input) {
-    // Reemplazar todo lo que no sea número o guion con una cadena vacía
-    input.value = input.value.replace(/[^0-9\-]/g, '');
-}
+    function openOverlayTerminos() {
+        document.getElementById("overlay-terminos").style.display = "block";
+    }
+
+    function closeOverlayTerminos() {
+        document.getElementById("overlay-terminos").style.display = "none";
+    }
+
+    function validarAceptacionTerminos() {
+        var checkboxTerminos = document.getElementById("checkboxTerminos");
+        if (!checkboxTerminos.checked) {
+            alert("Debes aceptar los términos y condiciones para continuar.");
+            return false;
+        }
+        return true;
+    }
 </script>

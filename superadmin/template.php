@@ -13,23 +13,23 @@ if (isset($_POST['btncerrar'])) {
   exit();
 }
 
-// Verifica si hay una marca de tiempo de última actividad
-if (isset($_SESSION['last_activity'])) {
-  // Obtiene la diferencia de tiempo en segundos
-  $inactive = 300; // 5 minutos en segundos
-  $session_life = time() - $_SESSION['last_activity'];
+// // Verifica si hay una marca de tiempo de última actividad
+// if (isset($_SESSION['last_activity'])) {
+//   // Obtiene la diferencia de tiempo en segundos
+//   $inactive = 300; // 5 minutos en segundos
+//   $session_life = time() - $_SESSION['last_activity'];
 
-  // Si ha pasado el tiempo de inactividad, cierra la sesión
-  if ($session_life > $inactive) {
-    session_unset();     // Elimina todas las variables de sesión
-    session_destroy();   // Finaliza la sesión actual
-    header("Location: ../index.php"); // Redirige a la página de inicio de sesión
-    exit();
-  }
-}
+//   // Si ha pasado el tiempo de inactividad, cierra la sesión
+//   if ($session_life > $inactive) {
+//     session_unset();     // Elimina todas las variables de sesión
+//     session_destroy();   // Finaliza la sesión actual
+//     header("Location: ../index.php"); // Redirige a la página de inicio de sesión
+//     exit();
+//   }
+// }
 
-// Actualiza la marca de tiempo de última actividad
-$_SESSION['last_activity'] = time();
+// // Actualiza la marca de tiempo de última actividad
+// $_SESSION['last_activity'] = time();
 
 ?>
 
@@ -77,14 +77,14 @@ $_SESSION['last_activity'] = time();
 
 </head>
 
-<div class="modal" id="modal">
+<!-- <div class="modal" id="modal">
     <div class="modal-content">
         <span id="close" class="close">&times;</span>
         <h2>Ingrese su Contraseña de Confirmación:</h2>
         <input type="password" id="passwordInput" placeholder="Contraseña">
         <button onclick="validarCodigo()">Aceptar</button>
     </div>
-</div>
+</div> -->
 <body>
   <div class="hero_area">
     <!-- header section strats -->
