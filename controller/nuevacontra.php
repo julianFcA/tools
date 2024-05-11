@@ -33,39 +33,37 @@ if (isset($_POST["inicio"])) {
     if ($fila) {
         $_SESSION['documento'] = $fila['documento'];
 ?>
+<div class="login-container">
+    <div class="row">
+        <div class="col-md-12 form-left">
+            <form method="POST" name="form1" id="form1" autocomplete="off" onsubmit="return validarContraseña() && validarContra()">
+                <h3>CAMBIO DE CONTRASEÑA</h3>
 
-        <div class="login-container">
-            <div class="row">
-                <div class="col-md-12 form-left">
-                    <form method="POST" name="form1" id="form1" autocomplete="off" onsubmit="return validarContraseña()">
-                        <h3>CAMBIO DE CONTRASEÑA</h3>
-
-                        <div class="form-group">
-                            <label for="cont">NUEVA CONTRASEÑA<span class="text-danger">*</span></label>
-                            <div class="input-group">
-                                <div class="input-group-text"><i class="bi bi-person-fill"></i></div>
-                                <input type="password" name="cont" id="contrasena" placeholder="Nueva clave" minlength="6" class="form-control" maxlength="12" oninput="maxlengthNumber(this);">
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="conta">CONFIRMACION DE CONTRASEÑA<span class="text-danger">*</span></label>
-                            <div class="input-group">
-                                <div class="input-group-text"><i class="bi bi-lock-fill"></i></div>
-                                <input type="password" name="conta" id="contrasena" placeholder="Confirme clave" minlength="6" class="form-control" maxlength="12" oninput="maxlengthNumber(this);">
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <input type="submit" name="inicio" id="inicio" class="btn btn-success px-5" value="Cambiar">
-                            <input type="hidden" name="MM_update" value="form1">
-                            <a href="../index.php" class="btn btn-primary px-5">Volver a la página principal</a>
-                        </div>
-                    </form>
+                <div class="form-group">
+                    <label for="cont">NUEVA CONTRASEÑA<span class="text-danger">*</span></label>
+                    <div class="input-group">
+                        <div class="input-group-text"><i class="bi bi-person-fill"></i></div>
+                        <input type="password" name="cont" id="cont" placeholder="Nueva clave" minlength="6" class="form-control" maxlength="12" oninput="maxlengthNumber(this);">
+                    </div>
                 </div>
-            </div>
-        </div>
 
+                <div class="form-group">
+                    <label for="conta">CONFIRMACION DE CONTRASEÑA<span class="text-danger">*</span></label>
+                    <div class="input-group">
+                        <div class="input-group-text"><i class="bi bi-lock-fill"></i></div>
+                        <input type="password" name="conta" id="conta" placeholder="Confirme clave" minlength="6" class="form-control" maxlength="12" oninput="maxlengthNumber(this);">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <input type="submit" name="inicio" id="inicio" class="btn btn-success px-5" value="Cambiar">
+                    <input type="hidden" name="MM_update" value="form1">
+                    <a href="../index.php" class="btn btn-primary px-5">Volver a la página principal</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 
 <?php
     } else {
@@ -75,7 +73,6 @@ if (isset($_POST["inicio"])) {
 }
 
 ?>
-
 
 <script>
     function validarContraseña() {
@@ -89,27 +86,30 @@ if (isset($_POST["inicio"])) {
         return true; // Permitir el envío del formulario si las contraseñas coinciden
     }
 
-
-
     function validarContra() {
-    var contraseña = document.getElementById("contrasena","cont","conta").value;
-    var mayusculaRegex = /[A-Z]/;
-    var numeroRegex = /[0-9]/;
-    var signoRegex = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/;
+        var contraseña = document.getElementById("cont").value;
+        var mayusculaRegex = /[A-Z]/;
+        var numeroRegex = /[0-9]/;
+        var signoRegex = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/;
 
-    if (!mayusculaRegex.test(contraseña)) {
-        alert("La contraseña debe contener al menos una letra mayúscula.");
-        return false;
+        if (!mayusculaRegex.test(contraseña)) {
+            alert("La contraseña debe contener al menos una letra mayúscula.");
+            return false;
+        }
+        if (!numeroRegex.test(contraseña)) {
+            alert("La contraseña debe contener al menos un número.");
+            return false;
+        }
+        if (!signoRegex.test(contraseña)) {
+            alert("La contraseña debe contener al menos un signo.");
+            return false;
+        }
+        return true;
     }
-    if (!numeroRegex.test(contraseña)) {
-        alert("La contraseña debe contener al menos un número.");
-        return false;
-    }
-    if (!signoRegex.test(contraseña)) {
-        alert("La contraseña debe contener al menos un signo.");
-        return false;
-    }
-    return true;
-}
 
+    function maxlengthNumber(element) {
+        if (element.value.length > parseInt(element.maxLength)) {
+            element.value = element.value.slice(0, element.maxLength);
+        }
+    }
 </script>

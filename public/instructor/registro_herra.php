@@ -112,7 +112,8 @@ if (isset($_POST["MM_register"]) && $_POST["MM_register"] == "formRegister") {
                                         <!-- Formulario de Registro -->
                                         <form class="registro_form" action="registro_herra.php" name="formRegister" autocomplete="off" method="POST" id="formulario" enctype="multipart/form-data">
 
-                                            <h1>Registro de Herramienta</h1>
+                                            
+                                        <h1>Registro de Herramienta</h1>
                                             <br>
                                             <div class="form-group">
                                                 <label>Tipo de Herramienta <a href="./regis_tp_herra.php" style="color: orange;">Crear Tipo de Herramienta</a></label>
@@ -125,7 +126,7 @@ if (isset($_POST["MM_register"]) && $_POST["MM_register"] == "formRegister") {
 
                                             <div class="form-group">
                                                 <label>Nombre de Herramienta</label>
-                                                <input type="text" placeholder="Ingrese Nombre de Herramienta" class="form-control" name="nombre_herra" title="Debe ser de 20 letras" required minlength="6" maxlength="20">
+                                                <input type="text" placeholder="Ingrese Nombre de Herramienta" class="form-control" name="nombre_herra" title="Debe ser de 20 letras" required minlength="6" maxlength="20" oninput="validarLetras(this)">
                                             </div>
 
                                             <div class="form-group">
@@ -139,12 +140,12 @@ if (isset($_POST["MM_register"]) && $_POST["MM_register"] == "formRegister") {
 
                                             <div class="form-group">
                                                 <label>Cantidad</label>
-                                                <input type="number" placeholder="Ingrese Cantidad de Herramienta" class="form-control" name="cantidad" title="Debe ser una cantidad de entre 1 o 3 cifras" required minlength="1" maxlength="4">
+                                                <input type="number" placeholder="Ingrese Cantidad de Herramienta" class="form-control" name="cantidad" title="Debe ser una cantidad de entre 1 o 3 cifras" required minlength="1" maxlength="4"  oninput="validarNumeros(this)">
                                             </div>
 
                                             <div class="form-group">
                                                 <label>Descripción</label>
-                                                <input type="text" placeholder="Ingrese Descripción de Herramienta" class="form-control" name="descripcion" title="Debe ser de 30 letras" required minlength="6" maxlength="30">
+                                                <input type="text" placeholder="Ingrese Descripción de Herramienta" class="form-control" name="descripcion" title="Debe ser de 30 letras" required minlength="6" maxlength="30" oninput="validarLetras(this)">
                                             </div>
 
                                             <div class="form-group">
@@ -169,3 +170,16 @@ if (isset($_POST["MM_register"]) && $_POST["MM_register"] == "formRegister") {
         </div>
     </div>
 </div>
+
+<script>
+    function validarLetras(input) {
+        // Remover cualquier caracter que no sea una letra
+        input.value = input.value.replace(/[^a-zA-Z]/g, '');
+    }
+
+
+    function validarNumeros(input) {
+            // Remover cualquier caracter que no sea un número
+            input.value = input.value.replace(/[^\d]/g, '');
+        }
+</script>

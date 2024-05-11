@@ -89,7 +89,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") { // Verificar si se envió el formula
 
                                             <div class="form-group">
                                                 <label>Nombre de Herramienta</label>
-                                                <input type="text" placeholder="Ingrese Nombre de Herramienta" class="form-control" value="<?php echo $columnas['nombre_herra'] ?>" name="nombre_herra" title="Debe ser de 20 letras" required oninput="validarLetras(this)" minlength="6" maxlength="20">
+                                                <input type="text" placeholder="Ingrese Nombre de Herramienta" class="form-control" value="<?php echo $columnas['nombre_herra'] ?>"  name="nombre_herra" title="Debe ser de 20 letras" required minlength="6" maxlength="20" oninput="validarLetras(this)">
                                             </div>
 
                                             <div class="form-group">
@@ -136,3 +136,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") { // Verificar si se envió el formula
         </div>
     </div>
 </div>
+<script>
+    function validarLetras(input) {
+        // Remover cualquier caracter que no sea una letra
+        input.value = input.value.replace(/[^a-zA-Z]/g, '');
+    }
+
+
+    function validarNumeros(input) {
+            // Remover cualquier caracter que no sea un número
+            input.value = input.value.replace(/[^\d]/g, '');
+        }
+</script>
