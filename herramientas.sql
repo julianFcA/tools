@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 10-05-2024 a las 03:49:34
+-- Tiempo de generación: 12-05-2024 a las 07:06:19
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -48,15 +48,6 @@ CREATE TABLE `deta_ficha` (
   `documento` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Volcado de datos para la tabla `deta_ficha`
---
-
-INSERT INTO `deta_ficha` (`id_deta_ficha`, `ficha`, `documento`) VALUES
-(23, 2315467, 1110456789),
-(24, 2500591, 1110456789),
-(25, 2315467, 1234567890);
-
 -- --------------------------------------------------------
 
 --
@@ -88,6 +79,7 @@ CREATE TABLE `empresa` (
 --
 
 INSERT INTO `empresa` (`nit_empre`, `nom_empre`, `direcc_empre`, `telefono`, `correo_empre`) VALUES
+('965648-1', 'sena ac1', 'man 10 cs 10 jordan', '3154678901', 'sena@gmail.com'),
 ('99988879-1', 'bd shoes company', 'jordan etapa ll', '3154688163', 'bdshoes@gmail.com');
 
 -- --------------------------------------------------------
@@ -101,13 +93,6 @@ CREATE TABLE `entrada_usu` (
   `fecha_entrada` datetime NOT NULL,
   `documento` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Volcado de datos para la tabla `entrada_usu`
---
-
-INSERT INTO `entrada_usu` (`id_entrada`, `fecha_entrada`, `documento`) VALUES
-(350, '2024-05-09 15:11:07', 1110567986);
 
 -- --------------------------------------------------------
 
@@ -156,17 +141,21 @@ INSERT INTO `ficha` (`ficha`, `id_forma`, `id_jornada`) VALUES
 
 CREATE TABLE `formacion` (
   `id_forma` tinyint(4) NOT NULL,
-  `nom_forma` text NOT NULL
+  `nom_forma` text NOT NULL,
+  `nit_empre` varchar(12) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `formacion`
 --
 
-INSERT INTO `formacion` (`id_forma`, `nom_forma`) VALUES
-(1, 'adso'),
-(2, 'alturas'),
-(3, 'mecanizado');
+INSERT INTO `formacion` (`id_forma`, `nom_forma`, `nit_empre`) VALUES
+(1, 'adso', '99988879-1'),
+(2, 'alturas', '99988879-1'),
+(3, 'mecanizado', '99988879-1'),
+(16, 'hsqu', '965648-1'),
+(17, 'multimedia', '965648-1'),
+(18, 'mecanica', '965648-1');
 
 -- --------------------------------------------------------
 
@@ -182,15 +171,9 @@ CREATE TABLE `herramienta` (
   `descripcion` text NOT NULL,
   `cantidad` smallint(6) NOT NULL,
   `imagen` varchar(255) NOT NULL,
-  `esta_herra` enum('disponible','prestado','dañado','') NOT NULL
+  `esta_herra` enum('disponible','prestado','dañado','') NOT NULL,
+  `nit_empre` varchar(12) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Volcado de datos para la tabla `herramienta`
---
-
-INSERT INTO `herramienta` (`codigo_barra_herra`, `id_tp_herra`, `nombre_herra`, `id_marca`, `descripcion`, `cantidad`, `imagen`, `esta_herra`) VALUES
-('663d32a44be419880', 8, 'martillo', 6, 'mango de goma', 20, '63c6c7c67fbb9.r_d.960-540-0.jpeg', 'disponible');
 
 -- --------------------------------------------------------
 
@@ -232,7 +215,8 @@ CREATE TABLE `licencia` (
 --
 
 INSERT INTO `licencia` (`licencia`, `esta_licen`, `fecha_ini`, `fecha_fin`, `nit_empre`) VALUES
-('663d23ae8273c', 'activo', '2024-05-09', '2025-05-09', '99988879-1');
+('663d23ae8273c', 'activo', '2024-05-09', '2025-05-09', '99988879-1'),
+('663fc7572d398', 'activo', '2024-05-11', '2025-05-11', '965648-1');
 
 -- --------------------------------------------------------
 
@@ -377,15 +361,6 @@ CREATE TABLE `usuario` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Volcado de datos para la tabla `usuario`
---
-
-INSERT INTO `usuario` (`documento`, `id_tp_docu`, `nombre`, `apellido`, `contrasena`, `correo`, `codigo_barras`, `fecha_registro`, `terminos`, `id_rol`, `id_esta_usu`, `nit_empre`) VALUES
-(1110456789, 2, 'ana', 'cano', '$2y$10$ImEtAI405Z.IZtBAaopjmOmAYwVaDFdfOMVTzLMMkMwVJPrPPIlTS', 'cano@gmail.com', '663d313f93d372753', '2024-05-09', 'si', 2, 1, '99988879-1'),
-(1110567986, 2, 'julian', 'calderon', '$2y$10$lRYb6EjPOn9Zp375iMBwcOsXW1hAgH3L7.jwUKnC2J9WA/RGg0OGO', 'jfcalderona16@gamil.com', '663d251e73b3b6201', '2024-05-09', 'si', 1, 1, '99988879-1'),
-(1234567890, 1, 'ohany', 'leto', '$2y$10$6awQrYasi.fEBb1FqBK7y.Z3cNAWUwKRROPoqrK7g1smft6uNEpB.', 'leto@gmail.com', '663d7d0e850445187', '2024-05-09', 'si', 3, 1, '99988879-1');
-
---
 -- Disparadores `usuario`
 --
 DELIMITER $$
@@ -473,7 +448,8 @@ ALTER TABLE `formacion`
 ALTER TABLE `herramienta`
   ADD PRIMARY KEY (`codigo_barra_herra`),
   ADD KEY `id_tp_herra` (`id_tp_herra`),
-  ADD KEY `id_marca` (`id_marca`);
+  ADD KEY `id_marca` (`id_marca`),
+  ADD KEY `nit_empre` (`nit_empre`);
 
 --
 -- Indices de la tabla `jornada`
@@ -545,31 +521,31 @@ ALTER TABLE `usuario`
 -- AUTO_INCREMENT de la tabla `detalle_prestamo`
 --
 ALTER TABLE `detalle_prestamo`
-  MODIFY `id_deta_presta` tinyint(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=88;
+  MODIFY `id_deta_presta` tinyint(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=91;
 
 --
 -- AUTO_INCREMENT de la tabla `deta_ficha`
 --
 ALTER TABLE `deta_ficha`
-  MODIFY `id_deta_ficha` tinyint(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
+  MODIFY `id_deta_ficha` tinyint(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
 
 --
 -- AUTO_INCREMENT de la tabla `deta_reporte`
 --
 ALTER TABLE `deta_reporte`
-  MODIFY `id_deta_reporte` tinyint(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
+  MODIFY `id_deta_reporte` tinyint(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
 
 --
 -- AUTO_INCREMENT de la tabla `entrada_usu`
 --
 ALTER TABLE `entrada_usu`
-  MODIFY `id_entrada` int(5) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=351;
+  MODIFY `id_entrada` int(5) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=387;
 
 --
 -- AUTO_INCREMENT de la tabla `formacion`
 --
 ALTER TABLE `formacion`
-  MODIFY `id_forma` tinyint(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id_forma` tinyint(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
 
 --
 -- AUTO_INCREMENT de la tabla `jornada`
@@ -587,13 +563,13 @@ ALTER TABLE `marca_herra`
 -- AUTO_INCREMENT de la tabla `prestamo_herra`
 --
 ALTER TABLE `prestamo_herra`
-  MODIFY `id_presta` tinyint(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=86;
+  MODIFY `id_presta` tinyint(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=89;
 
 --
 -- AUTO_INCREMENT de la tabla `reporte`
 --
 ALTER TABLE `reporte`
-  MODIFY `id_reporte` tinyint(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
+  MODIFY `id_reporte` tinyint(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=35;
 
 --
 -- AUTO_INCREMENT de la tabla `tp_herra`
@@ -644,7 +620,8 @@ ALTER TABLE `ficha`
 --
 ALTER TABLE `herramienta`
   ADD CONSTRAINT `herramienta_ibfk_1` FOREIGN KEY (`id_tp_herra`) REFERENCES `tp_herra` (`id_tp_herra`),
-  ADD CONSTRAINT `herramienta_ibfk_2` FOREIGN KEY (`id_marca`) REFERENCES `marca_herra` (`id_marca`);
+  ADD CONSTRAINT `herramienta_ibfk_2` FOREIGN KEY (`id_marca`) REFERENCES `marca_herra` (`id_marca`),
+  ADD CONSTRAINT `herramienta_ibfk_3` FOREIGN KEY (`nit_empre`) REFERENCES `empresa` (`nit_empre`);
 
 --
 -- Filtros para la tabla `licencia`
