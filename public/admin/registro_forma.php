@@ -6,7 +6,7 @@ $consulta8 = $conn->prepare("SELECT * FROM jornada");
 $consulta8->execute();
 $cons = $consulta8->fetchAll(PDO::FETCH_ASSOC);
 
-$consulta10 = $conn->prepare("SELECT * FROM formacion");
+$consulta10 = $conn->prepare("SELECT empresa.*, formacion.* FROM empresa INNER JOIN formacion ON empresa.nit_empre= formacion.nit_empre WHERE empresa.nit_empre = '$nit' AND formacion.id_forma >=1 ");
 $consulta10->execute();
 $consu10 = $consulta10->fetchAll(PDO::FETCH_ASSOC);
 

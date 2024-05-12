@@ -2,11 +2,41 @@
 require_once 'template.php';
 
 
+try {
+    $nit_empre = $_POST['nit_empre'] ?? '';
+    echo $nit_empre;
+
+    // Consulta SQL para verificar el código
+    $sql = "SELECT * FROM empresa INNER JOIN licencia ON empresa.nit_empre = licencia.nit_empre WHERE licencia.esta_licen = 'activo' AND empresa.nit_empre = :nit_empre";
+    $stmt = $conn->prepare($sql);
+    $stmt->bindParam(':nit_empre', $nit_empre);
+    $stmt->execute();
+    $resultado = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    // Comprobar si se encontró una coincidencia
+    if ($resultado) {
+        // La contraseña es correcta y el NIT de la empresa está activo
+        echo json_encode(array('acceso_permitido' => true));
+    } else {
+        // La contraseña es incorrecta o el NIT de la empresa no está activo
+        echo json_encode(array('acceso_permitido' => false));
+    }
+} catch (PDOException $e) {
+    // Captura cualquier excepción PDO (error de base de datos)
+    echo json_encode(array('error' => 'Error de base de datos: ' . $e->getMessage()));
+} catch (Exception $e) {
+    // Captura cualquier otra excepción
+    echo json_encode(array('error' => 'Error: ' . $e->getMessage()));
+}
+
+?>
+
+<?php
+
 // Consulta 1
 $consulta2 = $conn->prepare("SELECT nom_tp_docu, id_tp_docu FROM tp_docu WHERE id_tp_docu >= 1 ");
 $consulta2->execute();
 $consull = $consulta2->fetchAll(PDO::FETCH_ASSOC);
-
 
 
 $nom_forma = isset($_POST['nom_forma']) ? $_POST['nom_forma'] : null;
@@ -31,7 +61,6 @@ if ($nom_forma !== null) {
 }
 
 
-
 // Consulta 3
 $consulta4 = $conn->prepare("SELECT nom_rol, id_rol FROM rol WHERE id_rol >= 3 ");
 $consulta4->execute();
@@ -43,16 +72,71 @@ $consulta5->execute();
 $consulllll = $consulta5->fetchAll(PDO::FETCH_ASSOC);
 
 // Consulta 6
-// Preparar y ejecutar la consulta SQL
-$consulta6 = $conn->prepare("SELECT empresa.nom_empre, empresa.nit_empre, licencia.esta_licen FROM empresa INNER JOIN licencia ON empresa.nit_empre = licencia.nit_empre WHERE empresa.nit_empre  AND licencia.esta_licen = 'activo'");
+
+// Consulta SQL para verificar el NIT de la empresa
+$consulta6 = $conn->prepare("SELECT empresa.nom_empre, empresa.nit_empre, licencia.esta_licen FROM empresa INNER JOIN licencia ON empresa.nit_empre = licencia.nit_empre WHERE empresa.nit_empre= :nit_empre AND licencia.esta_licen = 'activo'");
+$consulta6->bindParam(':nit_empre', $nit_empre);
 $consulta6->execute();
 $consullllll = $consulta6->fetchAll(PDO::FETCH_ASSOC);
+
 
 $consulta7 = $conn->prepare("SELECT terminos FROM usuario ");
 $consulta7->execute();
 $consult = $consulta7->fetch(PDO::FETCH_ASSOC);
 
+
+
 ?>
+
+<style>
+    /* cuadro de texto con codigo */
+
+    .modal {
+        display: none;
+        position: fixed;
+        z-index: 1;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        background-color: rgba(0, 0, 0, 0.4);
+    }
+
+    .modal-content {
+        background-color: #fefefe;
+        margin: 15% auto;
+        padding: 20px;
+        border: 1px solid #888;
+        width: 40%;
+    }
+
+    .close {
+        color: #aaaaaa;
+        float: right;
+        font-size: 28px;
+        font-weight: bold;
+    }
+
+    .close:hover,
+    .close:focus {
+        color: #000;
+        text-decoration: none;
+        cursor: pointer;
+    }
+</style>
+
+
+<div class="modal" id="modal">
+    <div class="modal-content">
+        <span id="close" class="close">&times;</span>
+        <h2>Ingrese Nit de Empresa</h2>
+        <!-- Cambiar el tipo de campo de "password" a "text" -->
+        <input type="text" id="nitInput" name="nit_empre" placeholder="Ingrese Nit de la Empresa a la que Pertenece">
+        <button onclick="validarAcceso()" class="accept-button" style="background-color: orange; width: calc(100% - 10px); padding: 10px; margin-top: 10px;">Aceptar</button>
+    </div>
+</div>
+
 
 <div class="registro_container">
     <!-- Formulario de Registro -->
@@ -111,7 +195,7 @@ $consult = $consulta7->fetch(PDO::FETCH_ASSOC);
             <select name="nom_forma" id="nom_forma" class="form-control">
                 <?php
                 // Consulta para obtener las opciones de formación
-                $statement = $conn->prepare("SELECT * FROM formacion WHERE id_forma >= 1");
+                $statement = $conn->prepare("SELECT empresa.*, formacion.* FROM empresa INNER JOIN formacion ON empresa.nit_empre= formacion.nit_empre WHERE empresa.nit_empre = '$nit_empre' AND formacion.id_forma >=1 ");
                 $statement->execute();
                 while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
                     echo "<option value='" . $row['id_forma'] . "'>" . $row['nom_forma'] . "</option>";
@@ -354,4 +438,53 @@ $consult = $consulta7->fetch(PDO::FETCH_ASSOC);
         }
         return true;
     }
+</script>
+
+
+<script>
+    // Función para validar el código o el NIT de la empresa según el contexto
+    function validarAcceso() {
+        const valorIngresado = document.getElementById("nitInput").value;
+        document.getElementById("modal").style.display = "none";
+        // Realizar la solicitud AJAX
+        var xhr = new XMLHttpRequest();
+        xhr.open("POST", "", true);
+        xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState === 4) {
+                if (xhr.status === 200) {
+                    try {
+                        var respuesta = JSON.parse(xhr.responseText);
+                        if (respuesta.acceso_permitido) {
+                            alert("Acceso permitido.");
+                            document.getElementById("modal").style.display = "none";
+                            // Aquí debes especificar la URL a la que deseas redirigir al usuario
+                        } else {
+                            alert("Acceso denegado.");
+                            window.location.href = "";
+
+                        }
+                    } catch (error) {
+                        console.error("Error al procesar la respuesta JSON:", error.message);
+                    }
+                } else {
+                    // Manejar errores de solicitud si es necesario
+                    console.error("Error al procesar la solicitud. Código de estado:", xhr.status);
+                }
+            }
+        };
+        // Enviar el valor ingresado al servidor
+        xhr.send("nit_empre=" + encodeURIComponent(valorIngresado));
+    }
+
+    // Mostrar el cuadro de diálogo automáticamente al cargar la página
+    window.onload = function() {
+        document.getElementById("modal").style.display = "block";
+
+        // Asignar evento al botón de cierre después de que el DOM esté completamente cargado
+        document.getElementById("close").onclick = function() {
+            document.getElementById("modal").style.display = "none";
+            window.location.href = "./../index.php"; // Redirigir a la página principal
+        };
+    };
 </script>

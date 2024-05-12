@@ -10,7 +10,7 @@ if (isset($_POST["MM_register"]) && $_POST["MM_register"] == "formRegister") {
         echo '<script>window.location = "./regis_tp_herra.php";</script>';
     } else {
         // Se elimina NOW() de los valores
-        $stmt = $conn->prepare("INSERT INTO tp_herra (nom_tp_herra) VALUES (?)");
+        $stmt = $conn->prepare("INSERT INTO tp_herra (nom_tp_herra, nit_empre) VALUES (?, '$nit')");
 
         // Asegúrate de que el número de parámetros coincide con el número de '?' en la consulta
         $stmt->execute([$nom_tp_herra]);

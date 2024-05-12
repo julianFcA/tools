@@ -3,6 +3,7 @@ require_once '../database/conn.php';
 $database = new Database();
 $conn = $database->conectar();
 date_default_timezone_set('America/Bogota');
+
 ?>
 
 <!DOCTYPE html>

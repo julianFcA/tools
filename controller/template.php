@@ -3,6 +3,7 @@ require_once("../database/conn.php");
 $db = new database();
 $conn = $db->conectar();
 session_start();
+
 ?>
 
 <!DOCTYPE html>

@@ -7,36 +7,15 @@ use Picqer\Barcode\BarcodeGeneratorPNG;
 
 // Asegúrate de tener la conexión a la base de datos $conn correctamente configurada
 
-if (isset($_SESSION['nit_empre'])) {
-    $nit = $_SESSION['nit_empre'];
+$nit = $_SESSION['nit_empre'];
 
-    $consulta2= "SELECT empresa.*, herramienta.*, tp_herra.nom_tp_herra, tp_herra.id_tp_herra , marca_herra.* 
-                FROM empresa 
-                INNER JOIN licencia ON empresa.nit_empre = licencia.nit_empre 
-                LEFT JOIN herramienta ON empresa.nit_empre = herramienta.nit_empre 
-                INNER JOIN tp_herra ON herramienta.id_tp_herra = tp_herra.id_tp_herra 
-                INNER JOIN marca_herra ON herramienta.id_marca = marca_herra.id_marca 
-                WHERE empresa.nit_empre = :nit 
-                AND herramienta.id_tp_herra >= 1 
-                AND marca_herra.id_marca >= 1";
+$consulta2 = "SELECT empresa.*, tp_herra.* FROM empresa  INNER JOIN tp_herra ON empresa.nit_empre = tp_herra.nit_empre WHERE empresa.nit_empre = '$nit' AND tp_herra.id_tp_herra >= 1 ";
+$consull = $conn->prepare($consulta2);
+$consull->execute();
 
-    $consull = $conn->prepare($consulta2);
-    $consull->bindParam(':nit', $nit, PDO::PARAM_STR);
-    $consull->execute();
-
-    $consulta3= "SELECT empresa.*, herramienta.*, tp_herra.nom_tp_herra, tp_herra.id_tp_herra , marca_herra.* 
-                FROM empresa 
-                INNER JOIN licencia ON empresa.nit_empre = licencia.nit_empre 
-                LEFT JOIN herramienta ON empresa.nit_empre = herramienta.nit_empre 
-                INNER JOIN tp_herra ON herramienta.id_tp_herra = tp_herra.id_tp_herra 
-                INNER JOIN marca_herra ON herramienta.id_marca = marca_herra.id_marca 
-                WHERE empresa.nit_empre = :nit 
-                AND herramienta.id_tp_herra >= 1 
-                AND marca_herra.id_marca >= 1";
-
-    $consulll = $conn->prepare($consulta3);
-    $consulll->bindParam(':nit', $nit, PDO::PARAM_STR);
-    $consulll->execute();
+$consulta3 = "SELECT empresa.*, marca_herra.* FROM empresa INNER JOIN marca_herra ON empresa.nit_empre = marca_herra.nit_empre WHERE empresa.nit_empre = '$nit' AND marca_herra.id_marca >= 1";
+$consulll = $conn->prepare($consulta3);
+$consulll->execute();
 
 
 if (isset($_POST["MM_register"]) && $_POST["MM_register"] == "formRegister") {
@@ -116,7 +95,6 @@ if (isset($_POST["MM_register"]) && $_POST["MM_register"] == "formRegister") {
         echo '<script>alert("Registro exitoso.");</script>';
         echo '<script>window.location = "./herramienta.php";</script>';
     }
-}
 }
 
 ?>

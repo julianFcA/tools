@@ -41,7 +41,7 @@ foreach ($tablas as $tabla) {
     INNER JOIN tp_herra ON herramienta.id_tp_herra = tp_herra.id_tp_herra 
     INNER JOIN marca_herra ON herramienta.id_marca = marca_herra.id_marca 
     WHERE empresa.nit_empre = '$nit' 
-    AND herramienta.id_tp_herra >= 1 
+    AND tp_herra.id_tp_herra >= 1 
     AND marca_herra.id_marca >= 1";
     $result = $conn->query($sql);
 

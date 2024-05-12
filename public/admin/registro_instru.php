@@ -227,7 +227,7 @@ if (isset($_POST["MM_register"]) && $_POST["MM_register"] == "formRegister") {
                                     <select name="nom_forma" id="nom_forma" class="form-control">
                                         <?php
                                         // Consulta para obtener las opciones de formación
-                                        $statement = $conn->prepare("SELECT * FROM formacion WHERE id_forma >= 1");
+                                        $statement = $conn->prepare("SELECT empresa.*, formacion.* FROM empresa INNER JOIN formacion ON empresa.nit_empre= formacion.nit_empre WHERE empresa.nit_empre = '$nit' AND formacion.id_forma >=1 ");
                                         $statement->execute();
                                         while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
                                             echo "<option value='" . $row['id_forma'] . "'>" . $row['nom_forma'] . "</option>";
