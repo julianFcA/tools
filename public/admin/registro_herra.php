@@ -7,13 +7,37 @@ use Picqer\Barcode\BarcodeGeneratorPNG;
 
 // Asegúrate de tener la conexión a la base de datos $conn correctamente configurada
 
-$consulta2 = $conn->prepare("SELECT * FROM tp_herra ");
-$consulta2->execute();
-$consull = $consulta2->fetchAll(PDO::FETCH_ASSOC);
+if (isset($_SESSION['nit_empre'])) {
+    $nit = $_SESSION['nit_empre'];
 
-$consulta3 = $conn->prepare("SELECT * FROM marca_herra ");
-$consulta3->execute();
-$consulll = $consulta3->fetchAll(PDO::FETCH_ASSOC);
+    $consulta2= "SELECT empresa.*, herramienta.*, tp_herra.nom_tp_herra, tp_herra.id_tp_herra , marca_herra.* 
+                FROM empresa 
+                INNER JOIN licencia ON empresa.nit_empre = licencia.nit_empre 
+                LEFT JOIN herramienta ON empresa.nit_empre = herramienta.nit_empre 
+                INNER JOIN tp_herra ON herramienta.id_tp_herra = tp_herra.id_tp_herra 
+                INNER JOIN marca_herra ON herramienta.id_marca = marca_herra.id_marca 
+                WHERE empresa.nit_empre = :nit 
+                AND herramienta.id_tp_herra >= 1 
+                AND marca_herra.id_marca >= 1";
+
+    $consull = $conn->prepare($consulta2);
+    $consull->bindParam(':nit', $nit, PDO::PARAM_STR);
+    $consull->execute();
+
+    $consulta3= "SELECT empresa.*, herramienta.*, tp_herra.nom_tp_herra, tp_herra.id_tp_herra , marca_herra.* 
+                FROM empresa 
+                INNER JOIN licencia ON empresa.nit_empre = licencia.nit_empre 
+                LEFT JOIN herramienta ON empresa.nit_empre = herramienta.nit_empre 
+                INNER JOIN tp_herra ON herramienta.id_tp_herra = tp_herra.id_tp_herra 
+                INNER JOIN marca_herra ON herramienta.id_marca = marca_herra.id_marca 
+                WHERE empresa.nit_empre = :nit 
+                AND herramienta.id_tp_herra >= 1 
+                AND marca_herra.id_marca >= 1";
+
+    $consulll = $conn->prepare($consulta3);
+    $consulll->bindParam(':nit', $nit, PDO::PARAM_STR);
+    $consulll->execute();
+
 
 if (isset($_POST["MM_register"]) && $_POST["MM_register"] == "formRegister") {
     $id_tp_herra = isset($_POST['id_tp_herra']) ? $_POST['id_tp_herra'] : "";
@@ -84,7 +108,7 @@ if (isset($_POST["MM_register"]) && $_POST["MM_register"] == "formRegister") {
         $imagen_nombre = basename($imagen["name"]);
 
         // Se elimina NOW() de los valores
-        $stmt = $conn->prepare("INSERT INTO herramienta (codigo_barra_herra, id_tp_herra, nombre_herra, id_marca, cantidad, descripcion, imagen, esta_herra) VALUES (?, ?, ?, ?, ?, ?, ?,?)");
+        $stmt = $conn->prepare("INSERT INTO herramienta (codigo_barra_herra, id_tp_herra, nombre_herra, id_marca, cantidad, descripcion, imagen, esta_herra, nit_empre) VALUES (?, ?, ?, ?, ?, ?, ?, ?, '$nit')");
 
         // Asegúrate de que el número de parámetros coincide con el número de '?' en la consulta
         $stmt->execute([$codigo_barra_herra, $id_tp_herra, $nombre_herra, $id_marca, $cantidad, $descripcion, $imagen_nombre, $esta_herra]);
@@ -92,6 +116,7 @@ if (isset($_POST["MM_register"]) && $_POST["MM_register"] == "formRegister") {
         echo '<script>alert("Registro exitoso.");</script>';
         echo '<script>window.location = "./herramienta.php";</script>';
     }
+}
 }
 
 ?>

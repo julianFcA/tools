@@ -180,10 +180,6 @@ function validarContraseña() {
 }
 
 
-    // Obtener el elemento select
-   
-
-
     function prepareAndRedirect() {
         const selectedWeapons = document.querySelectorAll('input[type="checkbox"]:checked');
         const selectedIds = Array.from(selectedWeapons).map(checkbox => checkbox.value).join(',');

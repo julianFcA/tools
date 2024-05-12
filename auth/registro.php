@@ -44,7 +44,7 @@ $consulllll = $consulta5->fetchAll(PDO::FETCH_ASSOC);
 
 // Consulta 6
 // Preparar y ejecutar la consulta SQL
-$consulta6 = $conn->prepare("SELECT empresa.nom_empre, empresa.nit_empre, licencia.esta_licen FROM empresa INNER JOIN licencia ON empresa.nit_empre = licencia.nit_empre WHERE empresa.nit_empre > 0 AND licencia.esta_licen = 'activo'");
+$consulta6 = $conn->prepare("SELECT empresa.nom_empre, empresa.nit_empre, licencia.esta_licen FROM empresa INNER JOIN licencia ON empresa.nit_empre = licencia.nit_empre WHERE empresa.nit_empre  AND licencia.esta_licen = 'activo'");
 $consulta6->execute();
 $consullllll = $consulta6->fetchAll(PDO::FETCH_ASSOC);
 

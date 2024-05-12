@@ -6,6 +6,8 @@ require '../../vendor/autoload.php';
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
+$nit= $_SESSION['nit_empre'];
+
 // Crea un nuevo objeto Spreadsheet
 $spreadsheet = new Spreadsheet();
 
@@ -32,18 +34,18 @@ $tablas = array("usuario");
 // Itera sobre cada tabla
 foreach ($tablas as $tabla) {
     // Consulta los datos de la tabla actual
-    $sql = "SELECT usuario.nombre, usuario.apellido, usuario.documento, usuario.correo, usuario.codigo_barras, usuario.fecha_registro, formacion.nom_forma, jornada.tp_jornada, tp_docu.nom_tp_docu, deta_ficha.ficha, prestamo_herra.*, detalle_prestamo.*, herramienta.*
-FROM usuario 
-INNER JOIN rol ON usuario.id_rol = rol.id_rol 
-INNER JOIN deta_ficha ON deta_ficha.documento = usuario.documento 
-INNER JOIN ficha ON ficha.ficha = deta_ficha.ficha 
-INNER JOIN formacion ON ficha.id_forma = formacion.id_forma 
-INNER JOIN jornada ON ficha.id_jornada = jornada.id_jornada  
-INNER JOIN tp_docu ON usuario.id_tp_docu = tp_docu.id_tp_docu 
-INNER JOIN prestamo_herra ON usuario.documento = prestamo_herra.documento 
-INNER JOIN detalle_prestamo ON prestamo_herra.id_presta = detalle_prestamo.id_presta
-INNER JOIN herramienta ON herramienta.codigo_barra_herra = detalle_prestamo.codigo_barra_herra  
-WHERE ficha.ficha >= 1 AND jornada.id_jornada >= 1 AND usuario.id_rol = 3";
+    $sql = "SELECT empresa.nit_empre, empresa.nom_empre, empresa.direcc_empre, empresa.telefono, empresa.correo_empre, licencia.fecha_ini, licencia.fecha_fin, licencia.esta_licen, usuario.nombre, usuario.apellido, usuario.documento, usuario.correo, usuario.codigo_barras, usuario.fecha_registro, formacion.nom_forma, jornada.tp_jornada, tp_docu.nom_tp_docu, deta_ficha.ficha, prestamo_herra.*, detalle_prestamo.*, herramienta.*
+    FROM empresa INNER JOIN licencia ON empresa.nit_empre = licencia.nit_empre LEFT JOIN usuario ON empresa.nit_empre = usuario.nit_empre 
+    INNER JOIN rol ON usuario.id_rol = rol.id_rol 
+    INNER JOIN deta_ficha ON deta_ficha.documento = usuario.documento  
+    INNER JOIN ficha ON ficha.ficha = deta_ficha.ficha 
+    INNER JOIN formacion ON ficha.id_forma = formacion.id_forma 
+    INNER JOIN jornada ON ficha.id_jornada = jornada.id_jornada  
+    INNER JOIN tp_docu ON usuario.id_tp_docu = tp_docu.id_tp_docu 
+    INNER JOIN prestamo_herra ON usuario.documento = prestamo_herra.documento 
+    INNER JOIN detalle_prestamo ON prestamo_herra.id_presta = detalle_prestamo.id_presta
+    INNER JOIN herramienta ON herramienta.codigo_barra_herra = detalle_prestamo.codigo_barra_herra  
+    WHERE empresa.nit_empre='$nit' AND ficha.ficha >= 1 AND jornada.id_jornada >= 1 AND usuario.id_rol = 3";
     $result = $conn->query($sql);
 
     // Si hay datos en la tabla

@@ -4,10 +4,13 @@ require_once './../../vendor/autoload.php'; // Incluye el archivo de autoload de
 
 use PhpOffice\PhpSpreadsheet\IOFactory;
 
+
 $database = new Database();
 $conn = $database->conectar();
 session_start();
 date_default_timezone_set('America/Bogota');
+
+$nit= $_SESSION['nit_empre'];
 
 // Verifica si se ha enviado un archivo
 if (isset($_POST["submit"])) {
@@ -37,7 +40,7 @@ if (isset($_POST["submit"])) {
                 }
 
                 // Inserta los datos en la base de datos
-                $sql = "INSERT INTO formacion (id_forma, nom_forma) VALUES (?, ?)";
+                $sql = "INSERT INTO formacion (id_forma, nom_forma, nit_empre) VALUES (?, ?, '$nit')";
                 $stmt = $conn->prepare($sql);
                 // Suponiendo que los datos se encuentran en las columnas A y B, reemplaza los índices de $data con los índices de tus columnas
                 if ($stmt->execute([$data[0], $data[1]])) {
@@ -50,8 +53,8 @@ if (isset($_POST["submit"])) {
             // Cierra la conexión a la base de datos
             $conn = null;
 
-            echo '<script>alert("El archivo se ha subido y procesado correctamente.");';
-            echo 'window.location = "./formacion.php";</script>';
+            // echo '<script>alert("El archivo se ha subido y procesado correctamente.");';
+            // echo 'window.location = "./formacion.php";</script>';
         } else {
             echo '<script>alert("Hubo un error al subir el archivo.");';
             echo 'window.location = "./formacion.php";</script>';

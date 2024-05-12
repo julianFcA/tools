@@ -1,13 +1,16 @@
 <?php
 require_once 'template.php';
 
+$nit = $_SESSION['nit_empre'];
+
 $limit = 100; // Número de filas por página
 $page = isset($_GET['page']) ? $_GET['page'] : 1; // Página actual
 
 // Calcula el offset basado en la página actual
 $offset = ($page - 1) * $limit;
 
-$query = "SELECT * FROM formacion WHERE formacion.id_forma >= 1  ";
+
+$query = "SELECT empresa.*, formacion.* FROM empresa INNER JOIN formacion ON formacion.nit_empre= empresa.nit_empre WHERE empresa.nit_empre ='$nit' AND formacion.id_forma >= 1  ";
 $result = $conn->query($query);
 
 // Definir el número de resultados por página y la página actual
@@ -44,7 +47,6 @@ $resultado_pagina = $result->fetchAll(PDO::FETCH_ASSOC);
                                                     <table id="example3" class="table table-striped table-bordered" style="width:100%">
                                                         <thead>
                                                             <tr>
-                                                                <th>N°</th>
                                                                 <th>Formacion</th>
                                                                 <th>Accion</th>
                                                                 <!-- <th colspan="2">Acción</th> -->
@@ -64,7 +66,6 @@ $resultado_pagina = $result->fetchAll(PDO::FETCH_ASSOC);
 
                                                                 ?>
                                                                 <tr class="<?= $estadoClase ?>" style="color: <?php echo $color; ?>">
-                                                                    <td><?= $entrada["id_forma"] ?></td>
                                                                     <td><?= $entrada["nom_forma"] ?></td>
                                                                     <!-- revisar bien este form -->
                                                                     <td>
@@ -109,7 +110,7 @@ $resultado_pagina = $result->fetchAll(PDO::FETCH_ASSOC);
             </thead>
             <tbody>
                 <tr>
-                    <td>numeros descendentes empieza desde el 1</td>
+                    <td>vacia</td>
                     <td>Nombre de formacion</td>
                 </tr>
             </tbody>

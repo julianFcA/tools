@@ -4,6 +4,8 @@ require_once('./../../vendor/autoload.php');
 // Incluye la clase que necesitamos del espacio de nombres
 use Spipu\Html2Pdf\Html2Pdf;
 
+$nit= $_SESSION['nit_empre'] ;
+
 // Conecta a la base de datos (ajusta las credenciales según tu configuración)
 $servername = "localhost";
 $username = "root";
@@ -32,7 +34,7 @@ $sql = "SELECT usuario.nombre, usuario.apellido, usuario.documento, usuario.corr
         INNER JOIN (SELECT documento, MAX(fecha_entrada) AS ultima_entrada FROM entrada_usu GROUP BY documento) ultima_entrada 
             ON entrada_usu.documento = ultima_entrada.documento AND entrada_usu.fecha_entrada = ultima_entrada.ultima_entrada 
         INNER JOIN tp_docu ON usuario.id_tp_docu = tp_docu.id_tp_docu 
-        WHERE ficha.ficha > 0 AND jornada.id_jornada >= 1 AND usuario.id_rol = 2";
+        WHERE empresa.nit_empre='$nit' AND ficha.ficha > 0 AND jornada.id_jornada >= 1 AND usuario.id_rol = 2";
 
 // Ejecuta la consulta
 $result = $conn->query($sql);

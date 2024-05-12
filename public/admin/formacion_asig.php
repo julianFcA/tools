@@ -7,12 +7,13 @@ $page = isset($_GET['page']) ? $_GET['page'] : 1; // Página actual
 // Calcula el offset basado en la página actual
 $offset = ($page - 1) * $limit;
 
-$query = "SELECT deta_ficha.*, ficha.ficha, formacion.nom_forma, jornada.tp_jornada
-          FROM ficha
-          INNER JOIN deta_ficha ON deta_ficha.ficha = ficha.ficha
+$nit= $_SESSION['nit_empre'];
+
+$query = "SELECT empresa.*, licencia.*, usuario.*, deta_ficha.*, ficha.ficha, formacion.nom_forma, jornada.tp_jornada
+          FROM  empresa INNER JOIN licencia ON empresa.nit_empre = licencia.nit_empre LEFT JOIN usuario ON empresa.nit_empre = usuario.nit_empre  INNER JOIN deta_ficha ON deta_ficha.documento = usuario.documento INNER JOIN ficha ON ficha.ficha = deta_ficha.ficha
           INNER JOIN formacion ON ficha.id_forma = formacion.id_forma
           INNER JOIN jornada ON jornada.id_jornada = ficha.id_jornada
-          WHERE ficha.ficha > :ficha
+          WHERE empresa.nit_empre = '$nit' AND ficha.ficha > :ficha
           AND formacion.id_forma >= 1
           AND jornada.id_jornada >= 1
           LIMIT :limit OFFSET :offset";
