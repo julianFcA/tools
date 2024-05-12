@@ -17,6 +17,8 @@ $servername = "localhost";
 $username = "root";
 $password = "123456";
 $dbname = "herramientas";
+session_start();
+$nit= $_SESSION['nit_empre'];
 
 // Crea una conexión
 $conn = new mysqli($servername, $username, $password, $dbname);
@@ -32,7 +34,15 @@ $tablas = array(8);
 // Itera sobre cada tabla
 foreach ($tablas as $tabla) {
     // Consulta los datos de la tabla actual
-    $sql ="SELECT herramienta.* , tp_herra.nom_tp_herra, marca_herra.nom_marca FROM herramienta INNER JOIN tp_herra ON herramienta.id_tp_herra = tp_herra.id_tp_herra INNER JOIN marca_herra ON marca_herra.id_marca = herramienta.id_marca  WHERE herramienta.id_tp_herra >= 1 AND marca_herra.id_marca >= 1";
+    $sql ="SELECT herramienta.*, tp_herra.nom_tp_herra, marca_herra.* 
+    FROM empresa 
+    INNER JOIN licencia ON empresa.nit_empre = licencia.nit_empre 
+    LEFT JOIN herramienta ON empresa.nit_empre = herramienta.nit_empre 
+    INNER JOIN tp_herra ON herramienta.id_tp_herra = tp_herra.id_tp_herra 
+    INNER JOIN marca_herra ON herramienta.id_marca = marca_herra.id_marca 
+    WHERE empresa.nit_empre = '$nit' 
+    AND herramienta.id_tp_herra >= 1 
+    AND marca_herra.id_marca >= 1";
     $result = $conn->query($sql);
 
     // Si hay datos en la tabla

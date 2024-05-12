@@ -6,7 +6,6 @@ require '../../vendor/autoload.php';
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
-$nit= $_SESSION['nit_empre'];
 
 // Crea un nuevo objeto Spreadsheet
 $spreadsheet = new Spreadsheet();
@@ -19,6 +18,9 @@ $servername = "localhost";
 $username = "root";
 $password = "123456";
 $dbname = "herramientas";
+session_start();
+$nit= $_SESSION['nit_empre'] ;
+
 
 // Crea una conexión
 $conn = new mysqli($servername, $username, $password, $dbname);
@@ -34,7 +36,7 @@ $tablas = array(8);
 // Itera sobre cada tabla
 foreach ($tablas as $tabla) {
     // Consulta los datos de la tabla actual
-    $sql ="SELECT empresa.*, herramienta.*, tp_herra.nom_tp_herra, marca_herra.* 
+    $sql ="SELECT herramienta.*, tp_herra.nom_tp_herra, marca_herra.* 
     FROM empresa 
     INNER JOIN licencia ON empresa.nit_empre = licencia.nit_empre 
     LEFT JOIN herramienta ON empresa.nit_empre = herramienta.nit_empre 

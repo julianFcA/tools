@@ -7,9 +7,19 @@ $page = isset($_GET['page']) ? $_GET['page'] : 1; // Página actual
 // Calcula el offset basado en la página actual
 $offset = ($page - 1) * $limit;
 
-$query = ("SELECT herramienta.* , tp_herra.nom_tp_herra, marca_herra.* FROM herramienta INNER JOIN tp_herra ON herramienta.id_tp_herra = tp_herra.id_tp_herra INNER JOIN marca_herra ON herramienta.id_marca = marca_herra.id_marca WHERE herramienta.id_tp_herra >= 1 AND marca_herra.id_marca >= 1");
+$query = "SELECT empresa.*, herramienta.*, tp_herra.nom_tp_herra, marca_herra.* 
+          FROM empresa 
+          INNER JOIN licencia ON empresa.nit_empre = licencia.nit_empre 
+          LEFT JOIN herramienta ON empresa.nit_empre = herramienta.nit_empre 
+          INNER JOIN tp_herra ON herramienta.id_tp_herra = tp_herra.id_tp_herra 
+          INNER JOIN marca_herra ON herramienta.id_marca = marca_herra.id_marca 
+          WHERE empresa.nit_empre = :nit 
+          AND herramienta.id_tp_herra >= 1 
+          AND marca_herra.id_marca >= 1";
 
-$result = $conn->query($query);
+$result = $conn->prepare($query);
+$result->bindParam(':nit', $nit, PDO::PARAM_STR);
+$result->execute();
 
 // Definir el número de resultados por página y la página actual
 $porPagina = 20; // Puedes ajustar esto según tus necesidades

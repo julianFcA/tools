@@ -9,6 +9,8 @@ $servername = "localhost";
 $username = "root";
 $password = "123456";
 $dbname = "herramientas";
+session_start();
+$nit= $_SESSION['nit_empre'];
 
 // Crea una conexión
 $conn = new mysqli($servername, $username, $password, $dbname);
@@ -19,7 +21,15 @@ if ($conn->connect_error) {
 }
 
 // Consulta SQL
-$query ="SELECT herramienta.* , tp_herra.nom_tp_herra, marca_herra.nom_marca FROM herramienta INNER JOIN tp_herra ON herramienta.id_tp_herra = tp_herra.id_tp_herra INNER JOIN marca_herra ON marca_herra.id_marca = herramienta.id_marca  WHERE herramienta.id_tp_herra >= 1 AND marca_herra.id_marca >= 1";
+$query ="SELECT herramienta.codigo_barra_herra, herramienta.nombre_herra, herramienta.descripcion, herramienta.imagen, herramienta.cantidad, herramienta.esta_herra, tp_herra.nom_tp_herra, marca_herra.nom_marca
+FROM empresa 
+INNER JOIN licencia ON empresa.nit_empre = licencia.nit_empre 
+LEFT JOIN herramienta ON empresa.nit_empre = herramienta.nit_empre 
+INNER JOIN tp_herra ON herramienta.id_tp_herra = tp_herra.id_tp_herra 
+INNER JOIN marca_herra ON herramienta.id_marca = marca_herra.id_marca 
+WHERE empresa.nit_empre = '$nit' 
+AND herramienta.id_tp_herra >= 1 
+AND marca_herra.id_marca >= 1";
 
 // Ejecuta la consulta
 $result = $conn->query($query);
@@ -32,7 +42,7 @@ if ($result->num_rows > 0) {
     // Continúa con el resto del HTML para la tabla y los resultados
 
     // Crea una variable para almacenar el HTML de la tabla
-    $html .= '<table border="1"><tr><th>NIT</th><th>Nombre Empresa</th><th>Dirección</th><th>Teléfono</th><th>Correo</th><th>Licencia</th><th>Fecha Inicio</th><th>Fecha Fin</th><th>Estado Licencia</th><th>Nombre Usuario</th><th>Apellido Usuario</th><th>Documento Usuario</th><th>Correo Usuario</th><th>Código de Barras</th><th>Fecha Registro</th></tr>';
+    $html .= '<table border="1"><tr><th>Código de Barras</th><th>Nombre de Herramienta</th><th>Descripción</th><th>Imagen</th><th>Cantidad</th><th>Estado de Herramienta</th><th>Tipo de Herramienta</th><th>Marca</th></tr>';
 
     // Itera sobre los resultados y agrega filas a la tabla
     while($row = $result->fetch_assoc()) {

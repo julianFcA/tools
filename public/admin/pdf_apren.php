@@ -4,13 +4,15 @@ require_once('./../../vendor/autoload.php');
 // Incluye la clase que necesitamos del espacio de nombres
 use Spipu\Html2Pdf\Html2Pdf;
 
-$nit= $_SESSION['nit_empre'] ;
 
 // Conecta a la base de datos (ajusta las credenciales según tu configuración)
 $servername = "localhost";
 $username = "root";
 $password = "123456";
 $dbname = "herramientas";
+session_start();
+$nit= $_SESSION['nit_empre'] ;
+
 
 // Crea una conexión
 $conn = new mysqli($servername, $username, $password, $dbname);

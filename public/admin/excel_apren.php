@@ -6,8 +6,6 @@ require '../../vendor/autoload.php';
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
-$nit= $_SESSION['nit_empre'] ;
-
 // Crea un nuevo objeto Spreadsheet
 $spreadsheet = new Spreadsheet();
 
@@ -19,6 +17,9 @@ $servername = "localhost";
 $username = "root";
 $password = "123456";
 $dbname = "herramientas";
+session_start();
+$nit= $_SESSION['nit_empre'] ;
+
 
 // Crea una conexión
 $conn = new mysqli($servername, $username, $password, $dbname);

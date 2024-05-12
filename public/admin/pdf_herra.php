@@ -4,13 +4,14 @@ require_once('./../../vendor/autoload.php');
 // Incluye la clase que necesitamos del espacio de nombres
 use Spipu\Html2Pdf\Html2Pdf;
 
-$nit = $_SESSION['nit_empre'];
-
 // Conecta a la base de datos (ajusta las credenciales según tu configuración)
 $servername = "localhost";
 $username = "root";
 $password = "123456";
 $dbname = "herramientas";
+session_start();
+$nit= $_SESSION['nit_empre'] ;
+
 
 // Crea una conexión
 $conn = new mysqli($servername, $username, $password, $dbname);
@@ -21,7 +22,7 @@ if ($conn->connect_error) {
 }
 
 // Consulta SQL
-$sql ="SELECT empresa.*, herramienta.*, tp_herra.nom_tp_herra, marca_herra.* 
+$sql ="SELECT herramienta.codigo_barra_herra, herramienta.nombre_herra, herramienta.descripcion, herramienta.imagen, herramienta.cantidad, herramienta.esta_herra, tp_herra.nom_tp_herra, marca_herra.nom_marca
 FROM empresa 
 INNER JOIN licencia ON empresa.nit_empre = licencia.nit_empre 
 LEFT JOIN herramienta ON empresa.nit_empre = herramienta.nit_empre 
@@ -42,7 +43,7 @@ if ($result->num_rows > 0) {
     // Continúa con el resto del HTML para la tabla y los resultados
 
     // Crea una variable para almacenar el HTML de la tabla
-    $html .= '<table border="1"><tr><th>NIT</th><th>Código de Barras</th><th>Tipo de Herramienta</th><th>Nombre de Herramienta</th><th>Marca</th><th>Imagen</th><th>Descripción</th><th>Cantidad</th><th>Estado de Herramienta</th></tr>';
+    $html .= '<table border="1"><tr><th>Código de Barras</th><th>Nombre de Herramienta</th><th>Descripción</th><th>Imagen</th><th>Cantidad</th><th>Estado de Herramienta</th><th>Tipo de Herramienta</th><th>Marca</th></tr>';
 
     // Itera sobre los resultados y agrega filas a la tabla
     while($row = $result->fetch_assoc()) {
