@@ -2,36 +2,7 @@
 require_once 'template.php';
 
 
-try {
-    $nit_empre = $_POST['nit_empre'] ?? '';
-    echo $nit_empre;
-
-    // Consulta SQL para verificar el código
-    $sql = "SELECT * FROM empresa INNER JOIN licencia ON empresa.nit_empre = licencia.nit_empre WHERE licencia.esta_licen = 'activo' AND empresa.nit_empre = :nit_empre";
-    $stmt = $conn->prepare($sql);
-    $stmt->bindParam(':nit_empre', $nit_empre);
-    $stmt->execute();
-    $resultado = $stmt->fetch(PDO::FETCH_ASSOC);
-
-    // Comprobar si se encontró una coincidencia
-    if ($resultado) {
-        // La contraseña es correcta y el NIT de la empresa está activo
-        echo json_encode(array('acceso_permitido' => true));
-    } else {
-        // La contraseña es incorrecta o el NIT de la empresa no está activo
-        echo json_encode(array('acceso_permitido' => false));
-    }
-} catch (PDOException $e) {
-    // Captura cualquier excepción PDO (error de base de datos)
-    echo json_encode(array('error' => 'Error de base de datos: ' . $e->getMessage()));
-} catch (Exception $e) {
-    // Captura cualquier otra excepción
-    echo json_encode(array('error' => 'Error: ' . $e->getMessage()));
-}
-
-?>
-
-<?php
+// Verifica si la sesión contiene el resultado
 
 // Consulta 1
 $consulta2 = $conn->prepare("SELECT nom_tp_docu, id_tp_docu FROM tp_docu WHERE id_tp_docu >= 1 ");
@@ -71,19 +42,28 @@ $consulta5 = $conn->prepare("SELECT * FROM estado_usu");
 $consulta5->execute();
 $consulllll = $consulta5->fetchAll(PDO::FETCH_ASSOC);
 
-// Consulta 6
 
-// Consulta SQL para verificar el NIT de la empresa
-$consulta6 = $conn->prepare("SELECT empresa.nom_empre, empresa.nit_empre, licencia.esta_licen FROM empresa INNER JOIN licencia ON empresa.nit_empre = licencia.nit_empre WHERE empresa.nit_empre= :nit_empre AND licencia.esta_licen = 'activo'");
-$consulta6->bindParam(':nit_empre', $nit_empre);
-$consulta6->execute();
-$consullllll = $consulta6->fetchAll(PDO::FETCH_ASSOC);
+
+if (session_status() == PHP_SESSION_NONE) {
+
+
+if (isset($_SESSION['resultado'])) {
+    $result = $_SESSION['resultado'];
+    unset($_SESSION['resultado']);
+
+    echo "NIT de empresa: " . $result['nit_empre'] . "<br>";
+
+    $consulta6 = $conn->prepare("SELECT empresa.nom_empre, empresa.nit_empre, licencia.esta_licen FROM empresa INNER JOIN licencia ON empresa.nit_empre = licencia.nit_empre WHERE empresa.nit_empre= :nit_empre AND licencia.esta_licen = 'activo'");
+    $consulta6->bindParam(':nit_empre', $result['nit_empre']);
+    $consulta6->execute();
+    $consullllll = $consulta6->fetchAll(PDO::FETCH_ASSOC);
+}
+}
 
 
 $consulta7 = $conn->prepare("SELECT terminos FROM usuario ");
 $consulta7->execute();
 $consult = $consulta7->fetch(PDO::FETCH_ASSOC);
-
 
 
 ?>
@@ -126,16 +106,17 @@ $consult = $consulta7->fetch(PDO::FETCH_ASSOC);
     }
 </style>
 
-
 <div class="modal" id="modal">
     <div class="modal-content">
-        <span id="close" class="close">&times;</span>
+        <span id="close"class="close">&times;</span>
         <h2>Ingrese Nit de Empresa</h2>
         <!-- Cambiar el tipo de campo de "password" a "text" -->
-        <input type="text" id="nitInput" name="nit_empre" placeholder="Ingrese Nit de la Empresa a la que Pertenece">
-        <button onclick="validarAcceso()" class="accept-button" style="background-color: orange; width: calc(100% - 10px); padding: 10px; margin-top: 10px;">Aceptar</button>
+        <input type="text"id="nitInput" name="nit_empre"placeholder="Ingrese Nit de la Empresa a la que Pertenece">
+        <input type="hidden"name="nit_empre"value="<?php echo htmlspecialchars($_POST['nit_empre'] ?? ''); ?>">
+        <button onclick="validarAcceso()"class="accept-button" style="background-color: orange; width: calc(100% - 10px); padding: 10px; margin-top: 10px;">Aceptar</button>
     </div>
 </div>
+
 
 
 <div class="registro_container">
@@ -195,7 +176,7 @@ $consult = $consulta7->fetch(PDO::FETCH_ASSOC);
             <select name="nom_forma" id="nom_forma" class="form-control">
                 <?php
                 // Consulta para obtener las opciones de formación
-                $statement = $conn->prepare("SELECT empresa.*, formacion.* FROM empresa INNER JOIN formacion ON empresa.nit_empre= formacion.nit_empre WHERE empresa.nit_empre = '$nit_empre' AND formacion.id_forma >=1 ");
+                $statement = $conn->prepare("SELECT licencia.*, empresa.*, formacion.* FROM empresa INNER JOIN licencia ON empresa.nit_empre= licencia.nit_empre INNER JOIN formacion ON empresa.nit_empre= formacion.nit_empre WHERE empresa.nit_empre = '$resultado' AND formacion.id_forma >=1 ");
                 $statement->execute();
                 while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
                     echo "<option value='" . $row['id_forma'] . "'>" . $row['nom_forma'] . "</option>";
@@ -225,7 +206,7 @@ $consult = $consulta7->fetch(PDO::FETCH_ASSOC);
         <div class="form-group">
             <label>Empresa</label>
             <select class="form-control" name="nit_empre" required>
-                <?php foreach ($consullllll as $row) : ?>
+                <?php foreach ($result as $row) : ?>
                     <option value="<?php echo $row['nit_empre']; ?>"><?php echo $row['nom_empre']; ?></option>
                 <?php endforeach; ?>
             </select>
@@ -271,6 +252,7 @@ $consult = $consulta7->fetch(PDO::FETCH_ASSOC);
         </div>
     </form>
 </div>
+
 
 <script type="text/javascript">
     $(document).ready(function() {
@@ -448,7 +430,7 @@ $consult = $consulta7->fetch(PDO::FETCH_ASSOC);
         document.getElementById("modal").style.display = "none";
         // Realizar la solicitud AJAX
         var xhr = new XMLHttpRequest();
-        xhr.open("POST", "", true);
+        xhr.open("POST", "validar_acceso.php", true);
         xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
         xhr.onreadystatechange = function() {
             if (xhr.readyState === 4) {

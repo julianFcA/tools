@@ -60,28 +60,69 @@ $resultado_pagina = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                                             </tr>
                                                         </thead>
                                                         <tbody>
-                                                            <?php foreach ($resultado_pagina as $entrada) { ?>
+                                                        <?php foreach ($resultado_pagina as $entrada) { ?>
                                                                 <?php
                                                                 // Inicializar variables
                                                                 $estadoClase = '';
                                                                 $color = '';
                                                                 $mensaje = '';
                                                                 $botonActivar = '';
+                                                                $botonInactivo = '';
+                                                                $botonCancelar = '';
+                                                                $activo = '';
 
                                                                 // Verificar el estado del usuario
-                                                                if ($entrada["id_esta_usu"] == 1) {
-                                                                    // Usuario inactivo, bloquear el botón de activar
-                                                                    $estadoClase = '';
-                                                                    $color = 'green';
-                                                                    $mensaje = 'Activo';
-                                                                    $botonActivar = 'disabled';
-                                                                } else {
-                                                                    // Usuario en cualquier otro estado, habilitar el botón de activar
-                                                                    $estadoClase = 'table-success';
-                                                                    $color = 'orange';
-                                                                    $mensaje = 'Inactivo';
-                                                                    $botonActivar = '';
-                                                                }
+                                                                switch ($entrada["id_esta_usu"]) {
+                                                                    case 1:
+                                                                        // Usuario activo
+                                                                        $estadoClase = 'table-success';
+                                                                        $color = 'green';
+                                                                        $mensaje = 'Activo';
+                                                                        $botonActivar = 'disabled';
+                                                                        break;
+                                                                    case 2:
+                                                                        // Usuario inactivo con licencia pasada
+                                                                        $estadoClase = 'table-warning';
+                                                                        $color = 'orange';
+                                                                        $mensaje = 'Bloqueado';
+                                                                        break;
+                                                                    case 'activo':
+                                                                        // Licencia activa
+                                                                        // Actualizar el estado de la licencia en la base de datos a 'inactivo'
+                                                                        $updateEstado = $conn->prepare("UPDATE usuario SET id_esta_usu = '2' WHERE documento = :documento");
+                                                                        $updateEstado->bindParam(':documento', $entrada["documento"], PDO::PARAM_INT);
+                                                                        $updateEstado->execute();
+
+                                                                        $estadoClase = 'table-warning';
+                                                                        $botonInactivo = 'disabled';
+                                                                        $color = 'orange';
+                                                                        $mensaje = 'Bloqueado';
+                                                                        break;
+                                                                    case 'inactivo':
+                                                                        // Licencia inactiva
+                                                                        // Actualizar el estado de la licencia en la base de datos a 'activo'
+                                                                        $updateEstado = $conn->prepare("UPDATE usuario SET id_esta_usu = '1' WHERE documento = :documento");
+                                                                        $updateEstado->bindParam(':documento', $entrada["documento"], PDO::PARAM_INT);
+                                                                        $updateEstado->execute();
+
+                                                                        $estadoClase = 'table-success';
+                                                                        $activo = 'disabled';
+                                                                        $color = 'green';
+                                                                        $mensaje = 'Disponible';
+                                                                        break;
+                                                                    case 'cancelado':
+                                                                        $estadoClase = '';
+                                                                        $botonCancelar = 'disabled';
+                                                                        $color = 'red';
+                                                                        $mensaje = 'Cancelado';
+                                                                        break;
+                                                                    default:
+                                                                        // Cualquier otro estado
+                                                                        $estadoClase = '';
+                                                                        $color = 'orange';
+                                                                        $mensaje = 'Inactivo';
+                                                                        break;
+                                                                    }
                                                                 ?>
                                                                 <tr class="<?= $estadoClase ?>" style="color: <?php echo $color; ?>">
                                                                     <td><?= $entrada["nombre"] ?></td>

@@ -19,7 +19,7 @@ if (isset($_POST["documento"])) {
         $actualizar_usuario->execute([$estado_usuario, $id]);
 
         // Eliminar los tres reportados anteriores del usuario
-        $eliminar_reportados = $conn->prepare("DELETE FROM detalle_prestamo WHERE id_deta_presta IN (SELECT id_deta_presta FROM detalle_prestamo INNER JOIN prestamo_herra ON detalle_prestamo.id_presta = prestamo_herra.id_presta WHERE prestamo_herra.documento = ? ORDER BY detalle_prestamo.id_deta_presta DESC LIMIT 3)");
+        $eliminar_reportados = $conn->prepare("DELETE FROM detalle_prestamo WHERE id_deta_presta IN (SELECT id_deta_presta FROM detalle_prestamo INNER JOIN reporte ON detalle_prestamo.id_deta_presta = reporte.id_deta_presta  INNER JOIN deta_reporte ON reporte.id_reporte = deta_reporte.id_reporte INNER JOIN prestamo_herra ON detalle_prestamo.id_presta = prestamo_herra.id_presta WHERE prestamo_herra.documento = ? ORDER BY detalle_prestamo.id_deta_presta DESC LIMIT 3)");
         $eliminar_reportados->execute([$id]);        
 
 

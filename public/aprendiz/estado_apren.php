@@ -101,6 +101,7 @@ $userdata = json_encode($resultado_pagina);
                     <td>${json_data.ficha}</td>
                     <td>${json_data.tp_jornada}</td>
                     <td>${json_data.nombre_herra}</td>
+                    <td>${json_data.id_presta}</td>
                     <td>${json_data.fecha_adqui}</td>
                     <td>${json_data.dias}</td>
                     <td>${json_data.fecha_entrega}</td>
@@ -152,6 +153,7 @@ $userdata = json_encode($resultado_pagina);
                                                                         <th class="centered">Ficha</th>
                                                                         <th class="centered">Jornada</th>
                                                                         <th class="centered">Herramienta</th>
+                                                                        <th class="centered">N° Prestamo</th>
                                                                         <th class="centered">Fecha de Adquisición</th>
                                                                         <th class="centered">Dias de Prestamo</th>
                                                                         <th class="centered">Fecha de Entrega</th>
@@ -159,6 +161,34 @@ $userdata = json_encode($resultado_pagina);
                                                                     </tr>
                                                                 </thead>
                                                                 <tbody id="tableBody_users">
+                                                                    <?php foreach ($resultado_pagina as $entrada) {
+
+                                                                        // Determinar la clase CSS y el estado del botón según el estado_servi
+                                                                        $estadoClase = '';
+                                                                        $color = '';
+                                                                        $mensaje = '';
+                                                                        $botonInactivo = '';
+                                                                        $botonCancelar = '';
+                                                                        $activo = '';
+
+                                                                        // Comprobar si la hora de finalización ha pasado
+                                                                        $horaFinalizacionPasada = strtotime($entrada["fecha_entrega"]) < strtotime("now");
+
+                                                                        // Si la licencia está activa y la hora de finalización ha pasado
+                                                                        if ($entrada["estado_presta"] == 'prestado' && $horaFinalizacionPasada) {
+                                                                            // Actualizar el estado de la licencia en la base de datos a 'inactivo'
+                                                                            $updateEstado = $conn->prepare("UPDATE detalle_prestamo SET estado_presta = 'tarde' WHERE id_deta_presta = :id_deta_presta");
+                                                                            $updateEstado->bindParam(':id_deta_presta', $entrada["id_deta_presta"], PDO::PARAM_INT);
+                                                                            $updateEstado->execute();
+
+                                                                            // Actualizar las variables para reflejar el nuevo estado
+                                                                            $estadoClase = 'table-warning';
+                                                                            $botonInactivo = 'disabled';
+                                                                            $color = 'orange';
+                                                                            $mensaje = 'Bloqueado';
+                                                                        }
+                                                                    ?>
+                                                                    <?php } ?>
                                                                 </tbody>
                                                             </table>
                                                         </div>

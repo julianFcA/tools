@@ -10,10 +10,10 @@ $page = isset($_GET['page']) ? $_GET['page'] : 1;
 // Calcula el offset basado en la página actual
 $offset = ($page - 1) * $limit;
 
-$nit= $_SESSION['nit_empre'] ;
+$nit = $_SESSION['nit_empre'];
 
 // Consulta para obtener los datos de la página actual
-$query = "SELECT empresa.nit_empre, empresa.nom_empre, empresa.direcc_empre, empresa.telefono, empresa.correo_empre, licencia.fecha_ini, licencia.fecha_fin, licencia.esta_licen, usuario.nombre,usuario.apellido, usuario.documento, usuario.correo, usuario.codigo_barras, usuario.fecha_registro, formacion.nom_forma ,jornada.tp_jornada,  tp_docu.nom_tp_docu, deta_ficha.ficha, estado_usu.* FROM empresa INNER JOIN licencia ON empresa.nit_empre = licencia.nit_empre LEFT JOIN usuario ON empresa.nit_empre = usuario.nit_empre  INNER JOIN rol ON usuario.id_rol = rol.id_rol INNER JOIN deta_ficha ON deta_ficha.documento = usuario.documento INNER JOIN estado_usu ON estado_usu.id_esta_usu = usuario.id_esta_usu INNER JOIN ficha ON ficha.ficha = deta_ficha.ficha INNER JOIN formacion ON ficha.id_forma = formacion.id_forma INNER JOIN jornada ON ficha.id_jornada = jornada.id_jornada INNER JOIN tp_docu ON usuario.id_tp_docu = tp_docu.id_tp_docu WHERE empresa.nit_empre ='$nit' AND ficha.ficha >=1 AND jornada.id_jornada >=1 AND usuario.id_rol = 3 LIMIT :limit OFFSET :offset";// Agregar los marcadores de posición de límite y desplazamiento
+$query = "SELECT empresa.nit_empre, empresa.nom_empre, empresa.direcc_empre, empresa.telefono, empresa.correo_empre, licencia.fecha_ini, licencia.fecha_fin, licencia.esta_licen, usuario.nombre,usuario.apellido, usuario.documento, usuario.correo, usuario.codigo_barras, usuario.fecha_registro, formacion.nom_forma ,jornada.tp_jornada,  tp_docu.nom_tp_docu, deta_ficha.ficha, estado_usu.* FROM empresa INNER JOIN licencia ON empresa.nit_empre = licencia.nit_empre LEFT JOIN usuario ON empresa.nit_empre = usuario.nit_empre  INNER JOIN rol ON usuario.id_rol = rol.id_rol INNER JOIN deta_ficha ON deta_ficha.documento = usuario.documento INNER JOIN estado_usu ON estado_usu.id_esta_usu = usuario.id_esta_usu INNER JOIN ficha ON ficha.ficha = deta_ficha.ficha INNER JOIN formacion ON ficha.id_forma = formacion.id_forma INNER JOIN jornada ON ficha.id_jornada = jornada.id_jornada INNER JOIN tp_docu ON usuario.id_tp_docu = tp_docu.id_tp_docu WHERE empresa.nit_empre ='$nit' AND ficha.ficha >=1 AND jornada.id_jornada >=1 AND usuario.id_rol = 3 LIMIT :limit OFFSET :offset"; // Agregar los marcadores de posición de límite y desplazamiento
 
 // Preparar y ejecutar la consulta
 $stmt = $conn->prepare($query);
@@ -23,6 +23,7 @@ $stmt->execute();
 $resultado_pagina = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 ?>
+
 
 <div class="content-wrapper">
     <!-- Container-fluid starts -->
@@ -67,21 +68,62 @@ $resultado_pagina = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                                                 $color = '';
                                                                 $mensaje = '';
                                                                 $botonActivar = '';
+                                                                $botonInactivo = '';
+                                                                $botonCancelar = '';
+                                                                $activo = '';
 
                                                                 // Verificar el estado del usuario
-                                                                if ($entrada["id_esta_usu"] == 1) {
-                                                                    // Usuario inactivo, bloquear el botón de activar
-                                                                    $estadoClase = '';
-                                                                    $color = 'green';
-                                                                    $mensaje = 'Activo';
-                                                                    $botonActivar = 'disabled';
-                                                                } else {
-                                                                    // Usuario en cualquier otro estado, habilitar el botón de activar
-                                                                    $estadoClase = 'table-success';
-                                                                    $color = 'orange';
-                                                                    $mensaje = 'Inactivo';
-                                                                    $botonActivar = '';
-                                                                }
+                                                                switch ($entrada["id_esta_usu"]) {
+                                                                    case 1:
+                                                                        // Usuario activo
+                                                                        $estadoClase = 'table-success';
+                                                                        $color = 'green';
+                                                                        $mensaje = 'Activo';
+                                                                        $botonActivar = 'disabled';
+                                                                        break;
+                                                                    case 2:
+                                                                        // Usuario inactivo con licencia pasada
+                                                                        $estadoClase = 'table-warning';
+                                                                        $color = 'orange';
+                                                                        $mensaje = 'Bloqueado';
+                                                                        break;
+                                                                    case 'activo':
+                                                                        // Licencia activa
+                                                                        // Actualizar el estado de la licencia en la base de datos a 'inactivo'
+                                                                        $updateEstado = $conn->prepare("UPDATE usuario SET id_esta_usu = '2' WHERE documento = :documento");
+                                                                        $updateEstado->bindParam(':documento', $entrada["documento"], PDO::PARAM_INT);
+                                                                        $updateEstado->execute();
+
+                                                                        $estadoClase = 'table-warning';
+                                                                        $botonInactivo = 'disabled';
+                                                                        $color = 'orange';
+                                                                        $mensaje = 'Bloqueado';
+                                                                        break;
+                                                                    case 'inactivo':
+                                                                        // Licencia inactiva
+                                                                        // Actualizar el estado de la licencia en la base de datos a 'activo'
+                                                                        $updateEstado = $conn->prepare("UPDATE usuario SET id_esta_usu = '1' WHERE documento = :documento");
+                                                                        $updateEstado->bindParam(':documento', $entrada["documento"], PDO::PARAM_INT);
+                                                                        $updateEstado->execute();
+
+                                                                        $estadoClase = 'table-success';
+                                                                        $activo = 'disabled';
+                                                                        $color = 'green';
+                                                                        $mensaje = 'Disponible';
+                                                                        break;
+                                                                    case 'cancelado':
+                                                                        $estadoClase = '';
+                                                                        $botonCancelar = 'disabled';
+                                                                        $color = 'red';
+                                                                        $mensaje = 'Cancelado';
+                                                                        break;
+                                                                    default:
+                                                                        // Cualquier otro estado
+                                                                        $estadoClase = '';
+                                                                        $color = 'orange';
+                                                                        $mensaje = 'Inactivo';
+                                                                        break;
+                                                                    }
                                                                 ?>
                                                                 <tr class="<?= $estadoClase ?>" style="color: <?php echo $color; ?>">
                                                                     <td><?= $entrada["nombre"] ?></td>

@@ -60,6 +60,11 @@ try {
 
 ?>
 
+
+
+
+
+
 <script>
     let dataTable;
     let dataTableIsInitialized = false;

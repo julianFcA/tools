@@ -8,7 +8,15 @@ $page = isset($_POST['page']) ? $_POST['page'] : 1; // Página actual
 $offset = ($page - 1) * $limit;
 
 if (isset($_POST['documento'])) {
-    $query = "SELECT herramienta.*, tp_herra.nom_tp_herra, marca_herra.* FROM herramienta INNER JOIN tp_herra ON herramienta.id_tp_herra = tp_herra.id_tp_herra INNER JOIN marca_herra ON herramienta.id_marca = marca_herra.id_marca WHERE herramienta.id_tp_herra >= 1 AND marca_herra.id_marca >= 1";
+    $query = "SELECT empresa.*, herramienta.*, tp_herra.nom_tp_herra, marca_herra.* 
+    FROM empresa 
+    INNER JOIN licencia ON empresa.nit_empre = licencia.nit_empre 
+    LEFT JOIN herramienta ON empresa.nit_empre = herramienta.nit_empre 
+    INNER JOIN tp_herra ON herramienta.id_tp_herra = tp_herra.id_tp_herra 
+    INNER JOIN marca_herra ON herramienta.id_marca = marca_herra.id_marca 
+    WHERE empresa.nit_empre = '$nit' 
+    AND tp_herra.id_tp_herra >= 1 
+    AND marca_herra.id_marca >= 1";
     $result = $conn->query($query);
     // Definir el número de resultados por página y la página actual
     $porPagina = 20; // Puedes ajustar esto según tus necesidades

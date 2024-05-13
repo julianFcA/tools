@@ -41,6 +41,7 @@ $nit = $_SESSION['nit_empre'];
 
 ?>
 
+
 <!DOCTYPE html>
 <html lang="en">
 
