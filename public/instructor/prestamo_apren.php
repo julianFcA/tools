@@ -101,6 +101,7 @@ $userdata = json_encode($resultado_pagina);
                     <td>${json_data.ficha}</td>
                     <td>${json_data.tp_jornada}</td>
                     <td>${json_data.nombre_herra}</td>
+                    <td>${json_data.id_presta}</td>
                     <td>${json_data.fecha_adqui}</td>
                     <td>${json_data.dias}</td>
                     <td>${json_data.fecha_entrega}</td>
@@ -152,6 +153,7 @@ $userdata = json_encode($resultado_pagina);
                                                                         <th class="centered">Ficha</th>
                                                                         <th class="centered">Jornada</th>
                                                                         <th class="centered">Herramienta</th>
+                                                                        <th class="centered">N° Prestamo</th>
                                                                         <th class="centered">Fecha de Adquisición</th>
                                                                         <th class="centered">Dias de Prestamo</th>
                                                                         <th class="centered">Fecha de Entrega</th>

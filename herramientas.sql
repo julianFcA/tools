@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 12-05-2024 a las 07:06:19
+-- Tiempo de generación: 14-05-2024 a las 00:35:27
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -32,7 +32,7 @@ CREATE TABLE `detalle_prestamo` (
   `cant_herra` tinyint(4) NOT NULL,
   `codigo_barra_herra` varchar(500) NOT NULL,
   `id_presta` tinyint(4) NOT NULL,
-  `estado_presta` enum('prestado','incompleto','devuelto','reportado') NOT NULL,
+  `estado_presta` enum('prestado','incompleto','devuelto','reportado','tarde') NOT NULL,
   `cant_devolucion` tinyint(4) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -73,14 +73,6 @@ CREATE TABLE `empresa` (
   `telefono` varchar(14) NOT NULL,
   `correo_empre` varchar(30) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Volcado de datos para la tabla `empresa`
---
-
-INSERT INTO `empresa` (`nit_empre`, `nom_empre`, `direcc_empre`, `telefono`, `correo_empre`) VALUES
-('965648-1', 'sena ac1', 'man 10 cs 10 jordan', '3154678901', 'sena@gmail.com'),
-('99988879-1', 'bd shoes company', 'jordan etapa ll', '3154688163', 'bdshoes@gmail.com');
 
 -- --------------------------------------------------------
 
@@ -125,14 +117,6 @@ CREATE TABLE `ficha` (
   `id_jornada` tinyint(4) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Volcado de datos para la tabla `ficha`
---
-
-INSERT INTO `ficha` (`ficha`, `id_forma`, `id_jornada`) VALUES
-(2315467, 1, 1),
-(2500591, 1, 1);
-
 -- --------------------------------------------------------
 
 --
@@ -144,18 +128,6 @@ CREATE TABLE `formacion` (
   `nom_forma` text NOT NULL,
   `nit_empre` varchar(12) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Volcado de datos para la tabla `formacion`
---
-
-INSERT INTO `formacion` (`id_forma`, `nom_forma`, `nit_empre`) VALUES
-(1, 'adso', '99988879-1'),
-(2, 'alturas', '99988879-1'),
-(3, 'mecanizado', '99988879-1'),
-(16, 'hsqu', '965648-1'),
-(17, 'multimedia', '965648-1'),
-(18, 'mecanica', '965648-1');
 
 -- --------------------------------------------------------
 
@@ -210,14 +182,6 @@ CREATE TABLE `licencia` (
   `nit_empre` varchar(12) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Volcado de datos para la tabla `licencia`
---
-
-INSERT INTO `licencia` (`licencia`, `esta_licen`, `fecha_ini`, `fecha_fin`, `nit_empre`) VALUES
-('663d23ae8273c', 'activo', '2024-05-09', '2025-05-09', '99988879-1'),
-('663fc7572d398', 'activo', '2024-05-11', '2025-05-11', '965648-1');
-
 -- --------------------------------------------------------
 
 --
@@ -226,15 +190,9 @@ INSERT INTO `licencia` (`licencia`, `esta_licen`, `fecha_ini`, `fecha_fin`, `nit
 
 CREATE TABLE `marca_herra` (
   `id_marca` tinyint(4) NOT NULL,
-  `nom_marca` text NOT NULL
+  `nom_marca` text NOT NULL,
+  `nit_empre` varchar(12) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Volcado de datos para la tabla `marca_herra`
---
-
-INSERT INTO `marca_herra` (`id_marca`, `nom_marca`) VALUES
-(6, 'caterpilla');
 
 -- --------------------------------------------------------
 
@@ -312,15 +270,9 @@ INSERT INTO `tp_docu` (`id_tp_docu`, `nom_tp_docu`) VALUES
 
 CREATE TABLE `tp_herra` (
   `id_tp_herra` tinyint(4) NOT NULL,
-  `nom_tp_herra` text NOT NULL
+  `nom_tp_herra` text NOT NULL,
+  `nit_empre` varchar(12) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Volcado de datos para la tabla `tp_herra`
---
-
-INSERT INTO `tp_herra` (`id_tp_herra`, `nom_tp_herra`) VALUES
-(8, 'manual');
 
 -- --------------------------------------------------------
 
@@ -521,13 +473,13 @@ ALTER TABLE `usuario`
 -- AUTO_INCREMENT de la tabla `detalle_prestamo`
 --
 ALTER TABLE `detalle_prestamo`
-  MODIFY `id_deta_presta` tinyint(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=91;
+  MODIFY `id_deta_presta` tinyint(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=98;
 
 --
 -- AUTO_INCREMENT de la tabla `deta_ficha`
 --
 ALTER TABLE `deta_ficha`
-  MODIFY `id_deta_ficha` tinyint(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
+  MODIFY `id_deta_ficha` tinyint(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
 
 --
 -- AUTO_INCREMENT de la tabla `deta_reporte`
@@ -539,13 +491,13 @@ ALTER TABLE `deta_reporte`
 -- AUTO_INCREMENT de la tabla `entrada_usu`
 --
 ALTER TABLE `entrada_usu`
-  MODIFY `id_entrada` int(5) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=387;
+  MODIFY `id_entrada` int(5) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=418;
 
 --
 -- AUTO_INCREMENT de la tabla `formacion`
 --
 ALTER TABLE `formacion`
-  MODIFY `id_forma` tinyint(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
+  MODIFY `id_forma` tinyint(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
 
 --
 -- AUTO_INCREMENT de la tabla `jornada`
@@ -557,13 +509,13 @@ ALTER TABLE `jornada`
 -- AUTO_INCREMENT de la tabla `marca_herra`
 --
 ALTER TABLE `marca_herra`
-  MODIFY `id_marca` tinyint(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id_marca` tinyint(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT de la tabla `prestamo_herra`
 --
 ALTER TABLE `prestamo_herra`
-  MODIFY `id_presta` tinyint(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=89;
+  MODIFY `id_presta` tinyint(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=96;
 
 --
 -- AUTO_INCREMENT de la tabla `reporte`
@@ -575,7 +527,7 @@ ALTER TABLE `reporte`
 -- AUTO_INCREMENT de la tabla `tp_herra`
 --
 ALTER TABLE `tp_herra`
-  MODIFY `id_tp_herra` tinyint(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id_tp_herra` tinyint(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- Restricciones para tablas volcadas

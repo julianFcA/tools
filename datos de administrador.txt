@@ -1,5 +1,5 @@
-Datos de administrador:
+Datos de superadministrador.
 
-Documento= 1110567986	
-nombre= julian	
-contraseña=  2698975K*
+Codigo de ingreso:
+Cesar_esquivel2024
+

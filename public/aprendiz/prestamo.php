@@ -28,6 +28,17 @@ $pagina = isset($_POST['pagina']) ? $_POST['pagina'] : 1;
 $empieza = ($pagina - 1) * $porPagina;
 // Inicializa la variable $resultado_pagina
 $resultado_pagina = $result->fetchAll(PDO::FETCH_ASSOC);
+
+?>
+
+<?php 
+$permiso = "SELECT detalle_prestamo.*, prestamo_herra.* FROM prestamo_herra INNER JOIN detalle_prestamo ON prestamo_herra.id_presta = detalle_prestamo.id_presta WHERE detalle_prestamo.estado_presta = 'prestado' AND prestamo_herra.documento = :documento";
+$permi = $conn->prepare($permiso);
+$permi->bindParam(':documento', $docu, PDO::PARAM_STR);
+$permi->execute();
+
+$hayPrestamo = $permi->rowCount() > 0; // Si la consulta devuelve filas, hay un préstamo activo
+
 ?>
 
 <div class="content-wrapper">
@@ -108,7 +119,8 @@ $resultado_pagina = $result->fetchAll(PDO::FETCH_ASSOC);
                                                         </table>
                                                     </div>
                                                     <br>
-                                                    <button type="submit" class="btn btn-orange" style="width: 50%;" name="documento" value="<?php echo $_SESSION['documento'] ?>" onclick="prepareAndRedirect()">Seleccionar Herramientas</button>
+
+                                                    <button type="submit" class="btn btn-orange" style="width: 50%;" name="documento" value="<?php echo $_SESSION['documento'] ?>" onclick="prepareAndRedirect()" <?php if ($hayPrestamo) echo 'disabled'; ?>>Seleccionar Herramientas</button>
                                                 </form>
                                                 <br>
                                             </div>
