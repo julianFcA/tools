@@ -66,7 +66,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     } elseif ($cantidad_prestada >= $cantidad_devuelta) {
                         $nueva_cantidad_prestada = $cantidad_prestada - $cantidad_devuelta;
 
-                        $query_actualizar_detalle_prestamo = "UPDATE detalle_prestamo SET  cant_herra = ?, estado_presta = 'Reportado una parte' WHERE id_deta_presta = ?";
+                        $query_actualizar_detalle_prestamo = "UPDATE detalle_prestamo SET  cant_herra = ?, estado_presta = 'reportado una parte' WHERE id_deta_presta = ?";
                         $stmt_actualizar_detalle_prestamo = $conn->prepare($query_actualizar_detalle_prestamo);
                         $stmt_actualizar_detalle_prestamo->execute([$nueva_cantidad_prestada, $id_deta_presta]);
 

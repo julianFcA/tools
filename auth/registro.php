@@ -73,7 +73,7 @@ $consult = $consulta7->fetch(PDO::FETCH_ASSOC);
         <h2>Ingrese Nit de Empresa</h2>
         <!-- Cambiar el tipo de campo de "password" a "text" -->
         <input type="text"id="nitInput" name="nit_empre"placeholder="Ingrese Nit de la Empresa a la que Pertenece">
-        <input type="hidden"name="nit_empre"value="<?php echo htmlspecialchars($_POST['nit_empre'] ?? ''); ?>">
+        <input type="hidden"id="nitInput" name="nit_empre"value="<?php echo htmlspecialchars($_POST['nit_empre'] ?? ''); ?>">
         <button onclick="validarAcceso()"class="accept-button" style="background-color: orange; width: calc(100% - 10px); padding: 10px; margin-top: 10px;">Aceptar</button>
     </div>
 </div>

@@ -4,7 +4,7 @@ require_once '../database/conn.php';
 require_once '../vendor/autoload.php';
 
 use Picqer\Barcode\BarcodeGeneratorPNG;
- 
+
 $database = new Database();
 $conn = $database->conectar();
 
@@ -17,7 +17,6 @@ foreach ($_POST as $value) {
         break;
     }
 }
-
 
 if (isset($_POST["MM_register"]) && $_POST["MM_register"] == "formRegister") {
     if ($isAnyFieldEmpty) {
@@ -35,7 +34,6 @@ if (isset($_POST["MM_register"]) && $_POST["MM_register"] == "formRegister") {
         if ($resultCheckDocument) {
             echo '<script>alert("El documento ya está registrado.");</script>';
             echo '<script>window.location = "../auth/registro.php";</script>';
-            
         } else {
             $id_tp_docu = filter_input(INPUT_POST, 'id_tp_docu', FILTER_VALIDATE_INT);
             $nombre = filter_input(INPUT_POST, 'nombre', FILTER_SANITIZE_STRING);
@@ -62,8 +60,6 @@ if (isset($_POST["MM_register"]) && $_POST["MM_register"] == "formRegister") {
                 echo '<script>alert("Correo electrónico no válido.");</script>';
                 echo '<script>window.location = "../auth/registro.php";</script>';
             } else {
-            
-
                 // Generación de código de barras único
                 $codigo_barras = uniqid() . rand(1000, 9999);
                 $generator = new BarcodeGeneratorPNG();
@@ -80,13 +76,12 @@ if (isset($_POST["MM_register"]) && $_POST["MM_register"] == "formRegister") {
                     $fecha_registro = date("Y-m-d H:i:s");
 
                     // Insertar usuario en la base de datos
-                    $stmt = $conn->prepare("INSERT INTO usuario (documento, id_tp_docu, nombre, apellido, contrasena, correo, codigo_barras, fecha_registro, terminos, id_rol, id_esta_usu, nit_empre) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, $nit_empre)");
+                    $stmt = $conn->prepare("INSERT INTO usuario (documento, id_tp_docu, nombre, apellido, contrasena, correo, codigo_barras, fecha_registro, terminos, id_rol, id_esta_usu, nit_empre) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 
                     // Asegúrate de que el número de parámetros coincide con el número de '?' en la consulta
-                    $stmt->execute([$documento, $id_tp_docu, $nombre, $apellido, $user_password, $correo, $codigo_barras, $fecha_registro, $terminos, $id_rol, $id_esta_usu]);
+                    $stmt->execute([$documento, $id_tp_docu, $nombre, $apellido, $user_password, $correo, $codigo_barras, $fecha_registro, $terminos, $id_rol, $id_esta_usu, $nit_empre]);
 
                     $stmt1 = $conn->prepare("INSERT INTO deta_ficha (ficha, documento) VALUES (?, ?)");
-
                     $stmt1->execute([$ficha, $documento]);
 
                     echo '<script>alert("Registro exitoso.");</script>';
@@ -96,3 +91,4 @@ if (isset($_POST["MM_register"]) && $_POST["MM_register"] == "formRegister") {
         }
     }
 }
+?>

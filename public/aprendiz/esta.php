@@ -14,6 +14,8 @@ function updateUsersStatus($conn) {
                   FROM usuario 
                   INNER JOIN prestamo_herra ON usuario.documento = prestamo_herra.documento 
                   INNER JOIN detalle_prestamo ON prestamo_herra.id_presta = detalle_prestamo.id_presta
+                  INNER JOIN reporte ON detalle_prestamo.id_deta_presta = reporte.id_deta_presta
+                  INNER JOIN deta_reporte ON deta_reporte.id_reporte = reporte.id_reporte
                   INNER JOIN estado_usu ON estado_usu.id_esta_usu = usuario.id_esta_usu
                   WHERE usuario.id_rol = 3 AND usuario.id_esta_usu = 1 AND detalle_prestamo.estado_presta = 'reportado'
                   GROUP BY usuario.documento
@@ -28,25 +30,15 @@ function updateUsersStatus($conn) {
 
         if (!empty($documents)) {
             // Query para actualizar el estado de los usuarios
-            $update_user_query = "UPDATE usuario SET id_esta_usu = 2 WHERE documento IN (SELECT documento FROM (" . $query . ") AS temp)";
+            $update_query = "UPDATE usuario SET id_esta_usu = 2 WHERE documento IN (SELECT documento FROM (" . $query . ") AS temp)";
             // Preparar la consulta de actualización
-            $update_user_statement = $conn->prepare($update_user_query);
-            // Ejecutar la consulta de actualización de usuarios
-            $update_user_statement->execute();
-            
-            // Query para actualizar el estado de detalle_prestamo
-            $update_detail_query = "UPDATE detalle_prestamo SET estado_presta = 'bloqueado' WHERE id_deta_presta IN (SELECT id_deta_presta FROM reporte WHERE id_deta_presta IN (SELECT id_deta_presta FROM (" . $query . ") AS temp))";
-            // Preparar la consulta de actualización de detalle_prestamo
-            $update_detail_statement = $conn->prepare($update_detail_query);
-            // Ejecutar la consulta de actualización de detalle_prestamo
-            $update_detail_statement->execute();
+            $update_statement = $conn->prepare($update_query);
+            // Ejecutar la consulta de actualización
+            $update_statement->execute();
             
             // Imprimir el número de filas afectadas
-            $affected_rows_users = $update_user_statement->rowCount();
-            $affected_rows_detail = $update_detail_statement->rowCount();
-            echo "Se actualizaron $affected_rows_users usuario(s) y $affected_rows_detail detalle(s) de prestamo.";
-        } else {
-            echo "No se encontraron usuarios para actualizar.";
+            $affected_rows = $update_statement->rowCount();
+            echo "Se actualizaron $affected_rows fila(s).";
         }
     } catch (PDOException $e) {
         // Manejar cualquier excepción PDO
@@ -56,5 +48,8 @@ function updateUsersStatus($conn) {
 
 // Ejecutar la función para actualizar el estado del usuario
 updateUsersStatus($conn);
+
+
+
 
 ?>
