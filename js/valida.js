@@ -23,8 +23,8 @@ document.addEventListener('DOMContentLoaded', function() {
         // Realiza tus validaciones aquí y muestra mensajes de error si es necesario
 
         // Ejemplo de validación para el documento
-        if (documento.length !== 10 || isNaN(documento)) {
-            showError('Documento debe tener 10 dígitos numéricos');
+        if (documento.length < 8 ||documento.length > 10 || isNaN(documento)) {
+            showError('Documento debe tener de 8 a 10 dígitos numéricos');
             return false;
         }
 

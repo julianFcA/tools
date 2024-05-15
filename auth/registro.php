@@ -10,28 +10,6 @@ $consulta2->execute();
 $consull = $consulta2->fetchAll(PDO::FETCH_ASSOC);
 
 
-$nom_forma = isset($_POST['nom_forma']) ? $_POST['nom_forma'] : null;
-
-if ($nom_forma !== null) {
-    // Consulta para obtener las opciones de formación asociadas a la ficha seleccionada
-    $statement = $conn->prepare("SELECT * FROM ficha INNER JOIN formacion ON formacion.id_forma = ficha.id_forma INNER JOIN jornada ON jornada.id_jornada = ficha.id_jornada WHERE ficha.id_forma = ?");
-
-    $statement->execute([$nom_forma]);
-
-    $cadena = "<label>Ficha</label><br><select id='ficha' name='ficha'>";
-    $cadena1 = "<label>Jornada</label><br><select id='tp_jornada' name='tp_jornada'>";
-
-    while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
-        $cadena .= "<option value='" . $row['ficha'] . "'>" . $row['ficha'] . "</option>";
-        $cadena1 .= "<option value='" . $row['id_jornada'] . "'>" . $row['tp_jornada'] . "</option>";
-    }
-
-    $cadena .= "</select>"; // Cerrar la etiqueta select
-    $cadena1 .= "</select>";
-    echo $cadena . $cadena1; // Imprime ambas cadenas juntas
-}
-
-
 // Consulta 3
 $consulta4 = $conn->prepare("SELECT nom_rol, id_rol FROM rol WHERE id_rol >= 3 ");
 $consulta4->execute();
@@ -42,23 +20,6 @@ $consulta5 = $conn->prepare("SELECT * FROM estado_usu");
 $consulta5->execute();
 $consulllll = $consulta5->fetchAll(PDO::FETCH_ASSOC);
 
-
-
-if (session_status() == PHP_SESSION_NONE) {
-
-
-if (isset($_SESSION['resultado'])) {
-    $result = $_SESSION['resultado'];
-    unset($_SESSION['resultado']);
-
-    echo "NIT de empresa: " . $result['nit_empre'] . "<br>";
-
-    $consulta6 = $conn->prepare("SELECT empresa.nom_empre, empresa.nit_empre, licencia.esta_licen FROM empresa INNER JOIN licencia ON empresa.nit_empre = licencia.nit_empre WHERE empresa.nit_empre= :nit_empre AND licencia.esta_licen = 'activo'");
-    $consulta6->bindParam(':nit_empre', $result['nit_empre']);
-    $consulta6->execute();
-    $consullllll = $consulta6->fetchAll(PDO::FETCH_ASSOC);
-}
-}
 
 
 $consulta7 = $conn->prepare("SELECT terminos FROM usuario ");
@@ -118,7 +79,6 @@ $consult = $consulta7->fetch(PDO::FETCH_ASSOC);
 </div>
 
 
-
 <div class="registro_container">
     <!-- Formulario de Registro -->
     <form class="registro_form" action="../controller/RegisterController.php" name="formRegister" autocomplete="off" method="POST" class="formulario" id="formulario" onsubmit="return validarContraseña()">
@@ -173,15 +133,8 @@ $consult = $consulta7->fetch(PDO::FETCH_ASSOC);
 
         <div class="form-group">
             <label for="nom_forma">Formación</label>
-            <select name="nom_forma" id="nom_forma" class="form-control">
-                <?php
-                // Consulta para obtener las opciones de formación
-                $statement = $conn->prepare("SELECT licencia.*, empresa.*, formacion.* FROM empresa INNER JOIN licencia ON empresa.nit_empre= licencia.nit_empre INNER JOIN formacion ON empresa.nit_empre= formacion.nit_empre WHERE empresa.nit_empre = '$resultado' AND formacion.id_forma >=1 ");
-                $statement->execute();
-                while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
-                    echo "<option value='" . $row['id_forma'] . "'>" . $row['nom_forma'] . "</option>";
-                }
-                ?>
+            <select id="nom_forma" name="nom_forma" class="form-control">
+                <!-- Las opciones se llenarán mediante JavaScript -->
             </select>
         </div>
 
@@ -205,11 +158,8 @@ $consult = $consulta7->fetch(PDO::FETCH_ASSOC);
 
         <div class="form-group">
             <label>Empresa</label>
-            <select class="form-control" name="nit_empre" required>
-                <?php foreach ($result as $row) : ?>
-                    <option value="<?php echo $row['nit_empre']; ?>"><?php echo $row['nom_empre']; ?></option>
-                <?php endforeach; ?>
-            </select>
+            <input type="text" id="nombreEmpresa" name="nombreEmpresa" placeholder="Nombre de la Empresa" 
+            readonly>
         </div>
 
         <div class="form-group">
@@ -241,7 +191,7 @@ $consult = $consulta7->fetch(PDO::FETCH_ASSOC);
             <button type="button" onclick=" openOverlayTerminos()">Acepto Términos y Condiciones</button>
         </div>
 
-
+ 
         <input type="submit" name="MM_register" value="Registrarme" class="btn"></input>
         <input type="hidden" name="MM_register" value="formRegister" onclick="if(validarAceptacionTerminos())">
 
@@ -425,41 +375,29 @@ $consult = $consulta7->fetch(PDO::FETCH_ASSOC);
 
 <script>
     // Función para validar el código o el NIT de la empresa según el contexto
-    function validarAcceso() {
-        const valorIngresado = document.getElementById("nitInput").value;
-        document.getElementById("modal").style.display = "none";
-        // Realizar la solicitud AJAX
-        var xhr = new XMLHttpRequest();
-        xhr.open("POST", "validar_acceso.php", true);
-        xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-        xhr.onreadystatechange = function() {
-            if (xhr.readyState === 4) {
-                if (xhr.status === 200) {
-                    try {
-                        var respuesta = JSON.parse(xhr.responseText);
-                        if (respuesta.acceso_permitido) {
-                            alert("Acceso permitido.");
-                            document.getElementById("modal").style.display = "none";
-                            // Aquí debes especificar la URL a la que deseas redirigir al usuario
-                        } else {
-                            alert("Acceso denegado.");
-                            window.location.href = "";
-
-                        }
-                    } catch (error) {
-                        console.error("Error al procesar la respuesta JSON:", error.message);
-                    }
+    $(document).ready(function() {
+    $('#nitInput').change(function() {
+        var nit = $(this).val();
+        $.ajax({
+            type: "POST",
+            url: "validar_acceso.php", // Asegúrate que esta es la ruta correcta al archivo PHP
+            data: { nit_empre: nit },
+            dataType: 'json',
+            success: function(response) {
+                if(response.acceso_permitido) {
+                    $('#nombreEmpresa').val(response.nombre_empresa);
+                    $('#modal').hide();
                 } else {
-                    // Manejar errores de solicitud si es necesario
-                    console.error("Error al procesar la solicitud. Código de estado:", xhr.status);
+                    alert('Acceso denegado o no se encontró la empresa.');
+                    $('#nombreEmpresa').val(''); // Limpia el campo si no se encuentra la empresa
                 }
+            },
+            error: function() {
+                alert('Error al realizar la consulta.');
             }
-        };
-        // Enviar el valor ingresado al servidor
-        xhr.send("nit_empre=" + encodeURIComponent(valorIngresado));
-    }
-
-    // Mostrar el cuadro de diálogo automáticamente al cargar la página
+        });
+    });
+});
     window.onload = function() {
         document.getElementById("modal").style.display = "block";
 
@@ -469,4 +407,39 @@ $consult = $consulta7->fetch(PDO::FETCH_ASSOC);
             window.location.href = "./../index.php"; // Redirigir a la página principal
         };
     };
+
+
+    $(document).ready(function() {
+    $('#nitInput').change(function() {
+        var nit = $(this).val();
+        $.ajax({
+            type: "POST",
+            url: "obtener_formacion_empresa.php", // Este será el archivo PHP nuevo para la consulta
+            data: { nit_empre: nit },
+            dataType: 'json',
+            success: function(response) {
+                var selectFormacion = $('#nom_forma');
+                selectFormacion.empty(); // Limpia opciones anteriores
+
+                if (response.formaciones.length > 0) {
+                    response.formaciones.forEach(function(formacion) {
+                        selectFormacion.append($('<option>', {
+                            value: formacion.id_forma,
+                            text: formacion.nom_forma
+                        }));
+                    });
+                } else {
+                    selectFormacion.append($('<option>', {
+                        value: '',
+                        text: 'No hay formaciones disponibles'
+                    }));
+                }
+            },
+            error: function() {
+                alert('Error al cargar las formaciones.');
+            }
+        });
+    });
+});
 </script>
+

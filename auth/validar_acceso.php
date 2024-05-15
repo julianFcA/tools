@@ -1,37 +1,30 @@
 <?php
-try {
-    require_once '../database/conn.php';  // Ajusta según la ubicación real y método de inclusión
+require_once '../database/conn.php';
 
-    $database = new Database();
-    $conn = $database->conectar();
+$nit_empre = $_POST['nit_empre'] ?? '';
+
+try {
+    $servername = "localhost";
+    $username = "root";
+    $password = "123456";
+    $dbname = "herramientas";
     
-    // Obtener el valor de nit_empre desde el formulario
-    $nit_empre = $_POST['nit_empre'] ?? '';
-    
-    // Consulta SQL para verificar el código
-    $sql = "SELECT * FROM empresa INNER JOIN licencia ON empresa.nit_empre = licencia.nit_empre WHERE licencia.esta_licen = 'activo' AND empresa.nit_empre = :nit_empre";
-    $stmt = $conn->prepare($sql);
+    $conn = new PDO("mysql:host=$servername;dbname=herramientas", $username, $password);
+    // Set the PDO error mode to exception
+    $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+    $stmt = $conn->prepare("SELECT nom_empre FROM empresa WHERE nit_empre = :nit_empre");
     $stmt->bindParam(':nit_empre', $nit_empre);
     $stmt->execute();
     $resultado = $stmt->fetch(PDO::FETCH_ASSOC);
-        
-    // Comprobar si se encontró una coincidencia
+
     if ($resultado) {
-        $_SESSION['resultado'] = $resultado;
-        // Redirigir al usuario después de enviar la respuesta JSON
-        header('Location: ./registro.php');
-        // La contraseña es correcta y el NIT de la empresa está activo
-        echo json_encode(array('acceso_permitido' => true));
-        exit(); // Salir del script después de la redirección
+        echo json_encode(array('acceso_permitido' => true, 'nombre_empresa' => $resultado['nom_empre']));
     } else {
-        // La contraseña es incorrecta o el NIT de la empresa no está activo
         echo json_encode(array('acceso_permitido' => false));
     }
 } catch (PDOException $e) {
-    // Captura cualquier excepción PDO (error de base de datos)
     echo json_encode(array('error' => 'Error de base de datos: ' . $e->getMessage()));
-} catch (Exception $e) {
-    // Captura cualquier otra excepción
-    echo json_encode(array('error' => 'Error: ' . $e->getMessage()));
 }
+
 ?>
