@@ -58,8 +58,8 @@ if (isset($_POST["MM_register"]) && $_POST["MM_register"] == "formRegister") {
     }
 
     // Validaciones adicionales en el lado del servidor
-    if (strlen($nombre_herra) < 6 || strlen($nombre_herra) > 20) {
-        echo '<script>alert("Nombre de herramienta debe tener entre 6 y 20 caracteres.");</script>';
+    if (strlen($nombre_herra) < 3 || strlen($nombre_herra) > 20) {
+        echo '<script>alert("Nombre de herramienta debe tener entre 3 y 20 caracteres.");</script>';
         echo '<script>window.location = "./registro_herra.php";</script>';
     } elseif (strlen($descripcion) < 6 || strlen($descripcion) > 30) {
         echo '<script>alert("Descripción debe tener entre 6 y 30 caracteres.");</script>';
@@ -129,7 +129,7 @@ if (isset($_POST["MM_register"]) && $_POST["MM_register"] == "formRegister") {
 
                                             <div class="form-group">
                                                 <label>Nombre de Herramienta</label>
-                                                <input type="text" placeholder="Ingrese Nombre de Herramienta" class="form-control" name="nombre_herra" title="Debe ser de 20 letras" required minlength="6" maxlength="20" oninput="validarLetras(this)">
+                                                <input type="text" placeholder="Ingrese Nombre de Herramienta" class="form-control" name="nombre_herra" title="Debe ser de 20 letras" required minlength="3" maxlength="20" oninput="validarLetras(this)">
                                             </div>
 
                                             <div class="form-group">
@@ -175,10 +175,11 @@ if (isset($_POST["MM_register"]) && $_POST["MM_register"] == "formRegister") {
 </div>
 
 <script>
-    function validarLetras(input) {
-        // Remover cualquier caracter que no sea una letra
-        input.value = input.value.replace(/[^a-zA-Z]/g, '');
-    }
+  function validarLetras(input) {
+    // Remover cualquier caracter que no sea una letra o espacio
+    input.value = input.value.replace(/[^a-zA-Z\s]/g, '');
+}
+
 
 
     function validarNumeros(input) {

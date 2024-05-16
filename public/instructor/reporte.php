@@ -38,8 +38,7 @@ $userdata = json_encode($resultado_pagina);
 
 try {
     // Consulta SQL para actualizar el estado de los préstamos y el estado del usuario
-    $sql = "
-    UPDATE detalle_prestamo dp
+    $sql = "UPDATE detalle_prestamo dp
     INNER JOIN prestamo_herra ph ON dp.id_presta = ph.id_presta
     INNER JOIN usuario u ON ph.documento = u.documento
     SET dp.estado_presta = 'bloqueado', u.id_esta_usu = 2
@@ -52,9 +51,8 @@ try {
             INNER JOIN detalle_prestamo dp ON ph.id_presta = dp.id_presta
             WHERE dp.estado_presta = 'reportado'
             GROUP BY u.documento
-            HAVING reportado_count > 3
-        ) as subquery
-    )";
+            HAVING reportado_count >= 3
+        ) as subquery)";
 
     // Preparar la consulta
     $stmt = $conn->prepare($sql);
@@ -136,6 +134,7 @@ try {
                     <td>${json_data.ficha}</td>
                     <td>${json_data.tp_jornada}</td>
                     <td>${json_data.nombre_herra}</td>
+                    <td>${json_data.id_presta}</td>
                     <td>${json_data.fecha_adqui}</td>
                     <td>${json_data.dias}</td>
                     <td>${json_data.fecha_entrega}</td>
@@ -189,6 +188,7 @@ try {
                                                                         <th class="centered">Ficha</th>
                                                                         <th class="centered">Jornada</th>
                                                                         <th class="centered">Herramienta</th>
+                                                                        <th class="centered">N° prestamo</th>
                                                                         <th class="centered">Fecha de Adquisición</th>
                                                                         <th class="centered">Dias de Prestamo</th>
                                                                         <th class="centered">Fecha de Entrega</th>

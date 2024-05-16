@@ -17,6 +17,6 @@ if (isset($_POST["documento"])) {
         $updateSql->execute([$esta_aprend, $id]);
 
         echo '<script>alert("Aprendiz activado.");</script>';
-        echo '<script>window.location="./aprendices.php"</script>';
+        echo '<script>window.location="./index.php"</script>';
     }
 }

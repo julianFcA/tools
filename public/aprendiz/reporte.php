@@ -22,7 +22,7 @@ INNER JOIN detalle_prestamo ON prestamo_herra.id_presta = detalle_prestamo.id_pr
 INNER JOIN herramienta ON herramienta.codigo_barra_herra = detalle_prestamo.codigo_barra_herra  
 INNER JOIN reporte ON detalle_prestamo.id_deta_presta = reporte.id_deta_presta
 INNER JOIN deta_reporte ON deta_reporte.id_reporte = reporte.id_reporte
-WHERE usuario.documento = '$docu' AND ficha.ficha >= 1 AND jornada.id_jornada >= 1 AND usuario.id_rol = 3 AND detalle_prestamo.estado_presta = 'reportado'";
+WHERE usuario.documento = '$docu' AND ficha.ficha >= 1 AND jornada.id_jornada >= 1 AND usuario.id_rol = 3 AND detalle_prestamo.estado_presta = 'reportado' OR detalle_prestamo.estado_presta = 'bloqueado'";
 
 
 $result = $conn->query($query);
@@ -37,6 +37,37 @@ $resultado_pagina = $result->fetchAll(PDO::FETCH_ASSOC);
 
 $userdata = json_encode($resultado_pagina);
 
+try {
+    // Consulta SQL para actualizar el estado de los préstamos y el estado del usuario
+    $sql = "UPDATE detalle_prestamo dp
+    INNER JOIN prestamo_herra ph ON dp.id_presta = ph.id_presta
+    INNER JOIN usuario u ON ph.documento = u.documento
+    SET dp.estado_presta = 'bloqueado', u.id_esta_usu = 2
+    WHERE u.documento IN (
+        SELECT documento
+        FROM (
+            SELECT u.documento, COUNT(*) as reportado_count
+            FROM usuario u
+            INNER JOIN prestamo_herra ph ON u.documento = ph.documento
+            INNER JOIN detalle_prestamo dp ON ph.id_presta = dp.id_presta
+            WHERE dp.estado_presta = 'reportado'
+            GROUP BY u.documento
+            HAVING reportado_count >= 3
+        ) as subquery)";
+
+    // Preparar la consulta
+    $stmt = $conn->prepare($sql);
+    
+    // Ejecutar la consulta
+    $stmt->execute();
+    
+    // Obtener el número de filas afectadas
+    $rowCount = $stmt->rowCount();
+    
+    echo "Se han actualizado $rowCount registros correctamente.";
+} catch (PDOException $e) {
+    echo "Error al ejecutar la consulta: " . $e->getMessage();
+}
 ?>
 <script>
     let dataTable;
@@ -103,6 +134,7 @@ $userdata = json_encode($resultado_pagina);
                     <td>${json_data.ficha}</td>
                     <td>${json_data.tp_jornada}</td>
                     <td>${json_data.nombre_herra}</td>
+                    <td>${json_data.id_presta}</td>
                     <td>${json_data.fecha_adqui}</td>
                     <td>${json_data.dias}</td>
                     <td>${json_data.fecha_entrega}</td>
@@ -156,6 +188,7 @@ $userdata = json_encode($resultado_pagina);
                                                                         <th class="centered">Ficha</th>
                                                                         <th class="centered">Jornada</th>
                                                                         <th class="centered">Herramienta</th>
+                                                                        <th class="centered">N° prestamo</th>
                                                                         <th class="centered">Fecha de Adquisición</th>
                                                                         <th class="centered">Dias de Prestamo</th>
                                                                         <th class="centered">Fecha de Entrega</th>

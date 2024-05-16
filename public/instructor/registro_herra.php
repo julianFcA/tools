@@ -58,8 +58,8 @@ if (isset($_POST["MM_register"]) && $_POST["MM_register"] == "formRegister") {
     }
 
     // Validaciones adicionales en el lado del servidor
-    if (strlen($nombre_herra) < 6 || strlen($nombre_herra) > 20) {
-        echo '<script>alert("Nombre de herramienta debe tener entre 6 y 20 caracteres.");</script>';
+    if (strlen($nombre_herra) < 3 || strlen($nombre_herra) > 20) {
+        echo '<script>alert("Nombre de herramienta debe tener entre 3 y 20 caracteres.");</script>';
         echo '<script>window.location = "./registro_herra.php";</script>';
     } elseif (strlen($descripcion) < 6 || strlen($descripcion) > 30) {
         echo '<script>alert("Descripción debe tener entre 6 y 30 caracteres.");</script>';
@@ -174,10 +174,10 @@ if (isset($_POST["MM_register"]) && $_POST["MM_register"] == "formRegister") {
 </div>
 
 <script>
-    function validarLetras(input) {
-        // Remover cualquier caracter que no sea una letra
-        input.value = input.value.replace(/[^a-zA-Z]/g, '');
-    }
+     function validarLetras(input) {
+    // Remover cualquier caracter que no sea una letra o espacio
+    input.value = input.value.replace(/[^a-zA-Z\s]/g, '');
+}
 
 
     function validarNumeros(input) {
