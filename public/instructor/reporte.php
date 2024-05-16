@@ -7,7 +7,7 @@ $page = isset($_GET['page']) ? $_GET['page'] : 1; // Página actual
 // Calcula el offset basado en la página actual
 $offset = ($page - 1) * $limit;
 
-$nit =$_SESSION['nit_empre'];
+$nit = $_SESSION['nit_empre'];
 
 $query = "SELECT empresa.nit_empre, empresa.nom_empre, empresa.direcc_empre, empresa.telefono, empresa.correo_empre, licencia.fecha_ini, licencia.fecha_fin, licencia.esta_licen, usuario.nombre, usuario.apellido, usuario.documento, usuario.correo, usuario.codigo_barras, usuario.fecha_registro, formacion.nom_forma, jornada.tp_jornada, tp_docu.nom_tp_docu, deta_ficha.ficha, prestamo_herra.*, detalle_prestamo.*, herramienta.*, reporte.*, deta_reporte.*
 FROM  empresa INNER JOIN licencia ON empresa.nit_empre = licencia.nit_empre LEFT JOIN usuario ON empresa.nit_empre = usuario.nit_empre  
@@ -22,9 +22,9 @@ INNER JOIN detalle_prestamo ON prestamo_herra.id_presta = detalle_prestamo.id_pr
 INNER JOIN herramienta ON herramienta.codigo_barra_herra = detalle_prestamo.codigo_barra_herra  
 INNER JOIN reporte ON detalle_prestamo.id_deta_presta = reporte.id_deta_presta
 INNER JOIN deta_reporte ON deta_reporte.id_reporte = reporte.id_reporte
-WHERE empresa.nit_empre= '$nit' AND ficha.ficha >= 1 AND jornada.id_jornada >= 1 AND usuario.id_rol = 3 AND detalle_prestamo.estado_presta = 'reportado'";
+WHERE empresa.nit_empre= '$nit' AND ficha.ficha >= 1 AND jornada.id_jornada >= 1 AND usuario.id_rol = 3 AND detalle_prestamo.estado_presta = 'reportado' OR detalle_prestamo.estado_presta = 'bloqueado'";
 
-$result =$conn->query($query); 
+$result = $conn->query($query); 
 
 // Definir el número de resultados por página y la página actual
 $porPagina = 20; // Puedes ajustar esto según tus necesidades
@@ -37,12 +37,25 @@ $resultado_pagina = $result->fetchAll(PDO::FETCH_ASSOC);
 $userdata = json_encode($resultado_pagina);
 
 try {
-    // Consulta SQL para actualizar el estado de los préstamos
-    $sql = "UPDATE detalle_prestamo AS dp
-            INNER JOIN prestamo_herra AS ph ON dp.id_presta = ph.id_presta
-            SET dp.estado_presta = 'reportado'
-            WHERE ph.fecha_entrega < NOW() AND dp.estado_presta = 'prestado'";
-    
+    // Consulta SQL para actualizar el estado de los préstamos y el estado del usuario
+    $sql = "
+    UPDATE detalle_prestamo dp
+    INNER JOIN prestamo_herra ph ON dp.id_presta = ph.id_presta
+    INNER JOIN usuario u ON ph.documento = u.documento
+    SET dp.estado_presta = 'bloqueado', u.id_esta_usu = 2
+    WHERE u.documento IN (
+        SELECT documento
+        FROM (
+            SELECT u.documento, COUNT(*) as reportado_count
+            FROM usuario u
+            INNER JOIN prestamo_herra ph ON u.documento = ph.documento
+            INNER JOIN detalle_prestamo dp ON ph.id_presta = dp.id_presta
+            WHERE dp.estado_presta = 'reportado'
+            GROUP BY u.documento
+            HAVING reportado_count > 3
+        ) as subquery
+    )";
+
     // Preparar la consulta
     $stmt = $conn->prepare($sql);
     
@@ -56,14 +69,7 @@ try {
 } catch (PDOException $e) {
     echo "Error al ejecutar la consulta: " . $e->getMessage();
 }
-
-
 ?>
-
-
-
-
-
 
 <script>
     let dataTable;
