@@ -5,7 +5,6 @@ $conn = $database->conectar();
 session_start();
 date_default_timezone_set('America/Bogota');
 
-
 // Función para contar la cantidad de préstamos reportados por usuario
 function updateUsersStatus($conn) {
     try {
@@ -14,7 +13,6 @@ function updateUsersStatus($conn) {
                   FROM usuario 
                   INNER JOIN prestamo_herra ON usuario.documento = prestamo_herra.documento 
                   INNER JOIN detalle_prestamo ON prestamo_herra.id_presta = detalle_prestamo.id_presta
-                  INNER JOIN estado_usu ON estado_usu.id_esta_usu = usuario.id_esta_usu
                   WHERE usuario.id_rol = 3 AND usuario.id_esta_usu = 1 AND detalle_prestamo.estado_presta = 'reportado'
                   GROUP BY usuario.documento
                   HAVING COUNT(*) = 3";
@@ -28,14 +26,14 @@ function updateUsersStatus($conn) {
 
         if (!empty($documents)) {
             // Query para actualizar el estado de los usuarios
-            $update_user_query = "UPDATE usuario SET id_esta_usu = 2 WHERE documento IN (SELECT documento FROM (" . $query . ") AS temp)";
+            $update_user_query = "UPDATE usuario SET id_esta_usu = 2 WHERE documento IN (" . implode(',', $documents) . ")";
             // Preparar la consulta de actualización
             $update_user_statement = $conn->prepare($update_user_query);
             // Ejecutar la consulta de actualización de usuarios
             $update_user_statement->execute();
             
             // Query para actualizar el estado de detalle_prestamo
-            $update_detail_query = "UPDATE detalle_prestamo SET estado_presta = 'bloqueado' WHERE id_deta_presta IN (SELECT id_deta_presta FROM reporte WHERE id_deta_presta IN (SELECT id_deta_presta FROM (" . $query . ") AS temp))";
+            $update_detail_query = "UPDATE detalle_prestamo SET estado_presta = 'bloqueado' WHERE id_deta_presta IN (SELECT id_deta_presta FROM reporte WHERE id_deta_presta IN (SELECT id_deta_presta FROM detalle_prestamo WHERE estado_presta = 'reportado'))";
             // Preparar la consulta de actualización de detalle_prestamo
             $update_detail_statement = $conn->prepare($update_detail_query);
             // Ejecutar la consulta de actualización de detalle_prestamo
