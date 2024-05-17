@@ -95,7 +95,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 function redirectToPrestamoPage($message)
 {
     echo "<script>alert('$message');</script>";
-    echo '<script>window.location="./index.php"</script>';
+    echo '<script>window.location="./estado_apren.php"</script>';
     exit();
 }
 ?>
