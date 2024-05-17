@@ -105,7 +105,9 @@ $userdata = json_encode($resultado_pagina);
                     <td>${json_data.fecha_adqui}</td>
                     <td>${json_data.dias}</td>
                     <td>${json_data.fecha_entrega}</td>
+                    <td>${json_data.cant_herra}</td>
                     <td>${json_data.estado_presta}</td>
+                    <td>${json_data.cant_devolucion}</td>
                 </tr>`;
             });
             document.getElementById('tableBody_users').innerHTML = content;
@@ -157,7 +159,9 @@ $userdata = json_encode($resultado_pagina);
                                                                         <th class="centered">Fecha de Adquisición</th>
                                                                         <th class="centered">Dias de Prestamo</th>
                                                                         <th class="centered">Fecha de Entrega</th>
+                                                                        <th class="centered">Cantidad Actual</th>
                                                                         <th class="centered">Estado de Prestamo</th>
+                                                                        <th class="centered">Cantidad Devuelta</th>
                                                                     </tr>
                                                                 </thead>
                                                                 <tbody id="tableBody_users">

@@ -32,7 +32,7 @@ $resultado_pagina = $result->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
 <?php 
-$permiso = "SELECT detalle_prestamo.*, prestamo_herra.* FROM prestamo_herra INNER JOIN detalle_prestamo ON prestamo_herra.id_presta = detalle_prestamo.id_presta WHERE detalle_prestamo.estado_presta = 'prestado' AND prestamo_herra.documento = :documento";
+$permiso = "SELECT detalle_prestamo.*, prestamo_herra.* FROM prestamo_herra INNER JOIN detalle_prestamo ON prestamo_herra.id_presta = detalle_prestamo.id_presta WHERE detalle_prestamo.estado_presta = 'prestado' OR detalle_prestamo.estado_presta = 'reportado una parte' AND prestamo_herra.documento = :documento";
 $permi = $conn->prepare($permiso);
 $permi->bindParam(':documento', $docu, PDO::PARAM_STR);
 $permi->execute();

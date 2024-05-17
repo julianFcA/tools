@@ -22,7 +22,7 @@ $offset = ($page - 1) * $limit;
     INNER JOIN prestamo_herra ON detalle_prestamo.id_presta = prestamo_herra.id_presta
     WHERE prestamo_herra.documento = :documento AND
           tp_herra.id_tp_herra >= 1 AND 
-          marca_herra.id_marca >= 1 AND detalle_prestamo.estado_presta = 'prestado' or detalle_prestamo.estado_presta = 'incompleto' or detalle_prestamo.estado_presta = 'tarde'";
+          marca_herra.id_marca >= 1 AND detalle_prestamo.estado_presta = 'prestado' or detalle_prestamo.estado_presta = 'incompleto' or detalle_prestamo.estado_presta = 'tarde'or detalle_prestamo.estado_presta = 'reportado una parte'";
 
     // Preparar y ejecutar la consulta
     $stmt = $conn->prepare($query);
