@@ -78,11 +78,17 @@ $_SESSION['last_activity'] = time();
 </head>
 
 <div class="modal" id="modal">
+    <!-- Esta es la ventana modal. La clase "modal" probablemente se usa para estilos CSS que hacen que esta ventana aparezca sobre el contenido principal de la página. El ID "modal" permite que este elemento sea seleccionado y manipulado con JavaScript. -->
     <div class="modal-content">
+        <!-- Este div contiene el contenido de la ventana modal. La clase "modal-content" se usa para aplicar estilos específicos al contenido del modal, separándolo del fondo de la ventana modal. -->
         <span id="close" class="close">&times;</span>
+        <!-- Este elemento <span> actúa como un botón de cierre para la ventana modal. La clase "close" se usa para aplicar estilos CSS que lo hacen aparecer como un botón de cierre (normalmente una "x"). El ID "close" permite que este botón sea seleccionado y manipulado con JavaScript. El símbolo "&times;" es una "x" que indica el cierre. -->
         <h2>Ingrese su Contraseña de Confirmación:</h2>
+        <!-- Este es el encabezado del modal, pidiendo al usuario que ingrese una contraseña de confirmación. -->
         <input type="password" id="passwordInput" placeholder="Contraseña">
+        <!-- Este es un campo de entrada de tipo "password". Los caracteres ingresados se ocultan (se muestran como puntos o asteriscos). El ID "passwordInput" permite que este campo sea seleccionado y manipulado con JavaScript. El atributo "placeholder" muestra el texto "Contraseña" cuando el campo está vacío. -->
         <button onclick="validarCodigo()">Aceptar</button>
+        <!-- Este es un botón que, al ser presionado, llama a la función JavaScript "validarCodigo()". -->
     </div>
 </div>
 <body>

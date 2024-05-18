@@ -16,7 +16,20 @@ if (isset($_POST["MM_register"]) && $_POST["MM_register"] == "formRegister") {
     if ($nit_empre == "") {
         echo '<script>alert("EXISTEN CAMPOS VACÍOS");</script>';
         echo '<script>window location="registro_empre.php"</script>';
-    } else {
+    }
+    $stmtCheckDocument = $conn->prepare("SELECT nit_empre FROM empresa WHERE nit_empre = ?");
+    $stmtCheckDocument->bindParam(1, $nit_empre, PDO::PARAM_STR);
+    $stmtCheckDocument->execute();
+    $resultCheckDocument = $stmtCheckDocument->fetch(PDO::FETCH_ASSOC);
+
+    // Verificar si el documento ya existe en la base de datos
+    if ($resultCheckDocument) {
+        // El documento ya existe en la base de datos, mostrar mensaje emergente con JavaScript
+        echo '<script>alert("El nit de empresa ingresado ya está registrado.");</script>';
+        echo '<script>window.location = "./registro_empre.php";</script>';
+    }
+     else {
+        
         $insertsql = $conn->prepare("INSERT INTO empresa ( nit_empre, nom_empre, direcc_empre, telefono, correo_empre) VALUES (?, ?, ?, ?, ?)");
         $insertsql->execute([$nit_empre, $nom_empre, $direcc_empre, $telefono, $correo_empre]);
         echo '<script>alert ("Registro exitoso");</script>';

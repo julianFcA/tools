@@ -4,28 +4,24 @@ require_once 'template.php';
 
 // Verifica si la sesión contiene el resultado
 
-// Consulta 1
+// Consulta 2
 $consulta2 = $conn->prepare("SELECT nom_tp_docu, id_tp_docu FROM tp_docu WHERE id_tp_docu >= 1 ");
 $consulta2->execute();
 $consull = $consulta2->fetchAll(PDO::FETCH_ASSOC);
 
-
-// Consulta 3
+// Consulta 4
 $consulta4 = $conn->prepare("SELECT nom_rol, id_rol FROM rol WHERE id_rol >= 3 ");
 $consulta4->execute();
 $consullll = $consulta4->fetchAll(PDO::FETCH_ASSOC);
 
-// Consulta 4
+// Consulta 5
 $consulta5 = $conn->prepare("SELECT * FROM estado_usu");
 $consulta5->execute();
 $consulllll = $consulta5->fetchAll(PDO::FETCH_ASSOC);
 
-
-
 $consulta7 = $conn->prepare("SELECT terminos FROM usuario ");
 $consulta7->execute();
 $consult = $consulta7->fetch(PDO::FETCH_ASSOC);
-
 
 ?>
 
@@ -71,7 +67,6 @@ $consult = $consulta7->fetch(PDO::FETCH_ASSOC);
     <div class="modal-content">
         <span id="close"class="close">&times;</span>
         <h2>Ingrese Nit de Empresa</h2>
-        <!-- Cambiar el tipo de campo de "password" a "text" -->
         <input type="password"id="nitInput" name="nit_empre"placeholder="Ingrese Nit de la Empresa a la que Pertenece">
         <input type="hidden"id="nitInput" name="nit_empre"value="<?php echo htmlspecialchars($_POST['nit_empre'] ?? ''); ?>">
         <button onclick="validarAcceso()"class="accept-button" style="background-color: orange; width: calc(100% - 10px); padding: 10px; margin-top: 10px;">Aceptar</button>

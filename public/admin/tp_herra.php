@@ -112,7 +112,7 @@ $resultado_pagina = $result->fetchAll(PDO::FETCH_ASSOC);
                                                                 //     $mensaje = 'activo';
                                                                 // }
                                                                 // 
-                                                                ?> -->
+                                                                ?> 
                                                                 <tr class="<?= $estadoClase ?>" style="color: <?php echo $color; ?>">
                                                                     <td><img src="../../images/<?= $entrada["codigo_barra_herra"] ?>.png" style="max-width: 300px; height: auto; border: 2px solid #ffffff;"><?= $entrada["codigo_barra_herra"] ?></td>
                                                                     <td><?= $entrada["id_tp_herra"] ?></td>

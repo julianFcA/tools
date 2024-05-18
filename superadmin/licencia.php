@@ -6,14 +6,10 @@ $lista = $conn->prepare("SELECT * FROM licencia, empresa WHERE licencia.nit_empr
 $lista->execute();
 $listas = $lista->fetchAll(PDO::FETCH_ASSOC);
 ?>
-
- 
             <br>
             <br>
             <br>
-
             <body>
-
                 <div class="content-body container-table">
                     <div class="container-fluid">
                         <div class="row">
