@@ -1,8 +1,6 @@
 <?php
 require_once 'template.php';
 
-$docu = $_SESSION['documento'];
-
 // Verifica si se ha enviado un formulario POST y si se han seleccionado herramientas
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id_deta_presta']) && is_array($_POST['id_deta_presta'])) {
     // Almacena las herramientas seleccionadas en la variable de sesión
@@ -11,6 +9,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id_deta_presta']) && 
     redirectToPrestamoPage("Debes seleccionar al menos una herramienta del inventario.");
     echo '<script>window.location="./index.php"</script>';
 }
+$documento = $_POST['documento'];
 // Consulta para recuperar los detalles de las herramientas seleccionadas
 $query = "SELECT herramienta.*, 
                  tp_herra.nom_tp_herra, 
@@ -22,7 +21,7 @@ $query = "SELECT herramienta.*,
           INNER JOIN marca_herra ON herramienta.id_marca = marca_herra.id_marca 
           INNER JOIN detalle_prestamo ON herramienta.codigo_barra_herra = detalle_prestamo.codigo_barra_herra  
           INNER JOIN prestamo_herra ON detalle_prestamo.id_presta = prestamo_herra.id_presta 
-          WHERE prestamo_herra.documento = $docu AND detalle_prestamo.id_deta_presta IN (";
+          WHERE prestamo_herra.documento = $documento AND detalle_prestamo.id_deta_presta IN (";
 // Construye la parte dinámica de la consulta con marcadores de posición
 $placeholders = implode(',', array_fill(0, count($_SESSION['id_presta']), '?'));
 // Completa la consulta
@@ -39,16 +38,6 @@ function redirectToPrestamoPage($message)
     exit();
 }
 ?>
-
-<div class="modal" id="modal">
-    <div class="modal-content">
-        <span>&times;</span>
-        <h2>Ingrese Codigo de Confirmación</h2>
-        <input type="password" id="passwordInput" placeholder="Por Favor Instructor Verifique estado de Herramientas">
-        <button style="background-color: orange; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer;" onclick="validarCodigo()">Aceptar</button>
-    </div>
-</div>
-
 <div class="content-wrapper">
     <div class="container-fluid">
         <div class="tab-list">
@@ -65,8 +54,8 @@ function redirectToPrestamoPage($message)
 
                                             </div>
                                             <div class="card-body">
-                                                <form action="devolu.php" method="post" onsubmit="return validarFormulario()">
-                                                    <div class="table-responsive">
+                                                <form action="prestar_tiempo.php" method="post" onsubmit="return validarFormulario()">
+                                                    <class="table-responsive">
                                                         <table id="example3" class="table table-striped table-bordered" style="width:100%">
                                                             <thead>
                                                                 <tr>
@@ -77,7 +66,7 @@ function redirectToPrestamoPage($message)
                                                                     <th>Imagen</th>
                                                                     <th>Cantidad Prestada</th>
                                                                     <th>Fecha de Entrega</th>
-                                                                    <th>Cantidad a Devolver</th>
+                                                                    <th>Cantidad </th>
                                                                 </tr>
                                                             </thead>
                                                             <tbody>
@@ -88,6 +77,7 @@ function redirectToPrestamoPage($message)
                                                                 ?>
                                                                     <tr style="background-color: <?= $colorFondo ?>;">
                                                                         <td><img src="../../images/<?= $entrada["codigo_barra_herra"] ?>.png" style="max-width: 300px; height: auto; border: 2px solid #ffffff;"><?= $entrada["codigo_barra_herra"] ?>
+                                                                    </td>
                                                                         <td><?= $entrada["nom_tp_herra"] ?></td>
                                                                         <td><?= $entrada["nombre_herra"] ?></td>
                                                                         <td><?= $entrada["nom_marca"] ?></td>
@@ -110,10 +100,17 @@ function redirectToPrestamoPage($message)
                                                                 <?php endwhile ?>
                                                             </tbody>
                                                         </table>
-                                                        <input type="submit" name="action" value="Devolver Herramienta" class="btn btn-success" style="width: 30%; display: inline-block; margin-right: 2%;">
-                                                        <input type="submit" name="action" value="Reportar Herramienta" class="btn btn-danger" style="width: 30%; display: inline-block;">
-
-                                                        <input type="text" name="motivo" placeholder="Ingrese el motivo (solo para reportar una herramienta)">
+                                                        
+                                                        <div class="form-group">
+                                                            <label> Dias De Prestamo <a href=""></a></label>
+                                                            <select class="form-control" name="dias" id="dias"
+                                                                style="width: 50%;" required>
+                                                            </select>
+                                                        </div>
+                                                        
+                                                        <input type="submit" name="action" value="Mas Tiempo" class="btn btn-success" style="width: 30%; display: inline-block; margin-right: 2%;">
+                                                        <input type="hidden" name="MM_register"
+                                                        value="<?php echo $_POST['documento'] ?>">
                                                 </form>
                                             </div>
                                         </div>
@@ -147,27 +144,51 @@ function redirectToPrestamoPage($message)
     }
 </script>
 
-
 <script>
-    window.onload = function() {
-        document.getElementById("modal").style.display = "block";
-    };
+    var select = document.getElementById('dias');
 
-    // Función para cerrar el cuadro de diálogo
-    document.getElementById("close").onclick = function() {
-        document.getElementById("modal").style.display = "none";
-    };
+    // Agregar un event listener para el cambio en el select
+    select.addEventListener('change', function () {
+        // Obtener el valor seleccionado del select
+        var seleccionado = parseInt(select.value);
 
-    // Validar el código ingresado
-    function validarCodigo() {
-        const codigoCorrecto = "instructordeturno2024";
-        const codigoIngresado = document.getElementById("passwordInput").value;
+        // Mostrar el número seleccionado
+        var resultadoDiv = document.getElementById('resultado');
+        resultadoDiv.textContent = "Número seleccionado: " + seleccionado;
+    });
 
-        if (codigoIngresado === codigoCorrecto) {
-            alert("¡Contraseña correcta! Acceso permitido.");
-            document.getElementById("modal").style.display = "none";
-        } else {
-            alert("Contraseña incorrecta. Acceso denegado.");
+    // Llenar el select con opciones del 1 al 7
+    for (var i = 1; i <= 7; i++) {
+        var option = document.createElement('option');
+        option.value = i;
+        option.textContent = i;
+        select.appendChild(option);
+    }
+
+    function validarFormulario() {
+        var herramientas = document.querySelectorAll('input[name^="cantidad"]');
+        var mensajeError = "";
+
+        herramientas.forEach(function (herramienta) {
+            var cantidad = parseInt(herramienta.value);
+            var cantidadDisponible = parseInt(herramienta.dataset.disponible);
+
+            if (isNaN(cantidad) || cantidad <= 0) {
+                mensajeError += "La cantidad ingresada debe ser mayor que cero.\n";
+            } else if (cantidad > cantidadDisponible) {
+                mensajeError +=
+                    "La cantidad ingresada es mayor que la cantidad disponible para la herramienta con código de barras " +
+                    herramienta.dataset.codigoBarra + ".\n";
+            } else if (cantidad > 100) {
+                mensajeError += "Solo se permiten cantidades 15 para cada herramienta.\n";
+            }
+        });
+
+        if (mensajeError !== "") {
+            alert(mensajeError);
+            return false; // Evitar el envío del formulario
         }
+
+        return true; // Permitir el envío del formulario si todas las validaciones pasan
     }
 </script>

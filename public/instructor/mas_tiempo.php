@@ -48,10 +48,10 @@ if (isset($_POST['documento'])) {
                                     <div class="col-12">
                                         <div class="card">
                                             <div class="card-header">
-                                                <h4 class="card-title">Prestamo de Herramienta</h4>
+                                                <h4 class="card-title">Mas Tiempo de Prestamo de Herramienta</h4>
                                             </div>
                                             <div class="card-body">
-                                                <form action="termino_devo.php" method="post">
+                                                <form action="termino_tiempo.php" method="post">
                                                     <div class="table-responsive">
                                                         <!-- Tabla HTML para mostrar los resultados -->
                                                         <table id="example3" class="table table-striped table-bordered" style="width:100%">
@@ -77,7 +77,6 @@ if (isset($_POST['documento'])) {
                                                                 ?>
                                                                     <tr style="background-color: <?= $colorFondo ?>;">
                                                                         <td><img src="../../images/<?= $entrada["codigo_barra_herra"] ?>.png" style="max-width: 300px; height: auto; border: 2px solid #ffffff;"><?= $entrada["codigo_barra_herra"] ?>
-                                                                        </td>
                                                                         <td><?= $entrada["nom_tp_herra"] ?></td>
                                                                         <td><?= $entrada["nombre_herra"] ?></td>
                                                                         <td><?= $entrada["nom_marca"] ?></td>
@@ -100,8 +99,7 @@ if (isset($_POST['documento'])) {
                                                         </table>
                                                     </div>
                                                     <br>
-                                                    <button type="submit" class="btn btn-orange" style="width: 50%;" name="documento" value="<?php echo $documento_usuario ?>" onclick="prepareAndRedirect()">Devolver Herramientas</button>
-
+                                                    <button type="submit" class="btn btn-orange" style="width: 50%;" name="documento" value="<?php echo $documento_usuario ?>" onclick="prepareAndRedirect()">Pedir Mas Tiempo</button>
                                                 </form>
                                                 <br>
                                                 <a href="./index.php" class="btn btn-warning btn-sm mt-2" style="width: 10%;">Volver</a>

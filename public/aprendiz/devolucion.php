@@ -9,7 +9,7 @@ $page = isset($_POST['page']) ? $_POST['page'] : 1; // Página actual
 // Calcula el offset basado en la página actual
 $offset = ($page - 1) * $limit;
 
-    $query = "SELECT 
+$query = "SELECT 
         herramienta.*, 
         tp_herra.nom_tp_herra, 
         marca_herra.nom_marca, 
@@ -24,11 +24,11 @@ $offset = ($page - 1) * $limit;
           tp_herra.id_tp_herra >= 1 AND 
           marca_herra.id_marca >= 1 AND detalle_prestamo.estado_presta = 'prestado' or detalle_prestamo.estado_presta = 'incompleto' or detalle_prestamo.estado_presta = 'tarde'or detalle_prestamo.estado_presta = 'reportado una parte'";
 
-    // Preparar y ejecutar la consulta
-    $stmt = $conn->prepare($query);
-    $stmt->bindParam(':documento', $docu);
-    $result = $stmt->execute();
-    $resultado_pagina = $stmt->fetchAll(PDO::FETCH_ASSOC);
+// Preparar y ejecutar la consulta
+$stmt = $conn->prepare($query);
+$stmt->bindParam(':documento', $docu);
+$result = $stmt->execute();
+$resultado_pagina = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 ?>
 
@@ -47,14 +47,13 @@ $offset = ($page - 1) * $limit;
                                     <div class="col-12">
                                         <div class="card">
                                             <div class="card-header">
-                                                <h4 class="card-title">Prestamo de Herramienta</h4>
+                                                <h4 class="card-title">Devolucion de Herramienta</h4>
                                             </div>
                                             <div class="card-body">
                                                 <form action="termino_devo.php" method="post">
                                                     <div class="table-responsive">
                                                         <!-- Tabla HTML para mostrar los resultados -->
-                                                        <table id="example3" class="table table-striped table-bordered"
-                                                            style="width:100%">
+                                                        <table id="example3" class="table table-striped table-bordered" style="width:100%">
                                                             <thead>
                                                                 <tr>
                                                                     <th>Codigo De Barras</th>
@@ -74,9 +73,9 @@ $offset = ($page - 1) * $limit;
 
                                                                 foreach ($resultado_pagina as $entrada) {
 
-                                                                    ?>
+                                                                ?>
                                                                     <tr style="background-color: <?= $colorFondo ?>;">
-                                                                        <td><?= $entrada["codigo_barra_herra"] ?></td>
+                                                                        <td><img src="../../images/<?= $entrada["codigo_barra_herra"] ?>.png" style="max-width: 300px; height: auto; border: 2px solid #ffffff;"><?= $entrada["codigo_barra_herra"] ?>
                                                                         <td><?= $entrada["nom_tp_herra"] ?></td>
                                                                         <td><?= $entrada["nombre_herra"] ?></td>
                                                                         <td><?= $entrada["nom_marca"] ?></td>
@@ -85,28 +84,21 @@ $offset = ($page - 1) * $limit;
 
                                                                             $imageUrl = '../../images/' . $entrada["imagen"];
                                                                             ?>
-                                                                            <img src="<?= $imageUrl ?>"
-                                                                                alt="Imagen de herramienta"
-                                                                                style="max-width: 300px; height: auto; border: 2px solid #ffffff;">
+                                                                            <img src="<?= $imageUrl ?>" alt="Imagen de herramienta" style="max-width: 300px; height: auto; border: 2px solid #ffffff;">
                                                                         </td>
                                                                         <td><?= $entrada["fecha_adqui"] ?></td>
                                                                         <td><?= $entrada["cant_herra"] ?></td>
                                                                         <td><?= $entrada["dias"] ?></td>
-                                                                        <td><?= $entrada["fecha_entrega"] ?></td>    
-                                                                        <td><input type="checkbox" name="id_deta_presta[]"
-                                                                                value="<?= $entrada['id_deta_presta'] ?>"
-                                                                                onclick="checkLimit()"></td>
+                                                                        <td><?= $entrada["fecha_entrega"] ?></td>
+                                                                        <td><input type="checkbox" name="id_deta_presta[]" value="<?= $entrada['id_deta_presta'] ?>" onclick="checkLimit()"></td>
                                                                         </td>
                                                                     </tr>
-                                                                <?php }
-                                                                ; ?>
+                                                                <?php }; ?>
                                                             </tbody>
                                                         </table>
                                                     </div>
                                                     <br>
-                                                    <button type="submit" class="btn btn-orange" style="width: 50%;"
-                                                        name="documento" value="<?php echo $documento_usuario ?>"
-                                                        onclick="prepareAndRedirect()">Devolver Herramientas</button>
+                                                    <button type="submit" class="btn btn-orange" style="width: 50%;" name="documento" value="<?php echo $documento_usuario ?>" onclick="prepareAndRedirect()">Devolver Herramientas</button>
                                                 </form>
                                                 <br>
                                                 <a href="./index.php" class="btn btn-warning btn-sm mt-2" style="width: 10%;">Volver</a>

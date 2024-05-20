@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 16-05-2024 a las 08:09:08
+-- Tiempo de generación: 20-05-2024 a las 14:32:51
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -79,7 +79,8 @@ CREATE TABLE `empresa` (
 --
 
 INSERT INTO `empresa` (`nit_empre`, `nom_empre`, `direcc_empre`, `telefono`, `correo_empre`) VALUES
-('1234567-9', 'skateboards', 'lkslklsklks', '3154657895', 'sena@gmail.com');
+('1234567-9', 'skateboards', 'lkslklsklks', '3154657895', 'sena@gmail.com'),
+('899999034-1', 'mnaknknaknka', 'nknknkakna', '1311118161161', 'kakkakma@gmail.com');
 
 -- --------------------------------------------------------
 
@@ -189,6 +190,13 @@ CREATE TABLE `licencia` (
   `nit_empre` varchar(12) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Volcado de datos para la tabla `licencia`
+--
+
+INSERT INTO `licencia` (`licencia`, `esta_licen`, `fecha_ini`, `fecha_fin`, `nit_empre`) VALUES
+('6645f34e2fca6', 'activo', '2024-05-16', '2025-05-16', '899999034-1');
+
 -- --------------------------------------------------------
 
 --
@@ -281,6 +289,13 @@ CREATE TABLE `tp_herra` (
   `nit_empre` varchar(12) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Volcado de datos para la tabla `tp_herra`
+--
+
+INSERT INTO `tp_herra` (`id_tp_herra`, `nom_tp_herra`, `nit_empre`) VALUES
+(19, 'manual', '899999034-1');
+
 -- --------------------------------------------------------
 
 --
@@ -297,6 +312,16 @@ CREATE TABLE `tri_contra` (
   `nit_empre` varchar(10) NOT NULL,
   `accion_usu` varchar(20) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `tri_contra`
+--
+
+INSERT INTO `tri_contra` (`documento`, `id_tp_docu`, `nombre`, `apellido`, `contrasena`, `fecha`, `nit_empre`, `accion_usu`) VALUES
+(1110567986, 2, 'julian', 'calderon', '$2y$10$jbUGbmVjvExaWEvuBNKkM.GC28J3uTtUX1UhKcDlrFEiZ.T48ThPm', '2024-05-20 07:22:36', '899999034-', 'Actualización'),
+(1110567986, 2, 'cesar', 'calderon', '$2y$10$jbUGbmVjvExaWEvuBNKkM.GC28J3uTtUX1UhKcDlrFEiZ.T48ThPm', '2024-05-20 07:22:43', '899999034-', 'Actualización'),
+(1110567986, 2, 'cesar', 'esquivel', '$2y$10$jbUGbmVjvExaWEvuBNKkM.GC28J3uTtUX1UhKcDlrFEiZ.T48ThPm', '2024-05-20 07:22:51', '899999034-', 'Actualización'),
+(1110567986, 2, 'cesar', 'esquivel', '$2y$10$jbUGbmVjvExaWEvuBNKkM.GC28J3uTtUX1UhKcDlrFEiZ.T48ThPm', '2024-05-20 07:32:10', '899999034-', 'Actualización');
 
 -- --------------------------------------------------------
 
@@ -318,6 +343,13 @@ CREATE TABLE `usuario` (
   `id_esta_usu` tinyint(4) NOT NULL,
   `nit_empre` varchar(12) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `usuario`
+--
+
+INSERT INTO `usuario` (`documento`, `id_tp_docu`, `nombre`, `apellido`, `contrasena`, `correo`, `codigo_barras`, `fecha_registro`, `terminos`, `id_rol`, `id_esta_usu`, `nit_empre`) VALUES
+(28741078, 2, 'cesar', 'esquivel', '$2y$10$jbUGbmVjvExaWEvuBNKkM.GC28J3uTtUX1UhKcDlrFEiZ.T48ThPm', 'calderon@gmail.com', '66470677148bf9889', '2024-05-17', 'si', 1, 1, '899999034-1');
 
 --
 -- Disparadores `usuario`
@@ -480,31 +512,31 @@ ALTER TABLE `usuario`
 -- AUTO_INCREMENT de la tabla `detalle_prestamo`
 --
 ALTER TABLE `detalle_prestamo`
-  MODIFY `id_deta_presta` tinyint(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=109;
+  MODIFY `id_deta_presta` tinyint(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=122;
 
 --
 -- AUTO_INCREMENT de la tabla `deta_ficha`
 --
 ALTER TABLE `deta_ficha`
-  MODIFY `id_deta_ficha` tinyint(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=41;
+  MODIFY `id_deta_ficha` tinyint(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=43;
 
 --
 -- AUTO_INCREMENT de la tabla `deta_reporte`
 --
 ALTER TABLE `deta_reporte`
-  MODIFY `id_deta_reporte` tinyint(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=36;
+  MODIFY `id_deta_reporte` tinyint(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=44;
 
 --
 -- AUTO_INCREMENT de la tabla `entrada_usu`
 --
 ALTER TABLE `entrada_usu`
-  MODIFY `id_entrada` int(5) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=436;
+  MODIFY `id_entrada` int(5) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=445;
 
 --
 -- AUTO_INCREMENT de la tabla `formacion`
 --
 ALTER TABLE `formacion`
-  MODIFY `id_forma` tinyint(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=34;
+  MODIFY `id_forma` tinyint(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=37;
 
 --
 -- AUTO_INCREMENT de la tabla `jornada`
@@ -516,25 +548,25 @@ ALTER TABLE `jornada`
 -- AUTO_INCREMENT de la tabla `marca_herra`
 --
 ALTER TABLE `marca_herra`
-  MODIFY `id_marca` tinyint(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+  MODIFY `id_marca` tinyint(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
 -- AUTO_INCREMENT de la tabla `prestamo_herra`
 --
 ALTER TABLE `prestamo_herra`
-  MODIFY `id_presta` tinyint(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=106;
+  MODIFY `id_presta` tinyint(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=127;
 
 --
 -- AUTO_INCREMENT de la tabla `reporte`
 --
 ALTER TABLE `reporte`
-  MODIFY `id_reporte` tinyint(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=45;
+  MODIFY `id_reporte` tinyint(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=53;
 
 --
 -- AUTO_INCREMENT de la tabla `tp_herra`
 --
 ALTER TABLE `tp_herra`
-  MODIFY `id_tp_herra` tinyint(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
+  MODIFY `id_tp_herra` tinyint(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
 
 --
 -- Restricciones para tablas volcadas

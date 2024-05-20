@@ -57,7 +57,7 @@ $resultado_pagina = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                                                 <th>Formacion</th>
                                                                 <th>Ficha</th>
                                                                 <th>Jornada</th>
-                                                                <th colspan="3">Acción</th>
+                                                                <th colspan="4">Acción</th>
                                                             </tr>
                                                         </thead>
                                                         <tbody>
@@ -123,7 +123,7 @@ $resultado_pagina = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                                                         $color = 'orange';
                                                                         $mensaje = 'Inactivo';
                                                                         break;
-                                                                    }
+                                                                }
                                                                 ?>
                                                                 <tr class="<?= $estadoClase ?>" style="color: <?php echo $color; ?>">
                                                                     <td><?= $entrada["nombre"] ?></td>
@@ -140,6 +140,12 @@ $resultado_pagina = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                                                         <form method="post" action="./prestamo.php">
                                                                             <input type="hidden" name="documento" value="<?= $entrada["documento"] ?>">
                                                                             <button class="btn btn-success" type="submit" name="prest">Prestar Herramienta</button>
+                                                                        </form>
+                                                                    </td>
+                                                                    <td>
+                                                                        <form method="POST" action="./mas_tiempo.php">
+                                                                            <input type="hidden" name="documento" value="<?= $entrada["documento"] ?>">
+                                                                            <button class="btn btn-primary" type="submit" name="tiempo">Pedir Mas Tiempo</button>
                                                                         </form>
                                                                     </td>
                                                                     <td>

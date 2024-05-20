@@ -76,7 +76,8 @@ function redirectToPrestamoPage($message)
 
                                                                 ?>
                                                                     <tr style="background-color: <?= $colorFondo ?>;">
-                                                                        <td><?= $entrada["codigo_barra_herra"] ?></td>
+                                                                        <td><img src="../../images/<?= $entrada["codigo_barra_herra"] ?>.png" style="max-width: 300px; height: auto; border: 2px solid #ffffff;"><?= $entrada["codigo_barra_herra"] ?>
+                                                                        </td>
                                                                         <td><?= $entrada["nom_tp_herra"] ?></td>
                                                                         <td><?= $entrada["nombre_herra"] ?></td>
                                                                         <td><?= $entrada["nom_marca"] ?></td>

@@ -95,6 +95,56 @@ $hayPrestamo = $permi->rowCount() > 0; // Si la consulta devuelve filas, hay un 
 
                                                                     // Definir el color de fondo según el estado de la herramienta
                                                                     $colorFondo = ($entrada["esta_herra"] == 'disponible') ? '#c3e6cb' : '#f5c6cb';
+
+
+                                                                    // Determinar la clase CSS y el estado del botón según el estado_servi
+                                                                    $estadoClase = '';
+                                                                    $color = '';
+                                                                    $mensaje = '';
+                                                                    $botonInactivo = '';
+                                                                    $botonCancelar = '';
+                                                                    $activo = '';
+
+                                                                    // Comprobar si la hora de finalización ha pasado
+                                                                    $horaFinalizacionPasada = strtotime($entrada["fecha_entrega"]) < strtotime("now");
+
+                                                                    // Si la licencia está activa y la hora de finalización ha pasado
+                                                                    if ($entrada["estado_presta"] == 'prestado'  && $horaFinalizacionPasada) {
+                                                                        // Actualizar el estado de la licencia en la base de datos a 'inactivo'
+                                                                        $updateEstado = $conn->prepare("UPDATE detalle_prestamo SET estado_presta = 'tarde' WHERE id_deta_presta = :id_deta_presta");
+                                                                        $updateEstado->bindParam(':id_deta_presta', $entrada["id_deta_presta"], PDO::PARAM_INT);
+                                                                        $updateEstado->execute();
+
+                                                                        // Actualizar las variables para reflejar el nuevo estado
+                                                                        $estadoClase = 'table-warning';
+                                                                        $botonInactivo = 'disabled';
+                                                                        $color = 'orange';
+                                                                        $mensaje = 'Bloqueado';
+                                                                    } 
+                                                                    if ($entrada["estado_presta"] == 'incompleto'  && $horaFinalizacionPasada) {
+                                                                        // Actualizar el estado de la licencia en la base de datos a 'inactivo'
+                                                                        $updateEstado = $conn->prepare("UPDATE detalle_prestamo SET estado_presta = 'tarde' WHERE id_deta_presta = :id_deta_presta");
+                                                                        $updateEstado->bindParam(':id_deta_presta', $entrada["id_deta_presta"], PDO::PARAM_INT);
+                                                                        $updateEstado->execute();
+
+                                                                        // Actualizar las variables para reflejar el nuevo estado
+                                                                        $estadoClase = 'table-warning';
+                                                                        $botonInactivo = 'disabled';
+                                                                        $color = 'orange';
+                                                                        $mensaje = 'Bloqueado';
+                                                                    } 
+                                                                    if ($entrada["estado_presta"] == 'reportado una parte'  && $horaFinalizacionPasada) {
+                                                                        // Actualizar el estado de la licencia en la base de datos a 'inactivo'
+                                                                        $updateEstado = $conn->prepare("UPDATE detalle_prestamo SET estado_presta = 'tarde' WHERE id_deta_presta = :id_deta_presta");
+                                                                        $updateEstado->bindParam(':id_deta_presta', $entrada["id_deta_presta"], PDO::PARAM_INT);
+                                                                        $updateEstado->execute();
+
+                                                                        // Actualizar las variables para reflejar el nuevo estado
+                                                                        $estadoClase = 'table-warning';
+                                                                        $botonInactivo = 'disabled';
+                                                                        $color = 'orange';
+                                                                        $mensaje = 'Bloqueado';
+                                                                    } 
                                                                 ?>
                                                                     <tr style="background-color: <?= $colorFondo ?>;">
                                                                         <td><img src="../../images/<?= $entrada["codigo_barra_herra"] ?>.png" style="max-width: 300px; height: auto; border: 2px solid #ffffff;">
@@ -137,7 +187,7 @@ $hayPrestamo = $permi->rowCount() > 0; // Si la consulta devuelve filas, hay un 
 </div>
 <script>
     function checkLimit() {
-        const maxSelections = 3;
+        const maxSelections = 50;
         const checkboxes = document.querySelectorAll('input[type="checkbox"]');
         let checkedCount = 0;
 

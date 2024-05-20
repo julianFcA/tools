@@ -1,14 +1,13 @@
 <?php
 require_once 'template.php';
 
+$docu = $_SESSION['documento'];
+
 $limit = 100; // Número de filas por página
 $page = isset($_POST['page']) ? $_POST['page'] : 1; // Página actual
 
 // Calcula el offset basado en la página actual
 $offset = ($page - 1) * $limit;
-
-if (isset($_POST['documento'])) {
-    $documento_usuario = $_POST['documento'];
 
     $query = "SELECT 
         herramienta.*, 
@@ -23,14 +22,24 @@ if (isset($_POST['documento'])) {
     INNER JOIN prestamo_herra ON detalle_prestamo.id_presta = prestamo_herra.id_presta
     WHERE prestamo_herra.documento = :documento AND
           tp_herra.id_tp_herra >= 1 AND 
-          marca_herra.id_marca >= 1 AND detalle_prestamo.estado_presta = 'prestado' or detalle_prestamo.estado_presta = 'incompleto'  or detalle_prestamo.estado_presta= 'tarde' or detalle_prestamo.estado_presta = 'reportado una parte'";
+          marca_herra.id_marca >= 1 AND detalle_prestamo.estado_presta = 'prestado' or detalle_prestamo.estado_presta = 'incompleto' or detalle_prestamo.estado_presta = 'tarde'or detalle_prestamo.estado_presta = 'reportado una parte'";
 
     // Preparar y ejecutar la consulta
     $stmt = $conn->prepare($query);
-    $stmt->bindParam(':documento', $documento_usuario);
+    $stmt->bindParam(':documento', $docu);
     $result = $stmt->execute();
     $resultado_pagina = $stmt->fetchAll(PDO::FETCH_ASSOC);
-}
+
+?>
+
+<?php
+$permiso = "SELECT detalle_prestamo.*, prestamo_herra.* FROM prestamo_herra INNER JOIN detalle_prestamo ON prestamo_herra.id_presta = detalle_prestamo.id_presta WHERE detalle_prestamo.estado_presta = 'tarde' OR detalle_prestamo.estado_presta = 'bloqueado' OR detalle_prestamo.estado_presta = 'reportado' AND prestamo_herra.documento = :documento";
+$permi = $conn->prepare($permiso);
+$permi->bindParam(':documento', $docu, PDO::PARAM_STR);
+$permi->execute();
+
+$hayPrestamo = $permi->rowCount() > 0; // Si la consulta devuelve filas, hay un préstamo activo
+
 ?>
 
 <div class="content-wrapper">
@@ -48,10 +57,10 @@ if (isset($_POST['documento'])) {
                                     <div class="col-12">
                                         <div class="card">
                                             <div class="card-header">
-                                                <h4 class="card-title">Prestamo de Herramienta</h4>
+                                                <h4 class="card-title">Mas Tiempo de Prestamo de Herramienta</h4>
                                             </div>
                                             <div class="card-body">
-                                                <form action="termino_devo.php" method="post">
+                                                <form action="termino_tiempo.php" method="post">
                                                     <div class="table-responsive">
                                                         <!-- Tabla HTML para mostrar los resultados -->
                                                         <table id="example3" class="table table-striped table-bordered" style="width:100%">
@@ -72,12 +81,28 @@ if (isset($_POST['documento'])) {
                                                             <tbody>
                                                                 <?php
 
+                                                                function actualizarEstado($conn, $codigo_barra_herra, $cantidad)
+                                                                {
+                                                                    // Actualizar el estado de la herramienta dependiendo de la cantidad
+                                                                    $estado = ($cantidad == 0) ? 'prestado' : 'disponible';
+                                                                    $sql = "UPDATE herramienta SET esta_herra = :estado WHERE codigo_barra_herra = :codigo_barra";
+                                                                    $stmt = $conn->prepare($sql);
+                                                                    $stmt->bindParam(':estado', $estado);
+                                                                    $stmt->bindParam(':codigo_barra', $codigo_barra_herra);
+                                                                    $stmt->execute();
+                                                                }
+
                                                                 foreach ($resultado_pagina as $entrada) {
+                                                                    // Actualizar el estado y la cantidad de la herramienta
+                                                                    actualizarEstado($conn, $entrada["codigo_barra_herra"], $entrada["cantidad"]);
+
+                                                                    // Definir el color de fondo según el estado de la herramienta
+                                                                    $colorFondo = ($entrada["esta_herra"] == 'disponible') ? '#c3e6cb' : '#f5c6cb';
+
 
                                                                 ?>
                                                                     <tr style="background-color: <?= $colorFondo ?>;">
                                                                         <td><img src="../../images/<?= $entrada["codigo_barra_herra"] ?>.png" style="max-width: 300px; height: auto; border: 2px solid #ffffff;"><?= $entrada["codigo_barra_herra"] ?>
-                                                                        </td>
                                                                         <td><?= $entrada["nom_tp_herra"] ?></td>
                                                                         <td><?= $entrada["nombre_herra"] ?></td>
                                                                         <td><?= $entrada["nom_marca"] ?></td>
@@ -100,8 +125,7 @@ if (isset($_POST['documento'])) {
                                                         </table>
                                                     </div>
                                                     <br>
-                                                    <button type="submit" class="btn btn-orange" style="width: 50%;" name="documento" value="<?php echo $documento_usuario ?>" onclick="prepareAndRedirect()">Devolver Herramientas</button>
-
+                                                    <button type="submit" class="btn btn-orange" style="width: 50%;" name="documento" value="<?php echo $_SESSION['documento'] ?>" onclick="prepareAndRedirect()" <?php if ($hayPrestamo) echo 'disabled'; ?>>Pedir Mas Tiempo</button>
                                                 </form>
                                                 <br>
                                                 <a href="./index.php" class="btn btn-warning btn-sm mt-2" style="width: 10%;">Volver</a>

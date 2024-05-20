@@ -133,7 +133,7 @@ if (isset($_POST['documento'])) {
 </div>
 <script>
 function checkLimit() {
-    const maxSelections = 3;
+    const maxSelections = 20;
     const checkboxes = document.querySelectorAll('input[type="checkbox"]');
     let checkedCount = 0;
 

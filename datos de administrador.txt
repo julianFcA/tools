@@ -3,3 +3,9 @@ Datos de superadministrador.
 Codigo de ingreso:
 Cesar_esquivel2024
 
+
+Datos de administrado
+
+documento. 28741078
+nombre. cesar
+contraseña. 2698975K*

@@ -5,7 +5,6 @@ require_once 'template.php'
 
 <?php
 
-
 if (isset($_GET['licencia']) && isset($_GET['documento'])) {
     $documento = $_GET["documento"];
     $licencia = $_GET["licencia"];
