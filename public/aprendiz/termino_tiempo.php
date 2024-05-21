@@ -10,7 +10,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id_deta_presta']) && 
     redirectToPrestamoPage("Debes seleccionar al menos una herramienta del inventario.");
     echo '<script>window.location="./index.php"</script>';
 }
-$documento = $_POST['documento'];
 // Consulta para recuperar los detalles de las herramientas seleccionadas
 $query = "SELECT herramienta.*, 
                  tp_herra.nom_tp_herra, 
@@ -109,8 +108,9 @@ function redirectToPrestamoPage($message)
                                                             </select>
                                                         </div>
                                                         
-                                                        <input type="submit" name="action" value="Devolver Herramienta" class="btn btn-success" style="width: 30%; display: inline-block; margin-right: 2%;">
-                                                        <input type="submit" name="action" value="Reportar Herramienta" class="btn btn-danger" style="width: 30%; display: inline-block;">
+                                                        <input type="submit" name="action" value="Mas Tiempo" class="btn btn-success" style="width: 30%; display: inline-block; margin-right: 2%;">
+                                                        <input type="hidden" name="MM_register"
+                                                        value="<?php echo $_SESSION['documento'] ?>">
                                                 </form>
                                             </div>
                                         </div>

@@ -16,5 +16,5 @@ contraseña. 2698975K*
 
 Interfaz de aprendiz.
 
-codigo de confirmacion para devolver un herramienta.
+codigo de confirmacion para devolver una herramienta.
 codigo: instructordeturno2024

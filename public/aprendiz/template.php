@@ -158,7 +158,7 @@ $_SESSION['last_activity'] = time();
                             <li><a class="waves-effect waves-dark" href="index.php"><i class="icon-arrow-right"></i>Mi Actividad</a></li>
                             <li><a class="waves-effect waves-dark" href="herramienta.php"><i class="icon-arrow-right"></i> Herramienta</a></li>
                             <li><a class="waves-effect waves-dark" href="prestamo.php"><i class="icon-arrow-right"></i>Adquirir Herramienta</a></li>
-                            <li><a class="waves-effect waves-dark" href="mas_tiempo.php"><i class="icon-arrow-right"></i> Pedir Mas Tiemppo</a></li>
+                            <li><a class="waves-effect waves-dark" href="mas_tiempo.php"><i class="icon-arrow-right"></i> Pedir Mas Tiempo</a></li>
                             <li><a class="waves-effect waves-dark" href="apren.php"><i class="icon-arrow-right"></i> Prestamos </a></li>
                             <li><a class="waves-effect waves-dark" href="estado_apren.php"><i class="icon-arrow-right"></i> Estado de Prestamos </a></li>
                             <li><a class="waves-effect waves-dark" href="devolucion.php"><i class="icon-arrow-right"></i> Devolucion</a></li>
