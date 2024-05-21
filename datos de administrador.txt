@@ -1,11 +1,20 @@
+
 Datos de superadministrador.
 
 Codigo de ingreso:
 Cesar_esquivel2024
 
 
-Datos de administrado
+
+Datos de administrador
 
 documento. 28741078
 nombre. cesar
 contraseña. 2698975K*
+
+
+
+Interfaz de aprendiz.
+
+codigo de confirmacion para devolver un herramienta.
+codigo: instructordeturno2024
