@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 20-05-2024 a las 14:32:51
+-- Tiempo de generación: 22-05-2024 a las 01:14:42
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -28,10 +28,10 @@ SET time_zone = "+00:00";
 --
 
 CREATE TABLE `detalle_prestamo` (
-  `id_deta_presta` tinyint(4) NOT NULL,
+  `id_deta_presta` int(4) NOT NULL,
   `cant_herra` tinyint(4) NOT NULL,
   `codigo_barra_herra` varchar(500) NOT NULL,
-  `id_presta` tinyint(4) NOT NULL,
+  `id_presta` int(4) NOT NULL,
   `estado_presta` enum('prestado','incompleto','devuelto','reportado','tarde','bloqueado','reportado una parte') NOT NULL,
   `cant_devolucion` tinyint(4) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -55,8 +55,8 @@ CREATE TABLE `deta_ficha` (
 --
 
 CREATE TABLE `deta_reporte` (
-  `id_deta_reporte` tinyint(4) NOT NULL,
-  `id_reporte` tinyint(4) NOT NULL,
+  `id_deta_reporte` int(4) NOT NULL,
+  `id_reporte` int(4) NOT NULL,
   `codigo_barra_herra` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -71,7 +71,7 @@ CREATE TABLE `empresa` (
   `nom_empre` text NOT NULL,
   `direcc_empre` varchar(30) NOT NULL,
   `telefono` varchar(14) NOT NULL,
-  `correo_empre` varchar(30) NOT NULL
+  `correo_empre` varchar(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -79,8 +79,7 @@ CREATE TABLE `empresa` (
 --
 
 INSERT INTO `empresa` (`nit_empre`, `nom_empre`, `direcc_empre`, `telefono`, `correo_empre`) VALUES
-('1234567-9', 'skateboards', 'lkslklsklks', '3154657895', 'sena@gmail.com'),
-('899999034-1', 'mnaknknaknka', 'nknknkakna', '1311118161161', 'kakkakma@gmail.com');
+('899999034-1', 'sena centro de aprendizaje', '141- Sector, Cra. 45 Sur #1255', '2709600', '   servicioalciudadano@sena.edu.co');
 
 -- --------------------------------------------------------
 
@@ -216,7 +215,7 @@ CREATE TABLE `marca_herra` (
 --
 
 CREATE TABLE `prestamo_herra` (
-  `id_presta` tinyint(4) NOT NULL,
+  `id_presta` int(4) NOT NULL,
   `fecha_adqui` date NOT NULL,
   `dias` tinyint(4) NOT NULL,
   `fecha_entrega` date NOT NULL,
@@ -230,9 +229,9 @@ CREATE TABLE `prestamo_herra` (
 --
 
 CREATE TABLE `reporte` (
-  `id_reporte` tinyint(4) NOT NULL,
+  `id_reporte` int(4) NOT NULL,
   `descripcion` text NOT NULL,
-  `id_deta_presta` tinyint(4) NOT NULL,
+  `id_deta_presta` int(4) NOT NULL,
   `documento` bigint(11) NOT NULL,
   `fecha` date NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -289,13 +288,6 @@ CREATE TABLE `tp_herra` (
   `nit_empre` varchar(12) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Volcado de datos para la tabla `tp_herra`
---
-
-INSERT INTO `tp_herra` (`id_tp_herra`, `nom_tp_herra`, `nit_empre`) VALUES
-(19, 'manual', '899999034-1');
-
 -- --------------------------------------------------------
 
 --
@@ -312,16 +304,6 @@ CREATE TABLE `tri_contra` (
   `nit_empre` varchar(10) NOT NULL,
   `accion_usu` varchar(20) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Volcado de datos para la tabla `tri_contra`
---
-
-INSERT INTO `tri_contra` (`documento`, `id_tp_docu`, `nombre`, `apellido`, `contrasena`, `fecha`, `nit_empre`, `accion_usu`) VALUES
-(1110567986, 2, 'julian', 'calderon', '$2y$10$jbUGbmVjvExaWEvuBNKkM.GC28J3uTtUX1UhKcDlrFEiZ.T48ThPm', '2024-05-20 07:22:36', '899999034-', 'Actualización'),
-(1110567986, 2, 'cesar', 'calderon', '$2y$10$jbUGbmVjvExaWEvuBNKkM.GC28J3uTtUX1UhKcDlrFEiZ.T48ThPm', '2024-05-20 07:22:43', '899999034-', 'Actualización'),
-(1110567986, 2, 'cesar', 'esquivel', '$2y$10$jbUGbmVjvExaWEvuBNKkM.GC28J3uTtUX1UhKcDlrFEiZ.T48ThPm', '2024-05-20 07:22:51', '899999034-', 'Actualización'),
-(1110567986, 2, 'cesar', 'esquivel', '$2y$10$jbUGbmVjvExaWEvuBNKkM.GC28J3uTtUX1UhKcDlrFEiZ.T48ThPm', '2024-05-20 07:32:10', '899999034-', 'Actualización');
 
 -- --------------------------------------------------------
 
@@ -349,7 +331,11 @@ CREATE TABLE `usuario` (
 --
 
 INSERT INTO `usuario` (`documento`, `id_tp_docu`, `nombre`, `apellido`, `contrasena`, `correo`, `codigo_barras`, `fecha_registro`, `terminos`, `id_rol`, `id_esta_usu`, `nit_empre`) VALUES
-(28741078, 2, 'cesar', 'esquivel', '$2y$10$jbUGbmVjvExaWEvuBNKkM.GC28J3uTtUX1UhKcDlrFEiZ.T48ThPm', 'calderon@gmail.com', '66470677148bf9889', '2024-05-17', 'si', 1, 1, '899999034-1');
+(28741078, 2, 'cesar', 'esquivel', '$2y$10$jbUGbmVjvExaWEvuBNKkM.GC28J3uTtUX1UhKcDlrFEiZ.T48ThPm', 'calderon@gmail.com', '66470677148bf9889', '2024-05-17', 'si', 1, 1, '899999034-1'),
+(111056789, 2, 'lesley', 'aguirre', '$2y$10$1fp5c024QEmidZVTAhC03uzXsMXbXvyc0Ncr4wHblEC1lDQTV6mcm', 'aguirre@gmail.com', '664cc9d97f9bc1914', '2024-05-21', 'si', 3, 1, '899999034-1'),
+(111056879, 1, 'angel', 'rico', '$2y$10$3MEEYlooDXAf7Hubce4teuTJMexf2gvPmtObns2Jj/A3dwtdLGQAy', 'rico@gmail.com', '664d032e3e9a98910', '2024-05-21', 'si', 3, 1, '899999034-1'),
+(1110567984, 2, 'ana', 'cano', '$2y$10$AEQ/s8mTGmc9wJUFcy/pW.nzYJ6pzbMWbi0jreKgsmWbomh5mhQjO', 'cano@gmail.com', '664d02e34b43c1454', '2024-05-21', 'si', 2, 1, '899999034-1'),
+(1110567986, 2, 'julian', 'calderon', '$2y$10$Vxey6kTqSeaj/tpx.5xiWOhkxS3BwxtUm4onkQk/ujFgAjVcEnQhq', 'jfcalderona16@gmail.com', '664cc9902085a5229', '2024-05-21', 'si', 2, 1, '899999034-1');
 
 --
 -- Disparadores `usuario`
@@ -381,8 +367,8 @@ DELIMITER ;
 --
 ALTER TABLE `detalle_prestamo`
   ADD PRIMARY KEY (`id_deta_presta`),
-  ADD KEY `id_presta` (`id_presta`),
-  ADD KEY `codigo_barra_herra` (`codigo_barra_herra`);
+  ADD KEY `codigo_barra_herra` (`codigo_barra_herra`),
+  ADD KEY `id_presta` (`id_presta`);
 
 --
 -- Indices de la tabla `deta_ficha`
@@ -397,8 +383,8 @@ ALTER TABLE `deta_ficha`
 --
 ALTER TABLE `deta_reporte`
   ADD PRIMARY KEY (`id_deta_reporte`),
-  ADD KEY `id_reporte` (`id_reporte`),
-  ADD KEY `codigo_barra_herra` (`codigo_barra_herra`);
+  ADD KEY `codigo_barra_herra` (`codigo_barra_herra`),
+  ADD KEY `id_reporte` (`id_reporte`);
 
 --
 -- Indices de la tabla `empresa`
@@ -473,8 +459,8 @@ ALTER TABLE `prestamo_herra`
 --
 ALTER TABLE `reporte`
   ADD PRIMARY KEY (`id_reporte`),
-  ADD KEY `id_deta_presta` (`id_deta_presta`),
-  ADD KEY `documento` (`documento`);
+  ADD KEY `documento` (`documento`),
+  ADD KEY `id_deta_presta` (`id_deta_presta`);
 
 --
 -- Indices de la tabla `rol`
@@ -512,31 +498,31 @@ ALTER TABLE `usuario`
 -- AUTO_INCREMENT de la tabla `detalle_prestamo`
 --
 ALTER TABLE `detalle_prestamo`
-  MODIFY `id_deta_presta` tinyint(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=122;
+  MODIFY `id_deta_presta` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=124;
 
 --
 -- AUTO_INCREMENT de la tabla `deta_ficha`
 --
 ALTER TABLE `deta_ficha`
-  MODIFY `id_deta_ficha` tinyint(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=43;
+  MODIFY `id_deta_ficha` tinyint(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=47;
 
 --
 -- AUTO_INCREMENT de la tabla `deta_reporte`
 --
 ALTER TABLE `deta_reporte`
-  MODIFY `id_deta_reporte` tinyint(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=44;
+  MODIFY `id_deta_reporte` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=44;
 
 --
 -- AUTO_INCREMENT de la tabla `entrada_usu`
 --
 ALTER TABLE `entrada_usu`
-  MODIFY `id_entrada` int(5) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=445;
+  MODIFY `id_entrada` int(5) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=458;
 
 --
 -- AUTO_INCREMENT de la tabla `formacion`
 --
 ALTER TABLE `formacion`
-  MODIFY `id_forma` tinyint(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=37;
+  MODIFY `id_forma` tinyint(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=40;
 
 --
 -- AUTO_INCREMENT de la tabla `jornada`
@@ -548,25 +534,25 @@ ALTER TABLE `jornada`
 -- AUTO_INCREMENT de la tabla `marca_herra`
 --
 ALTER TABLE `marca_herra`
-  MODIFY `id_marca` tinyint(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `id_marca` tinyint(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 
 --
 -- AUTO_INCREMENT de la tabla `prestamo_herra`
 --
 ALTER TABLE `prestamo_herra`
-  MODIFY `id_presta` tinyint(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=127;
+  MODIFY `id_presta` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=129;
 
 --
 -- AUTO_INCREMENT de la tabla `reporte`
 --
 ALTER TABLE `reporte`
-  MODIFY `id_reporte` tinyint(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=53;
+  MODIFY `id_reporte` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=53;
 
 --
 -- AUTO_INCREMENT de la tabla `tp_herra`
 --
 ALTER TABLE `tp_herra`
-  MODIFY `id_tp_herra` tinyint(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
+  MODIFY `id_tp_herra` tinyint(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 
 --
 -- Restricciones para tablas volcadas
@@ -576,8 +562,8 @@ ALTER TABLE `tp_herra`
 -- Filtros para la tabla `detalle_prestamo`
 --
 ALTER TABLE `detalle_prestamo`
-  ADD CONSTRAINT `detalle_prestamo_ibfk_2` FOREIGN KEY (`id_presta`) REFERENCES `prestamo_herra` (`id_presta`),
-  ADD CONSTRAINT `detalle_prestamo_ibfk_3` FOREIGN KEY (`codigo_barra_herra`) REFERENCES `herramienta` (`codigo_barra_herra`);
+  ADD CONSTRAINT `detalle_prestamo_ibfk_3` FOREIGN KEY (`codigo_barra_herra`) REFERENCES `herramienta` (`codigo_barra_herra`),
+  ADD CONSTRAINT `detalle_prestamo_ibfk_4` FOREIGN KEY (`id_presta`) REFERENCES `prestamo_herra` (`id_presta`);
 
 --
 -- Filtros para la tabla `deta_ficha`
@@ -590,8 +576,8 @@ ALTER TABLE `deta_ficha`
 -- Filtros para la tabla `deta_reporte`
 --
 ALTER TABLE `deta_reporte`
-  ADD CONSTRAINT `deta_reporte_ibfk_1` FOREIGN KEY (`id_reporte`) REFERENCES `reporte` (`id_reporte`),
-  ADD CONSTRAINT `deta_reporte_ibfk_2` FOREIGN KEY (`codigo_barra_herra`) REFERENCES `herramienta` (`codigo_barra_herra`);
+  ADD CONSTRAINT `deta_reporte_ibfk_2` FOREIGN KEY (`codigo_barra_herra`) REFERENCES `herramienta` (`codigo_barra_herra`),
+  ADD CONSTRAINT `deta_reporte_ibfk_3` FOREIGN KEY (`id_reporte`) REFERENCES `reporte` (`id_reporte`);
 
 --
 -- Filtros para la tabla `entrada_usu`
@@ -630,8 +616,8 @@ ALTER TABLE `prestamo_herra`
 -- Filtros para la tabla `reporte`
 --
 ALTER TABLE `reporte`
-  ADD CONSTRAINT `reporte_ibfk_2` FOREIGN KEY (`id_deta_presta`) REFERENCES `detalle_prestamo` (`id_deta_presta`),
-  ADD CONSTRAINT `reporte_ibfk_3` FOREIGN KEY (`documento`) REFERENCES `usuario` (`documento`);
+  ADD CONSTRAINT `reporte_ibfk_3` FOREIGN KEY (`documento`) REFERENCES `usuario` (`documento`),
+  ADD CONSTRAINT `reporte_ibfk_4` FOREIGN KEY (`id_deta_presta`) REFERENCES `detalle_prestamo` (`id_deta_presta`);
 
 --
 -- Filtros para la tabla `usuario`
