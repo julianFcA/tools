@@ -37,45 +37,47 @@ $sql ="SELECT empresa.nit_empre, empresa.nom_empre, empresa.direcc_empre, empres
 // Ejecuta la consulta
 $result = $conn->query($sql);
 
+
 // Verifica si hay resultados
 if ($result->num_rows > 0) {
     // Agrega un título al reporte
-    $html = '<html><head><title>Reporte de Instructores</title>';
+    $html = '<html><head><title>Aprendiz</title>';
     $html .= '<style>
-                table { width: 100%; border-collapse: collapse; }
-                th, td { padding: 5px; text-align: left; border: 1px solid #ddd; font-size: 10px; }
+                table { width: 100%; border-collapse: collapse; page-break-inside: auto; }
+                th, td { padding: 4px; text-align: left; border: 1px solid #ddd; font-size: 8px; word-wrap: break-word; }
                 th { background-color: #f2f2f2; }
-                h1 { text-align: center; font-size: 14px; }
+                tr { page-break-inside: avoid; page-break-after: auto; }
+                h1 { text-align: center; font-size: 12px; }
             </style>';
     $html .= '</head><body>';
-    $html .= '<h1>Reporte de Instructores</h1>';
-    // Continúa con el resto del HTML para la tabla y los resultados
+    $html .= '<h1>Aprendiz</h1>';
 
     // Crea una variable para almacenar el HTML de la tabla
-    $html .= '<table><tr><th>Nombre Usuario</th><th>Apellido Usuario</th><th>Documento Usuario</th><th>Correo Usuario</th><th>Código de Barras</th><th>Fecha Registro</th><th>Formacion</th><th>Ficha</th><th>Jornada</th></tr>';
+    $html .= '<table><thead><tr><th>Nombre Usuario</th><th>Apellido Usuario</th><th>Tipo de Documento</th><th>Documento Usuario</th><th>Correo Usuario</th><th>Código de Barras</th><th>Fecha Registro</th><th>Formacion</th><th>Ficha</th><th>Jornada</th></tr></thead><tbody>';
 
-    // Itera sobre los resultados y agrega filas a la tabla
-    while($row = $result->fetch_assoc()) {
-        $html .= '<tr>';
-        foreach($row as $value) {
-            $html .= '<td>' . htmlspecialchars($value) . '</td>';
-        }
-        $html .= '</tr>';
+    while ($row = $result->fetch_assoc()) {
+        $html .= '<tr>
+                    <td>' . htmlspecialchars($row['nombre']) . '</td>
+                    <td>' . htmlspecialchars($row['apellido']) . '</td>
+                    <td>' . htmlspecialchars($row['nom_tp_docu']) . '</td>
+                    <td>' . htmlspecialchars($row['documento']) . '</td>
+                    <td>' . htmlspecialchars($row['correo']) . '</td>
+                    <td>' . htmlspecialchars($row['codigo_barras']) . '</td>
+                    <td>' . htmlspecialchars($row['fecha_registro']) . '</td>
+                    <td>' . htmlspecialchars($row['nom_forma']) . '</td>
+                    <td>' . htmlspecialchars($row['ficha']) . '</td>
+                    <td>' . htmlspecialchars($row['tp_jornada']) . '</td>
+                  </tr>';
     }
-    $html .= '</table></body></html>';
+    $html .= '</tbody></table></body></html>';
 
-    // Crea un objeto HTML2PDF con tamaño de hoja Carta (Letter)
-    $html2pdf = new Html2Pdf('P', 'Letter', 'es', true, 'UTF-8', array(5, 5, 5, 5));
-    
-    // Genera el PDF
-    $html2pdf->writeHTML($html); // Inserta el HTML en el PDF
-    $html2pdf->output('reporte_instructores.pdf', 'D'); // Genera el PDF y lo descarga
-
+    $html2pdf = new Html2Pdf('L', 'LETTER', 'es', true, 'UTF-8', array(5, 5, 5, 5));
+    $html2pdf->writeHTML($html);
+    $html2pdf->output('aprendiz.pdf', 'D');
 } else {
     echo '<script>alert("No se encontraron resultados.");</script>';
     echo '<script>window.location="./index.php"</script>';
 }
 
-// Cierra la conexión
 $conn->close();
 ?>

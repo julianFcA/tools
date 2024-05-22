@@ -31,7 +31,7 @@ if (isset($_POST["MM_register"]) && $_POST["MM_register"] == "formRegister") {
         $errors[] = "La dirección debe tener entre 3 y 40 caracteres.";
     }
 
-    if (strlen($telefono) < 8 || strlen($telefono) > 13) {
+    if (strlen($telefono) < 7 || strlen($telefono) > 13) {
         $errors[] = "El teléfono debe tener entre 8 y 13 caracteres.";
     }
 

@@ -91,6 +91,7 @@ $_SESSION['last_activity'] = time();
         <!-- Este es un botón que, al ser presionado, llama a la función JavaScript "validarCodigo()". -->
     </div>
 </div>
+
 <body>
   <div class="hero_area">
     <!-- header section strats -->

@@ -12,7 +12,6 @@ $dbname = "herramientas";
 session_start();
 $nit= $_SESSION['nit_empre'] ;
 
-
 // Crea una conexión
 $conn = new mysqli($servername, $username, $password, $dbname);
 
@@ -40,44 +39,50 @@ $sql = "SELECT usuario.nombre, usuario.apellido, usuario.documento, usuario.corr
 // Ejecuta la consulta
 $result = $conn->query($sql);
 
-// Verifica si hay resultados
 if ($result->num_rows > 0) {
-    // Agrega un título al reporte
-    $html = '<html><head><title>Reporte de Ingreso de Instructores</title>';
+    $html = '<html><head><title>Ingreso Instructores</title>';
     $html .= '<style>
-                table { width: 100%; border-collapse: collapse; }
-                th, td { padding: 5px; text-align: left; border: 1px solid #ddd; font-size: 10px; }
+                table { width: 100%; border-collapse: collapse; page-break-inside: auto; }
+                th, td { padding: 5px; text-align: left; border: 1px solid #ddd; font-size: 9px; word-wrap: break-word; }
                 th { background-color: #f2f2f2; }
+                tr { page-break-inside: avoid; page-break-after: auto; }
                 h1 { text-align: center; font-size: 14px; }
             </style>';
     $html .= '</head><body>';
-    $html .= '<h1>Reporte de Ingreso de Instructores</h1>';
-    // Crea una tabla para mostrar los resultados
-    $html .= '<table><tr><th>Nombre Usuario</th><th>Apellido Usuario</th><th>Tipo de Documento</th><th>Documento Usuario</th><th>Formacion</th><th>Ficha</th><th>Jornada</th><th>Ultimo Ingreso</th></tr>';
+    $html .= '<h1>Ingreso Instructores</h1>';
+    $html .= '<table><thead><tr>
+                <th>Nombre</th>
+                <th>Apellido</th>
+                <th>Tipo de Documento</th>
+                <th>Documento</th>
+                <th>Formación</th>
+                <th>Ficha</th>
+                <th>Jornada</th>
+                <th>Ultimo Ingreso</th>
+             </tr></thead><tbody>';
 
-    // Itera sobre los resultados y agrega filas a la tabla
-    while($row = $result->fetch_assoc()) {
-        $html .= '<tr>';
-        foreach($row as $value) {
-            $html .= '<td>' . htmlspecialchars($value) . '</td>';
-        }
-        $html .= '</tr>';
+
+    while ($row = $result->fetch_assoc()) {
+        $html .= '<tr>
+                    <td>' . htmlspecialchars($row['nombre']) . '</td>
+                    <td>' . htmlspecialchars($row['apellido']) . '</td>
+                    <td>' . htmlspecialchars($row['nom_tp_docu']) . '</td>
+                    <td>' . htmlspecialchars($row['documento']) . '</td>
+                    <td>' . htmlspecialchars($row['nom_forma']) . '</td>
+                    <td>' . htmlspecialchars($row['ficha']) . '</td>
+                    <td>' . htmlspecialchars($row['tp_jornada']) . '</td>
+                    <td>' . htmlspecialchars($row['fecha_entrada']) . '</td>
+                  </tr>';
     }
-    $html .= '</table></body></html>';
+    $html .= '</tbody></table></body></html>';
 
-    // Crea un objeto HTML2PDF con tamaño de hoja Carta (Letter)
-    $html2pdf = new Html2Pdf('P', 'Letter', 'es', true, 'UTF-8', array(5, 5, 5, 5));
-
-
-    // Genera el PDF
-    $html2pdf->writeHTML($html); // Inserta el HTML en el PDF
-    $html2pdf->output('reporte_ingreso_instructores.pdf', 'D'); // Genera el PDF y lo descarga
-
+    $html2pdf = new Html2Pdf('P', 'Letter', 'es', true, 'UTF-8', array(5, 5, 5));
+    $html2pdf->writeHTML($html);
+    $html2pdf->output('ingreso_instructores.pdf', 'D');
 } else {
     echo '<script>alert("No se encontraron resultados.");</script>';
-    echo '<script>window.location="./ingreso_instru.php"</script>';
+    echo '<script>window.location="./index.php"</script>';
 }
 
-// Cierra la conexión
 $conn->close();
 ?>

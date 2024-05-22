@@ -134,8 +134,8 @@ try {
                     <td>${json_data.nom_forma}</td>
                     <td>${json_data.ficha}</td>
                     <td>${json_data.tp_jornada}</td>
-                    <td>${json_data.id_presta}</td>
                     <td>${json_data.nombre_herra}</td>
+                    <td>${json_data.id_presta}</td>
                     <td>${json_data.fecha_adqui}</td>
                     <td>${json_data.dias}</td>
                     <td>${json_data.fecha_entrega}</td>
