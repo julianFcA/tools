@@ -5,6 +5,7 @@ require '../../vendor/autoload.php';
 
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use PhpOffice\PhpSpreadsheet\Style;
 
 
 // Crea un nuevo objeto Spreadsheet
@@ -56,11 +57,25 @@ foreach ($tablas as $tabla) {
             if (empty($columnas)) {
                 $columnas = array_keys($row);
                 $sheet->fromArray($columnas, null, 'A1');
+
+                // Aplica formato a los encabezados
+                $headerStyle = [
+                    'font' => ['bold' => true],
+                    'fill' => ['fillType' => Style\Fill::FILL_SOLID, 'startColor' => ['rgb' => 'F0F0F0']],
+                    'borders' => ['allBorders' => ['borderStyle' => Style\Border::BORDER_THIN]],
+                ];
+                $sheet->getStyle('A1:' . $sheet->getHighestColumn() . '1')->applyFromArray($headerStyle);
             }
             // Agrega los datos a la hoja
             $sheet->fromArray($row, null, 'A' . ($sheet->getHighestRow() + 1));
         }
     }
+}
+
+
+// Autoajustar el ancho de las columnas
+foreach(range('A', $sheet->getHighestDataColumn()) as $col) {
+    $sheet->getColumnDimension($col)->setAutoSize(true);
 }
 
 

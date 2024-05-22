@@ -43,28 +43,31 @@ $result = $conn->query($sql);
 // Verifica si hay resultados
 if ($result->num_rows > 0) {
     // Agrega un título al reporte
-    $html = '<html><head><title>Reporte de Ingreso de Instructores</title></head><body>';
+    $html = '<html><head><title>Reporte de Ingreso de Instructores</title>';
+    $html .= '<style>
+                table { width: 100%; border-collapse: collapse; }
+                th, td { padding: 5px; text-align: left; border: 1px solid #ddd; font-size: 10px; }
+                th { background-color: #f2f2f2; }
+                h1 { text-align: center; font-size: 14px; }
+            </style>';
+    $html .= '</head><body>';
     $html .= '<h1>Reporte de Ingreso de Instructores</h1>';
     // Crea una tabla para mostrar los resultados
-    $html .= '<table border="1"><tr><th>Nombre Usuario</th><th>Apellido Usuario</th><th>Tipo de Documento</th><th>Documento Usuario</th><th>Formacion</th><th>Ficha</th><th>Jornada</th><th>Ultimo Ingreso</th></tr>';
+    $html .= '<table><tr><th>Nombre Usuario</th><th>Apellido Usuario</th><th>Tipo de Documento</th><th>Documento Usuario</th><th>Formacion</th><th>Ficha</th><th>Jornada</th><th>Ultimo Ingreso</th></tr>';
 
     // Itera sobre los resultados y agrega filas a la tabla
-    while ($row = $result->fetch_assoc()) {
+    while($row = $result->fetch_assoc()) {
         $html .= '<tr>';
-        $html .= '<td>' . $row['nombre'] . '</td>';
-        $html .= '<td>' . $row['apellido'] . '</td>';
-        $html .= '<td>' . $row['nom_tp_docu'] . '</td>';
-        $html .= '<td>' . $row['documento'] . '</td>';
-        $html .= '<td>' . $row['nom_forma'] . '</td>';
-        $html .= '<td>' . $row['ficha'] . '</td>';
-        $html .= '<td>' . $row['tp_jornada'] . '</td>';
-        $html .= '<td>' . $row['fecha_entrada'] . '</td>';
+        foreach($row as $value) {
+            $html .= '<td>' . htmlspecialchars($value) . '</td>';
+        }
         $html .= '</tr>';
     }
     $html .= '</table></body></html>';
 
     // Crea un objeto HTML2PDF con tamaño de hoja Carta (Letter)
-    $html2pdf = new Html2Pdf('P', 'Letter');
+    $html2pdf = new Html2Pdf('P', 'Letter', 'es', true, 'UTF-8', array(5, 5, 5, 5));
+
 
     // Genera el PDF
     $html2pdf->writeHTML($html); // Inserta el HTML en el PDF

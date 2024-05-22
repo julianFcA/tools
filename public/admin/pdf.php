@@ -30,26 +30,31 @@ $result = $conn->query($sql);
 // Verifica si hay resultados
 if ($result->num_rows > 0) {
     // Agrega un título al reporte
-    $html = '<html><head><title>Reporte de Instructores</title></head><body>';
+    $html = '<html><head><title>Reporte de Instructores</title>';
+    $html .= '<style>
+                table { width: 100%; border-collapse: collapse; }
+                th, td { padding: 5px; text-align: left; border: 1px solid #ddd; font-size: 10px; }
+                th { background-color: #f2f2f2; }
+                h1 { text-align: center; font-size: 14px; }
+            </style>';
+    $html .= '</head><body>';
     $html .= '<h1>Reporte de Instructores</h1>';
     // Continúa con el resto del HTML para la tabla y los resultados
 
     // Crea una variable para almacenar el HTML de la tabla
-    $html .= '<table border="1"><tr><th>Nombre Usuario</th><th>Apellido Usuario</th><th>Documento Usuario</th><th>Correo Usuario</th><th>Código de Barras</th><th>Fecha Registro</th><th>Formacion</th><th>Ficha</th><th>Jornada</th></tr>';
+    $html .= '<table><tr><th>Nombre Usuario</th><th>Apellido Usuario</th><th>Documento Usuario</th><th>Correo Usuario</th><th>Código de Barras</th><th>Fecha Registro</th><th>Formacion</th><th>Ficha</th><th>Jornada</th></tr>';
 
-    // Itera sobre los resultados y agrega filas a la tabla
     while($row = $result->fetch_assoc()) {
         $html .= '<tr>';
         foreach($row as $value) {
-            $html .= '<td>' . $value . '</td>';
+            $html .= '<td>' . htmlspecialchars($value) . '</td>';
         }
         $html .= '</tr>';
     }
     $html .= '</table></body></html>';
 
     // Crea un objeto HTML2PDF con tamaño de hoja Carta (Letter)
-    $html2pdf = new Html2Pdf('P', 'Letter');
-
+    $html2pdf = new Html2Pdf('P', 'Letter', 'es', true, 'UTF-8', array(5, 5, 5, 5));
     // Genera el PDF
     $html2pdf->writeHTML($html); // Inserta el HTML en el PDF
     $html2pdf->output('reporte_instructores.pdf', 'D'); // Genera el PDF y lo descarga
