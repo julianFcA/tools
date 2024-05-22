@@ -18,6 +18,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") { // Verificar si se envió el formula
     $descripcion = $_POST['descripcion'];
     $cantidad = $_POST['cantidad'];
 
+    if (strlen($nombre_herra) < 3 || strlen($nombre_herra) > 20) {
+        echo '<script>alert("Nombre de herramienta debe tener entre 3 y 20 caracteres.");</script>';
+        echo '<script>window.location = "./actu_herra.php";</script>';
+    } elseif (strlen($descripcion) < 6 || strlen($descripcion) > 30) {
+        echo '<script>alert("Descripción debe tener entre 6 y 30 caracteres.");</script>';
+        echo '<script>window.location = "./actu_herra.php";</script>';
+    }
+
     // Validación de campos vacíos
     if (empty($nombre_herra) || empty($marca) || empty($descripcion) || empty($cantidad )){
         echo '<script>alert("Existen datos vacíos");</script>';

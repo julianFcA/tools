@@ -17,6 +17,17 @@ if (isset($_POST["MM_register"]) && ($_POST["MM_register"] == "formRegister")) {
     $apellido = $_POST['apellido'];
     $correo = $_POST['correo'];
 
+    if (strlen($nombre) < 3 || strlen($nombre) > 12) {
+        echo '<script>alert("Nombre debe tener entre 3 y 12 caracteres.");</script>';
+        echo '<script>window.location = "./actu_instru.php";</script>';
+    } elseif (strlen($apellido) < 3 || strlen($apellido) > 15) {
+        echo '<script>alert("El apellido debe tener entre 3 y 15 caracteres.");</script>';
+        echo '<script>window.location = "./actu_instru.php";</script>';
+    } elseif (!filter_var($correo, FILTER_VALIDATE_EMAIL)) {
+        echo '<script>alert("Correo electrónico no válido.");</script>';
+        echo '<script>window.location = "./actu_instru.php";</script>';
+    }
+
     // Validación de campos vacíos
     if (empty($documento) || empty($nombre) || empty($apellido) || empty($correo)) {
         echo '<script>alert("Existen datos vacíos");</script>';
