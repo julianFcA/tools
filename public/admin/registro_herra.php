@@ -61,6 +61,9 @@ if (isset($_POST["MM_register"]) && $_POST["MM_register"] == "formRegister") {
     if (strlen($nombre_herra) < 3 || strlen($nombre_herra) > 20) {
         echo '<script>alert("Nombre de herramienta debe tener entre 3 y 20 caracteres.");</script>';
         echo '<script>window.location = "./registro_herra.php";</script>';
+    } elseif (strlen($cantidad) < 1 || strlen($cantidad) > 4 || !is_numeric($cantidad)) {
+        echo '<script>alert("La cantidad debe ser entre 1 y 4 caracteres.");</script>';
+        echo '<script>window.location = "./registro_herra.php";</script>';
     } elseif (strlen($descripcion) < 6 || strlen($descripcion) > 30) {
         echo '<script>alert("Descripción debe tener entre 6 y 30 caracteres.");</script>';
         echo '<script>window.location = "./registro_herra.php";</script>';

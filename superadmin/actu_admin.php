@@ -18,10 +18,6 @@ if (isset($_POST["MM_register"]) && $_POST["MM_register"] == "formRegister") {
 
     $errors = [];
 
-    if (strlen($documento) < 8 || strlen($documento) > 10 || !is_numeric($documento)) {
-        $errors[] = "Documento debe contener entre 8 y 10 dígitos numéricos.";
-    }
-
     if (strlen($nombre) < 3 || strlen($nombre) > 12) {
         $errors[] = "Nombre debe tener entre 3 y 12 caracteres.";
     }
