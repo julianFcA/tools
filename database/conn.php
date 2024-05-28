@@ -8,7 +8,7 @@
         private $localhost = "localhost";
         private $database = "herramientas";
         private $username = "root";
-        private $userpassword = "123456";
+        private $userpassword = "";
         private $charset ="utf8";
 
         // MANEJO DE EXCEPCIONES TRY AND CATCH

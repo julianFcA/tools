@@ -5,7 +5,7 @@
 
 $mysqlDatabaseName ='herramientas';
 $mysqlUserName ='root';
-$mysqlPassword ='123456';
+$mysqlPassword ='';
 $mysqlHostName = 'localhost';
 $mysqlExportpath = 'respaldo.sql';
 

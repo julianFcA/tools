@@ -7,7 +7,7 @@ use Spipu\Html2Pdf\Html2Pdf;
 // Conecta a la base de datos (ajusta las credenciales según tu configuración)
 $servername = "localhost";
 $username = "root";
-$password = "123456";
+$password = "";
 $dbname = "herramientas";
 
 // Crea una conexión

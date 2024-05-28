@@ -17,7 +17,7 @@ $sheet = $spreadsheet->getActiveSheet();
 
 $servername = "localhost";
 $username = "root";
-$password = "123456";
+$password = "";
 $dbname = "herramientas";
 
 $conn = new mysqli($servername, $username, $password, $dbname);

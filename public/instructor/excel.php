@@ -15,7 +15,7 @@ $sheet = $spreadsheet->getActiveSheet();
 // Conecta a la base de datos (ajusta las credenciales según tu configuración)
 $servername = "localhost";
 $username = "root";
-$password = "123456";
+$password = "";
 $dbname = "herramientas";
 
 session_start();

@@ -6,7 +6,7 @@ $nit_empre = $_POST['nit_empre'] ?? '';
 try {
     $servername = "localhost";
     $username = "root";
-    $password = "123456";
+    $password = "";
     $dbname = "herramientas";
     
     $conn = new PDO("mysql:host=$servername;dbname=herramientas", $username, $password);

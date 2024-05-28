@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 22-05-2024 a las 01:14:42
+-- Tiempo de generación: 28-05-2024 a las 07:46:10
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -79,7 +79,7 @@ CREATE TABLE `empresa` (
 --
 
 INSERT INTO `empresa` (`nit_empre`, `nom_empre`, `direcc_empre`, `telefono`, `correo_empre`) VALUES
-('899999034-1', 'sena centro de aprendizaje', '141- Sector, Cra. 45 Sur #1255', '2709600', '   servicioalciudadano@sena.edu.co');
+('899999034-1', 'sena centro de aprendizaje', '141- Sector, Cra. 45 Sur #1255', '2709600', 'servicioalciudadano@sena.edu.co');
 
 -- --------------------------------------------------------
 
@@ -331,11 +331,7 @@ CREATE TABLE `usuario` (
 --
 
 INSERT INTO `usuario` (`documento`, `id_tp_docu`, `nombre`, `apellido`, `contrasena`, `correo`, `codigo_barras`, `fecha_registro`, `terminos`, `id_rol`, `id_esta_usu`, `nit_empre`) VALUES
-(28741078, 2, 'cesar', 'esquivel', '$2y$10$jbUGbmVjvExaWEvuBNKkM.GC28J3uTtUX1UhKcDlrFEiZ.T48ThPm', 'calderon@gmail.com', '66470677148bf9889', '2024-05-17', 'si', 1, 1, '899999034-1'),
-(111056789, 2, 'lesley', 'aguirre', '$2y$10$1fp5c024QEmidZVTAhC03uzXsMXbXvyc0Ncr4wHblEC1lDQTV6mcm', 'aguirre@gmail.com', '664cc9d97f9bc1914', '2024-05-21', 'si', 3, 1, '899999034-1'),
-(111056879, 1, 'angel', 'rico', '$2y$10$3MEEYlooDXAf7Hubce4teuTJMexf2gvPmtObns2Jj/A3dwtdLGQAy', 'rico@gmail.com', '664d032e3e9a98910', '2024-05-21', 'si', 3, 1, '899999034-1'),
-(1110567984, 2, 'ana', 'cano', '$2y$10$AEQ/s8mTGmc9wJUFcy/pW.nzYJ6pzbMWbi0jreKgsmWbomh5mhQjO', 'cano@gmail.com', '664d02e34b43c1454', '2024-05-21', 'si', 2, 1, '899999034-1'),
-(1110567986, 2, 'julian', 'calderon', '$2y$10$Vxey6kTqSeaj/tpx.5xiWOhkxS3BwxtUm4onkQk/ujFgAjVcEnQhq', 'jfcalderona16@gmail.com', '664cc9902085a5229', '2024-05-21', 'si', 2, 1, '899999034-1');
+(28741078, 2, 'cesar', 'esquivel', '$2y$10$jbUGbmVjvExaWEvuBNKkM.GC28J3uTtUX1UhKcDlrFEiZ.T48ThPm', 'calderon@gmail.com', '66470677148bf9889', '2024-05-17', 'si', 1, 1, '899999034-1');
 
 --
 -- Disparadores `usuario`
@@ -498,31 +494,31 @@ ALTER TABLE `usuario`
 -- AUTO_INCREMENT de la tabla `detalle_prestamo`
 --
 ALTER TABLE `detalle_prestamo`
-  MODIFY `id_deta_presta` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=124;
+  MODIFY `id_deta_presta` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=125;
 
 --
 -- AUTO_INCREMENT de la tabla `deta_ficha`
 --
 ALTER TABLE `deta_ficha`
-  MODIFY `id_deta_ficha` tinyint(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=47;
+  MODIFY `id_deta_ficha` tinyint(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=49;
 
 --
 -- AUTO_INCREMENT de la tabla `deta_reporte`
 --
 ALTER TABLE `deta_reporte`
-  MODIFY `id_deta_reporte` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=44;
+  MODIFY `id_deta_reporte` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=45;
 
 --
 -- AUTO_INCREMENT de la tabla `entrada_usu`
 --
 ALTER TABLE `entrada_usu`
-  MODIFY `id_entrada` int(5) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=458;
+  MODIFY `id_entrada` int(5) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=467;
 
 --
 -- AUTO_INCREMENT de la tabla `formacion`
 --
 ALTER TABLE `formacion`
-  MODIFY `id_forma` tinyint(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=40;
+  MODIFY `id_forma` tinyint(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=43;
 
 --
 -- AUTO_INCREMENT de la tabla `jornada`
@@ -534,25 +530,25 @@ ALTER TABLE `jornada`
 -- AUTO_INCREMENT de la tabla `marca_herra`
 --
 ALTER TABLE `marca_herra`
-  MODIFY `id_marca` tinyint(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
+  MODIFY `id_marca` tinyint(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
 
 --
 -- AUTO_INCREMENT de la tabla `prestamo_herra`
 --
 ALTER TABLE `prestamo_herra`
-  MODIFY `id_presta` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=129;
+  MODIFY `id_presta` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=130;
 
 --
 -- AUTO_INCREMENT de la tabla `reporte`
 --
 ALTER TABLE `reporte`
-  MODIFY `id_reporte` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=53;
+  MODIFY `id_reporte` int(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=54;
 
 --
 -- AUTO_INCREMENT de la tabla `tp_herra`
 --
 ALTER TABLE `tp_herra`
-  MODIFY `id_tp_herra` tinyint(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
+  MODIFY `id_tp_herra` tinyint(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
 
 --
 -- Restricciones para tablas volcadas

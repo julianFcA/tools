@@ -4,7 +4,7 @@ use Spipu\Html2Pdf\Html2Pdf;
 
 $servername = "localhost";
 $username = "root";
-$password = "123456";
+$password = "";
 $dbname = "herramientas";
 session_start();
 $nit = $_SESSION['nit_empre'];
