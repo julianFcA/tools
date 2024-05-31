@@ -76,13 +76,13 @@ if (isset($_POST["MM_register"]) && $_POST["MM_register"] == "formRegister") {
             // El documento no existe en la base de datos, proceder con la inserción
             // Generar código de barras
 
-            $codigo_barras = uniqid();
-
+            $codigo_barras = uniqid() . rand(1000, 9999);
             $generator = new BarcodeGeneratorPNG();
             $codigo_barras_imagen = $generator->getBarcode($codigo_barras, $generator::TYPE_CODE_128);
-        
-            // Guardar el código de barras en un archivo
-            file_put_contents(__DIR__ . '/../images/' . $codigo_barras . '.png', $codigo_barras_imagen);
+            $barcode_file_path = __DIR__ . '/../images/' . $codigo_barras . '.png';
+
+            // Guardar imagen del código de barras
+            $saveBarcodeResult = file_put_contents($barcode_file_path, $codigo_barras_imagen);
 
             // Hashear contraseña
             $user_password = password_hash($contrasena, PASSWORD_DEFAULT);

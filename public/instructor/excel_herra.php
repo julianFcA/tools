@@ -1,10 +1,12 @@
 <?php
-// Incluye la librería PhpSpreadsheet
+// Incluye la librería PhpSpreadsheet y Picqer Barcode
 require '../../vendor/autoload.php';
 
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use PhpOffice\PhpSpreadsheet\Style;
+use PhpOffice\PhpSpreadsheet\Worksheet\Drawing;
+use Picqer\Barcode\BarcodeGeneratorPNG;
 
 // Crea un nuevo objeto Spreadsheet
 $spreadsheet = new Spreadsheet();
@@ -61,10 +63,30 @@ if ($result->num_rows > 0) {
     ];
     $sheet->getStyle('A2:G2')->applyFromArray($headerStyle);
 
+    // Generador de código de barras
+    $barcodeGenerator = new BarcodeGeneratorPNG();
+
     // Iterar sobre los resultados y agregar filas
     $rowNum = 3; // Comienza en la fila 3
     while ($row = $result->fetch_assoc()) {
-        $sheet->setCellValue('A' . $rowNum, $row['codigo_barra_herra']);
+        // Genera la imagen del código de barras
+        $barcodeData = $barcodeGenerator->getBarcode($row['codigo_barra_herra'], $barcodeGenerator::TYPE_CODE_128);
+        $barcodeFilePath = tempnam(sys_get_temp_dir(), 'barcode_') . '.png';
+        file_put_contents($barcodeFilePath, $barcodeData);
+
+        // Insertar la imagen del código de barras en la celda
+        $drawing = new Drawing();
+        $drawing->setPath($barcodeFilePath);
+        $drawing->setCoordinates('A' . $rowNum);
+        $drawing->setHeight(50); // Ajustar la altura de la imagen
+        $drawing->setWidth(150); // Ajustar el ancho de la imagen
+        $drawing->setOffsetX(5); // Añadir un pequeño margen a la izquierda
+        $drawing->setOffsetY(5); // Añadir un pequeño margen arriba
+        $drawing->setWorksheet($sheet);
+
+        // Ajustar la altura de la fila para que quepa la imagen
+        $sheet->getRowDimension($rowNum)->setRowHeight(50);
+
         $sheet->setCellValue('B' . $rowNum, $row['nom_tp_herra']);
         $sheet->setCellValue('C' . $rowNum, $row['nombre_herra']);
         $sheet->setCellValue('D' . $rowNum, $row['nom_marca']);
@@ -75,8 +97,11 @@ if ($result->num_rows > 0) {
     }
 }
 
-// Autoajustar el ancho de las columnas
-foreach (range('A', $sheet->getHighestDataColumn()) as $col) {
+// Ajustar el ancho de la columna A para que quepa la imagen del código de barras
+$sheet->getColumnDimension('A')->setWidth(25);
+
+// Autoajustar el ancho de las demás columnas
+foreach (range('B', $sheet->getHighestDataColumn()) as $col) {
     $sheet->getColumnDimension($col)->setAutoSize(true);
 }
 

@@ -1,8 +1,9 @@
 <?php
 require_once('./../../vendor/autoload.php');
 
-// Incluye la clase que necesitamos del espacio de nombres
+// Incluye las clases que necesitamos de los espacios de nombres
 use Spipu\Html2Pdf\Html2Pdf;
+use Picqer\Barcode\BarcodeGeneratorHTML;
 
 // Conecta a la base de datos (ajusta las credenciales según tu configuración)
 $servername = "localhost";
@@ -10,7 +11,7 @@ $username = "root";
 $password = "";
 $dbname = "herramientas";
 session_start();
-$nit= $_SESSION['nit_empre'];
+$nit = $_SESSION['nit_empre'];
 
 // Crea una conexión
 $conn = new mysqli($servername, $username, $password, $dbname);
@@ -21,18 +22,18 @@ if ($conn->connect_error) {
 }
 
 // Consulta SQL
-$query ="SELECT herramienta.codigo_barra_herra, herramienta.nombre_herra, herramienta.descripcion, herramienta.imagen, herramienta.cantidad, herramienta.esta_herra, tp_herra.nom_tp_herra, marca_herra.nom_marca
+$sql = "SELECT herramienta.codigo_barra_herra, herramienta.nombre_herra, herramienta.descripcion, herramienta.imagen, herramienta.cantidad, herramienta.esta_herra, tp_herra.nom_tp_herra, marca_herra.nom_marca
 FROM empresa 
 INNER JOIN licencia ON empresa.nit_empre = licencia.nit_empre 
 LEFT JOIN herramienta ON empresa.nit_empre = herramienta.nit_empre 
 INNER JOIN tp_herra ON herramienta.id_tp_herra = tp_herra.id_tp_herra 
 INNER JOIN marca_herra ON herramienta.id_marca = marca_herra.id_marca 
 WHERE empresa.nit_empre = '$nit' 
-AND herramienta.id_tp_herra >= 1 
+AND tp_herra.id_tp_herra >= 1 
 AND marca_herra.id_marca >= 1";
 
 // Ejecuta la consulta
-$result = $conn->query($query);
+$result = $conn->query($sql);
 
 // Verifica si hay resultados
 if ($result->num_rows > 0) {
@@ -43,25 +44,35 @@ if ($result->num_rows > 0) {
                 th, td { padding: 5px; text-align: left; border: 1px solid #ddd; font-size: 10px; }
                 th { background-color: #f2f2f2; }
                 h1 { text-align: center; font-size: 14px; }
+                .barcode { width: 10px; height: auto; }
             </style>';
     $html .= '</head><body>';
     $html .= '<h1>Reporte de Herramientas</h1>';
-    // Continúa con el resto del HTML para la tabla y los resultados
 
     // Crea una variable para almacenar el HTML de la tabla
     $html .= '<table><tr><th>Código de Barras</th><th>Nombre de Herramienta</th><th>Descripción</th><th>Imagen</th><th>Cantidad</th><th>Estado de Herramienta</th><th>Tipo de Herramienta</th><th>Marca</th></tr>';
 
+    // Crea un objeto generador de código de barras
+    $barcodeGenerator = new BarcodeGeneratorHTML();
+
+    // Itera sobre los resultados y agrega filas a la tabla
     while($row = $result->fetch_assoc()) {
+        $barcode = '<div style="width: 10px; height: auto;">' . $barcodeGenerator->getBarcode($row['codigo_barra_herra'], $barcodeGenerator::TYPE_CODE_128) . '</div>';
         $html .= '<tr>';
-        foreach($row as $value) {
-            $html .= '<td>' . htmlspecialchars($value) . '</td>';
-        }
+        $html .= '<td>' . $barcode . '</td>';
+        $html .= '<td>' . htmlspecialchars($row['nombre_herra']) . '</td>';
+        $html .= '<td>' . htmlspecialchars($row['descripcion']) . '</td>';
+        $html .= '<td>' . htmlspecialchars($row['imagen']) . '</td>';
+        $html .= '<td>' . htmlspecialchars($row['cantidad']) . '</td>';
+        $html .= '<td>' . htmlspecialchars($row['esta_herra']) . '</td>';
+        $html .= '<td>' . htmlspecialchars($row['nom_tp_herra']) . '</td>';
+        $html .= '<td>' . htmlspecialchars($row['nom_marca']) . '</td>';
         $html .= '</tr>';
     }
     $html .= '</table></body></html>';
 
-    // Crea un objeto HTML2PDF con tamaño de hoja Carta (Letter)
-    $html2pdf = new Html2Pdf('P', 'Letter', 'es', true, 'UTF-8', array(5, 5, 5, 5));
+    // Crea un objeto HTML2PDF con tamaño de hoja Carta (Letter) y orientación horizontal
+    $html2pdf = new Html2Pdf('L', 'Letter', 'es', true, 'UTF-8', array(5, 5, 5, 5));
 
     // Genera el PDF
     $html2pdf->writeHTML($html); // Inserta el HTML en el PDF

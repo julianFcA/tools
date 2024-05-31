@@ -17,9 +17,8 @@ if (isset($_POST["MM_register"]) && $_POST["MM_register"] == "formRegister") {
         echo '<script>window.location = "./registro_forma_manual.php";</script>';
         exit; // Salir del script después de la redirección
     } else {
-
         $stmtCheckFormacion = $conn->prepare("SELECT nom_forma FROM formacion WHERE nom_forma = ?");
-        $stmtCheckFormacion->bindParam(1, $nom_forma, PDO::PARAM_INT);
+        $stmtCheckFormacion->bindParam(1, $nom_forma, PDO::PARAM_STR); // Corrige el tipo de dato a PDO::PARAM_STR
         $stmtCheckFormacion->execute();
         $resultCheckFormacion = $stmtCheckFormacion->fetch(PDO::FETCH_ASSOC);
 
@@ -27,12 +26,13 @@ if (isset($_POST["MM_register"]) && $_POST["MM_register"] == "formRegister") {
             // El documento ya existe en la base de datos, mostrar mensaje emergente con JavaScript
             echo '<script>alert("la formacion ya esta registrada.");</script>';
             echo '<script>window.location = "./registro_forma_manual.php";</script>';
+            exit; // Salir del script después de la redirección
         }
 
         // Prepara y ejecuta la consulta para insertar en la tabla formacion
-        $sql_insert_formacion = "INSERT INTO formacion (id_forma, nom_forma, nit_empre) VALUES (?, ?, '$nit')";
+        $sql_insert_formacion = "INSERT INTO formacion (id_forma, nom_forma, nit_empre) VALUES (?, ?, ?)";
         $stmt_insert_formacion = $conn->prepare($sql_insert_formacion);
-        $stmt_insert_formacion->execute([$id_forma, $nom_forma]);
+        $stmt_insert_formacion->execute([$id_forma, $nom_forma, $nit]);
 
         echo '<script>alert("Registro exitoso.");</script>';
         echo '<script>window.location = "./registro_forma.php";</script>';

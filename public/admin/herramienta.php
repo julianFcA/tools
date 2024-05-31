@@ -91,7 +91,7 @@ $resultado_pagina = $result->fetchAll(PDO::FETCH_ASSOC);
                                                                 $colorFondo = ($entrada["esta_herra"] == 'disponible') ? '#c3e6cb' : '#f5c6cb';
                                                             ?>
                                                                 <tr style="background-color: <?= $colorFondo ?>;">
-                                                                    <td><img src="../../images/<?= $entrada["codigo_barra_herra"] ?>.png" style="max-width: 300px; height: auto; border: 2px solid #ffffff;"><?= $entrada["codigo_barra_herra"] ?></td>
+                                                                    <td><img src="../../images/<?= $entrada["codigo_barra_herra"] ?>.png" style="max-width: 300px; height: auto; border: 2px solid #ffffff;"></td>
                                                                     <td><?= $entrada["nom_tp_herra"] ?></td>
                                                                     <td><?= $entrada["nombre_herra"] ?></td>
                                                                     <td><?= $entrada["nom_marca"] ?></td>
