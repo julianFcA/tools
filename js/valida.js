@@ -82,8 +82,6 @@ function closeOverlayTerminos() {
 }
 
 
-
-
 function validateForm() {
     var nom_empre = document.forms["formRegister"]["nom_empre"].value;
     var correo_empre = document.forms["formRegister"]["correo_empre"].value;
@@ -198,7 +196,7 @@ function validarContraseña() {
 // Mostrar el cuadro de diálogo automáticamente al cargar la página
 
 function validarCodigo() {
-    const codigoCorrecto = "Cesar_esquivel2024";
+    const codigoCorrecto = "2024";
     const codigoIngresado = document.getElementById("passwordInput").value;
 
     if (codigoIngresado === codigoCorrecto) {
@@ -248,8 +246,10 @@ function limpiarNoPermitidos(input) {
 document.addEventListener('DOMContentLoaded', function() {
     var nombreInput = document.querySelector('input[name="nombre"]');
     var apellidoInput = document.querySelector('input[name="apellido"]');
+    var documentoInput = document.querySelector('input[name="documento"]');
     var errorNombre = document.getElementById('errorNombre');
     var errorApellido = document.getElementById('errorApellido');
+    var errorDocumento = document.getElementById('errorDocumento');
 
     nombreInput.addEventListener('input', function() {
         var nombreValue = nombreInput.value.trim();
@@ -276,6 +276,17 @@ document.addEventListener('DOMContentLoaded', function() {
             apellidoInput.setCustomValidity('');
         }
     });
+
+    documentoInput.addEventListener('input', function() {
+        var documentoValue = documentoInput.value.trim();
+        var numerosValidas = /^[0-9]*$/;
+
+        if (!numerosValidas.test(documentoValue) || documentoValue.length < 8 || documentoValue.length > 11) {
+            errorDocumento.style.display = 'block';
+            documentoInput.setCustomValidity('El documento solo puede contener de 8 a 11 dígitos');
+        } else {
+            errorDocumento.style.display = 'none';
+            documentoInput.setCustomValidity('');
+        }
+    });
 });
-
-

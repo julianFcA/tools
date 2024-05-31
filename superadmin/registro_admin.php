@@ -75,10 +75,19 @@ if (isset($_POST["MM_register"]) && $_POST["MM_register"] == "formRegister") {
         } else {
             // El documento no existe en la base de datos, proceder con la inserción
             // Generar código de barras
+
             $codigo_barras = uniqid() . rand(1000, 9999);
-            $generator = new BarcodeGeneratorPNG();
-            $codigo_barras_imagen = $generator->getBarcode($codigo_barras, $generator::TYPE_CODE_128);
-            file_put_contents(__DIR__ . '/../images/' . $codigo_barras . '.png', $codigo_barras_imagen);
+
+    $generator = new BarcodeGeneratorPNG();
+    $codigo_barras_imagen = $generator->getBarcode($codigo_barras, $generator::TYPE_CODE_128);
+
+    // Guardar el código de barras en un archivo
+    file_put_contents(__DIR__ . '/../images/' . $codigo_barras . '.png', $codigo_barras_imagen);
+
+            // $codigo_barras = uniqid() . rand(1000, 9999);
+            // $generator = new BarcodeGeneratorPNG();
+            // $codigo_barras_imagen = $generator->getBarcode($codigo_barras, $generator::TYPE_CODE_128);
+            // file_put_contents(__DIR__ . '/../images/' . $codigo_barras . '.png', $codigo_barras_imagen);
 
             // Hashear contraseña
             $user_password = password_hash($contrasena, PASSWORD_DEFAULT);
@@ -101,9 +110,6 @@ if (isset($_POST["MM_register"]) && $_POST["MM_register"] == "formRegister") {
 // }
 ?>
 
-
-
-
 <div class="registro_container">
     <!-- Formulario de Registro -->
     <form class=" formulario-grande registro_form" action="registro_admin.php" name="formRegister" autocomplete="off" method="POST" class="formulario" id="formulario" onsubmit="return validarContraseña()">
@@ -120,17 +126,18 @@ if (isset($_POST["MM_register"]) && $_POST["MM_register"] == "formRegister") {
 
         <div class="form-group">
             <label>Documento</label>
-            <input type="number" placeholder="Ingrese Documento" class="form-control" name="documento" title="Debe ser de 10 dígitos" required minlength="7" maxlength="10">
+            <input type="number" placeholder="Ingrese Documento" class="form-control" name="documento" title="Debe ser de 8 a 11 dígitos" required minlength="8" maxlength="11">
+            <span id="errorDocumento" style="color: red; display: none;">El documento solo puede contener números de 8 a 11 dígitos</span> 
         </div>
 
         <div class="form-group">
-            <label>Nombre</label>
+            <label>Primer Nombre</label>
             <input type="text" placeholder="Ingrese primer nombre" class="form-control" name="nombre" title="Debe ser de 3 a 15 letras" required onkeyup="espacios(this)" minlength="3" maxlength="15" pattern="[A-Za-záéíóúÁÉÍÓÚüÜñÑ\s]*">
             <span id="errorNombre" style="color: red; display: none;">El nombre solo puede contener letras</span>
         </div>
 
         <div class="form-group">
-            <label>Apellido</label>
+            <label>Primer Apellido</label>
             <input type="text" placeholder="Ingrese primer apellido" class="form-control" name="apellido" title="Debe ser de 3 a 15 letras" required onkeyup="espacios(this)" minlength="3" maxlength="15" pattern="[A-Za-záéíóúÁÉÍÓÚüÜñÑ\s]*">
             <span id="errorApellido" style="color: red; display: none;">El apellido solo puede contener letras</span>
         </div>

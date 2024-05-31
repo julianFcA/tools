@@ -5,31 +5,26 @@ $empresa = $conn->prepare("SELECT nit_empre, nom_empre FROM empresa WHERE nit_em
 $empresa->execute();
 $empresas = $empresa->fetchAll();  // Cambiado de fetch() a fetchAll()
 
+
 if (isset($_POST["MM_insert"]) && $_POST["MM_insert"] == "formreg") {
-    // Obtener datos del formulario
-    $nit_empre = $_POST["nit_empre"];
-    $licencia = uniqid();
+$nit_empre = $_POST["nit_empre"];
+$licencia = uniqid();
+$fecha_ini = date('Y-m-d H:i:s');
+$fecha_fin = date('Y-m-d H:i:s', strtotime('+1 year'));
 
-    $fecha_ini = date('Y-m-d H:i:s');
+$validar_nit = $conn->prepare("SELECT * FROM licencia WHERE nit_empre = ?");
+$validar_nit->execute([$nit_empre]);
+$resultCheckDocument = $validar_nit->fetch(PDO::FETCH_ASSOC);
 
-    $fecha_fin = date('Y-m-d H:i:s', strtotime('+1 year'));
-
-    $validar_nit = $conn->prepare("SELECT * FROM licencia WHERE nit_empre = ?");
-    $validar_nit->execute([$nit_empre]);
-    
-
-    if ($nit_empre == "") {
-        echo '<script>alert("EXISTEN CAMPOS VACÍOS");</script>';
-        echo '<script>window location="crear.php"</script>';
-    } 
-    else {
-      $insertsql = $conn->prepare("INSERT INTO licencia (licencia, esta_licen, fecha_ini, fecha_fin, nit_empre) VALUES (?, 'activo', ?, ?, ?)");
-      $insertsql->execute([$licencia, $fecha_ini, $fecha_fin, $nit_empre]); // Solo se pasan $licencia y $nit_empre
-      echo '<script>alert("Registro exitoso");</script>';
-      echo '<script>window.location = "licencia.php";</script>';
-
-
-    }
+if ($resultCheckDocument) {
+    echo '<script>alert("La empresa que quiere asignar ya está asignada."); window.location = "./crear.php";</script>';
+} elseif (empty($nit_empre)) {
+    echo '<script>alert("EXISTEN CAMPOS VACÍOS"); window.location = "./crear.php";</script>';
+} else {
+    $insertsql = $conn->prepare("INSERT INTO licencia (licencia, esta_licen, fecha_ini, fecha_fin, nit_empre) VALUES (?, 'activo', ?, ?, ?)");
+    $insertsql->execute([$licencia, $fecha_ini, $fecha_fin, $nit_empre]);
+    echo '<script>alert("Registro exitoso"); window.location = "licencia.php";</script>';
+}
 }
 ?>
 

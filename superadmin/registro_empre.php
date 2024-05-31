@@ -72,17 +72,17 @@ if (isset($_POST["MM_register"]) && $_POST["MM_register"] == "formRegister") {
 
             <div class="form-group">
                 <label>Nombre de Empresa</label>
-                <input type="text" placeholder="Ingrese Nombre de Empresa" class="form-control" name="nom_empre" title="Debe ser de 40 letras" required oninput="validarLetrasNumerosGuiones(this)" minlength="6" maxlength="50">
+                <input type="text" placeholder="Ingrese Nombre de Empresa" class="form-control" name="nom_empre" title="Debe ser de 40 letras" required oninput="validarLetrasNumerosGuiones(this)" minlength="3" maxlength="40">
             </div>
 
             <div class="form-group">
                 <label>Dirección de Empresa</label>
-                <input type="text" placeholder="Ingrese Dirección de Empresa" class="form-control" name="direcc_empre" title="Debe ser de 30 letras" required oninput="validarLetrasConEspacios(this)" minlength="6" maxlength="30">
+                <input type="text" placeholder="Ingrese Dirección de Empresa" class="form-control" name="direcc_empre" title="Debe ser de 30 letras" required minlength="6" maxlength="30">
             </div>
 
             <div class="form-group">
                 <label> Teléfono de Empresa</label>
-                <input type="text" placeholder="Ingrese Teléfono de Empresa" class="form-control" name="telefono" required onkeyup="espacios(this)" minlength="8" maxlength="14">
+                <input type="text" placeholder="Ingrese Teléfono de Empresa" class="form-control" name="telefono" required onkeyup="espacios(this)" minlength="8" maxlength="10">
             </div>
 
             <div class="form-group">
@@ -96,15 +96,25 @@ if (isset($_POST["MM_register"]) && $_POST["MM_register"] == "formRegister") {
 </body>
 
 <script>
-    function validarLetrasNumerosGuiones(input) {
+        function validarLetrasNumerosGuiones(input) {
         var valor = input.value.trim();
-        var regex = /^[a-zA-Z0-9\- ]*$/;
+        var letrasYGuiones = valor.replace(/[^a-zA-Z\- ]/g, '');
+        var numeros = valor.replace(/[^0-9]/g, '');
 
-        if (!regex.test(valor)) {
-            alert('El nombre de empresa solo puede contener letras, números y guiones.');
-            input.value = valor.replace(/[^a-zA-Z0-9\- ]/g, '');
+        if (numeros.length > 3) {
+            alert('El nombre de empresa solo puede contener hasta 3 números.');
+            // Limitar a los primeros 3 números y concatenar con las letras y guiones permitidos
+            numeros = numeros.substring(0, 3);
+            input.value = numeros + letrasYGuiones;
+        } else {
+            var regex = /^[a-zA-Z0-9\- ]*$/;
+            if (!regex.test(valor)) {
+                alert('El nombre de empresa solo puede contener letras, números y guiones.');
+                input.value = letrasYGuiones + numeros;
+            }
         }
     }
+
 
     function validarLetrasConEspacios(input) {
         var valor = input.value.trim();
