@@ -69,9 +69,9 @@ $resultado_pagina = $result->fetchAll(PDO::FETCH_ASSOC);
                                                                     <td><?= $entrada["nom_forma"] ?></td>
                                                                     <!-- revisar bien este form -->
                                                                     <td>
-                                                                        <form method="GET" action="elim_forma.php">
+                                                                        <form method="GET" action="actu_forma.php">
                                                                             <input type="hidden" name="id_forma" value="<?= $entrada["id_forma"] ?>">
-                                                                            <button class="btn btn-danger" type="submit" name="elimin">Eliminar</button>
+                                                                            <button class="btn btn-success" type="submit" name="actu">Editar</button>
                                                                         </form>
                                                                     </td>
                                                                 </tr>
