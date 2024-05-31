@@ -42,7 +42,7 @@ if (isset($_POST["MM_register"]) && $_POST["MM_register"] == "formRegister") {
         // Verificar si el documento ya existe en la base de datos
         if ($resultCheck) {
             // El documento ya existe en la base de datos, mostrar mensaje emergente con JavaScript
-            echo '<script>alert("El ficha ya esta registrada.");</script>';
+            echo '<script>alert("la ficha ya esta registrada.");</script>';
             echo '<script>window.location = "./registro_forma.php";</script>';
         }
 
@@ -58,7 +58,7 @@ if (isset($_POST["MM_register"]) && $_POST["MM_register"] == "formRegister") {
         $stmtInsertFicha->execute([$ficha, $id_forma, $id_jornada]);
 
         echo '<script>alert("Registro exitoso.");</script>';
-        echo '<script>window.location = "./registro_instru.php";</script>';
+        echo '<script>window.location = "./formacion_creada.php";</script>';
         exit; // Salir del script después de la redirección
     }
 }

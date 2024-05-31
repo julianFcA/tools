@@ -9,11 +9,10 @@ $offset = ($page - 1) * $limit;
 
 $nit= $_SESSION['nit_empre'];
 
-$query = "SELECT empresa.*, licencia.*, usuario.*, deta_ficha.*, ficha.ficha, formacion.nom_forma, jornada.tp_jornada
-          FROM  empresa INNER JOIN licencia ON empresa.nit_empre = licencia.nit_empre LEFT JOIN usuario ON empresa.nit_empre = usuario.nit_empre  INNER JOIN deta_ficha ON deta_ficha.documento = usuario.documento INNER JOIN ficha ON ficha.ficha = deta_ficha.ficha
-          INNER JOIN formacion ON ficha.id_forma = formacion.id_forma
+$query = "SELECT ficha.ficha, formacion.nom_forma, jornada.tp_jornada
+          FROM  ficha INNER JOIN formacion ON ficha.id_forma = formacion.id_forma
           INNER JOIN jornada ON jornada.id_jornada = ficha.id_jornada
-          WHERE empresa.nit_empre = '$nit' AND ficha.ficha > :ficha
+          WHERE ficha.ficha > :ficha
           AND formacion.id_forma >= 1
           AND jornada.id_jornada >= 1
           LIMIT :limit OFFSET :offset";
@@ -43,7 +42,7 @@ $resultado_pagina = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                     <div class="col-12">
                                         <div class="card">
                                             <div class="card-header">
-                                                <h4 class="card-title">Actividad | Formaciones Asignadas</h4>
+                                                <h4 class="card-title">Actividad | Formaciones Creadas</h4>
                                             </div>
                                             <div class="card-body">
                                                 <div class="table-responsive">
@@ -53,8 +52,7 @@ $resultado_pagina = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                                             <tr>
                                                                 <th>ficha</th>
                                                                 <th>Formacion</th>
-                                                                <th>Jornada</th>
-                                                                <th>Instructor</th>
+                                                                <th>Jornada</th>    
                                                             </tr>
                                                         </thead>
                                                         <tbody>
@@ -63,7 +61,6 @@ $resultado_pagina = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                                                     <td><?= $entrada["ficha"] ?></td>
                                                                     <td><?= $entrada["nom_forma"] ?></td>
                                                                     <td><?= $entrada["tp_jornada"] ?></td>
-                                                                    <td><?= $entrada["nombre"] ?></td>
                                                                 </tr>
                                                             <?php } ?>
                                                         </tbody>

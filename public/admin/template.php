@@ -170,7 +170,9 @@ $nit = $_SESSION['nit_empre'];
                             <li><a class="waves-effect waves-dark" href="index.php"><i class="icon-arrow-right"></i>Instructores</a></li>
                             <li><a class="waves-effect waves-dark" href="aprendices.php"><i class="icon-arrow-right"></i>Aprendices</a></li>
                             <li><a class="waves-effect waves-dark" href="formacion.php"><i class="icon-arrow-right"></i>Formaciones</a></li>
+                            <li><a class="waves-effect waves-dark" href="registro_forma_manual.php"><i class="icon-arrow-right"></i> Registrar Formación Manual</a></li>
                             <li><a class="waves-effect waves-dark" href="registro_forma.php"><i class="icon-arrow-right"></i> Registrar Formación</a></li>
+                            <li><a class="waves-effect waves-dark" href="formacion_creada.php"><i class="icon-arrow-right"></i> Formaciones creadas</a></li>
                             <li><a class="waves-effect waves-dark" href="formacion_asig.php"><i class="icon-arrow-right"></i>Formaciones Asignadas</a></li>
                             <li><a class="waves-effect waves-dark" href="registro_instru.php"><i class="icon-arrow-right"></i> Registrar Instructor</a></li>
                             <li><a class="waves-effect waves-dark" href="regis_marca.php"><i class="icon-arrow-right"></i> Registrar Marca de Herramienta</a></li>

@@ -37,7 +37,7 @@ if (isset($_POST["submit"])) {
 
                 if ($result_check['count'] > 0) {
                     // Si ya existe, muestra un mensaje de error y no inserta el registro
-                    echo '<script>alert("El registro ya existe en la base de datos. Se el nombre de la formacion o si ingreso numeros en la primera columna tal vez tambien sea eso.");';
+                    echo '<script>alert("El registro ya existe en la base de datos. Sea el nombre de la formacion o si ingreso numeros en la primera columna tal vez tambien sea eso.");';
                     echo 'window.location = "./formacion.php";</script>';
                 } else {
                     // Si no existe, procede con la inserción

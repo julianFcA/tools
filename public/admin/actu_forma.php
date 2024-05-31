@@ -22,6 +22,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Validar longitud del nombre de formación
     if (strlen($nom_forma) < 3 || strlen($nom_forma) > 40) {
         echo '<script>alert("Nombre de formación debe tener entre 3 y 40 caracteres.");</script>';
+        echo '<script>window.location = "./actu_forma.php";</script>';
     } else {
         // Actualización de registros
         $actu_update = $conn->prepare("UPDATE formacion SET nom_forma = :nom_forma WHERE id_forma = :id_forma");
