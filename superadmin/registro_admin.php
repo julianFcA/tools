@@ -1,7 +1,7 @@
 <?php
 require_once 'template.php';
 
-require_once __DIR__ . '/../vendor/autoload.php';
+require './../vendor/autoload.php';
 
 use Picqer\Barcode\BarcodeGeneratorPNG;
 
@@ -122,7 +122,7 @@ if (isset($_POST["MM_register"]) && $_POST["MM_register"] == "formRegister") {
         <div class="form-group">
             <label>Documento</label>
             <input type="number" placeholder="Ingrese Documento" class="form-control" name="documento" title="Debe ser de 8 a 11 dígitos" required minlength="8" maxlength="11">
-            <span id="errorDocumento" style="color: red; display: none;">El documento solo puede contener números de 8 a 11 dígitos</span> 
+            <span id="errorDocumento" style="color: red; display: none;">El documento solo puede contener números de 8 a 11 dígitos</span>
         </div>
 
         <div class="form-group">
