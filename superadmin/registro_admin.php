@@ -1,7 +1,7 @@
 <?php
 require_once 'template.php';
 
-require __DIR__ . './../vendor/autoload.php';
+require './../vendor/autoload.php';
 
 use Picqer\Barcode\BarcodeGeneratorPNG;
 
