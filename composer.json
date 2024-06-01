@@ -1,15 +1,20 @@
 {
-    "name": "miorganizacion/sis_proyecto",
+    "name": "vendor/tools",
     "autoload": {
         "psr-4": {
-            "Miorganizacion\\SisProyecto\\": "src/"
+            "Vendor\\Tools\\": "src/"
         }
     },
+    "authors": [
+        {
+            "name": "s"
+        }
+    ],
     "require": {
-        "phpoffice/phpexcel": "^1.8",
-        "phpoffice/phpspreadsheet": "^2.0",
-        "dompdf/dompdf": "^2.0",
         "picqer/php-barcode-generator": "^2.4",
-        "phpmailer/phpmailer": "^6.9"
+        "phpoffice/phpspreadsheet": "^2.0",
+        "spipu/html2pdf": "^5.2",
+        "resend/resend-php": "^0.12.0"
+        
     }
 }
