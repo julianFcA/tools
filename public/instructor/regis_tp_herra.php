@@ -5,8 +5,8 @@ if (isset($_POST["MM_register"]) && $_POST["MM_register"] == "formRegister") {
     $nom_tp_herra = isset($_POST['nom_tp_herra']) ? $_POST['nom_tp_herra'] : "";
 
     // Validaciones adicionales en el lado del servidor
-    if (strlen($nom_tp_herra) < 6 || strlen($nom_tp_herra) > 20) {
-        echo '<script>alert("La herramienta debe tener entre 6 y 20 caracteres.");</script>';
+    if (strlen($nom_tp_herra) < 3 || strlen($nom_tp_herra) > 20) {
+        echo '<script>alert("La herramienta debe tener entre 3 y 20 caracteres.");</script>';
         echo '<script>window.location = "./regis_tp_herra.php";</script>';
     } else {
         // Se elimina NOW() de los valores

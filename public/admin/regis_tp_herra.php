@@ -5,8 +5,8 @@ if (isset($_POST["MM_register"]) && $_POST["MM_register"] == "formRegister") {
     $nom_tp_herra = isset($_POST['nom_tp_herra']) ? $_POST['nom_tp_herra'] : "";
 
     // Validaciones adicionales en el lado del servidor
-    if (strlen($nom_tp_herra) < 6 || strlen($nom_tp_herra) > 20) {
-        echo '<script>alert("La herramienta debe tener entre 6 y 20 caracteres.");</script>';
+    if (strlen($nom_tp_herra) < 3 || strlen($nom_tp_herra) > 20) {
+        echo '<script>alert("La herramienta debe tener entre 3 y 20 caracteres.");</script>';
         echo '<script>window.location = "./regis_tp_herra.php";</script>';
     } else {
         // Se elimina NOW() de los valores
@@ -42,7 +42,7 @@ if (isset($_POST["MM_register"]) && $_POST["MM_register"] == "formRegister") {
                                             <div class="form-group">
                                                 <br>
                                                 <label>Tipo de Herramienta</label>
-                                                <input type="text" placeholder="Ingrese Tipo de Herramienta" class="form-control" name="nom_tp_herra" title="Debe ser de 20 letras" required minlength="6" maxlength="20" required oninput="validarLetras(this)">
+                                                <input type="text" placeholder="Ingrese Tipo de Herramienta" class="form-control" name="nom_tp_herra" title="Debe ser de 20 letras" required minlength="3" maxlength="20" required oninput="validarLetras(this)">
                                             </div>
                                             <br>
                                             <input type="submit" name="MM_register" value="Crear Tipo de Herramienta" class="btn-primary"></input>

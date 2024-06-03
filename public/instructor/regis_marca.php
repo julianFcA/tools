@@ -5,8 +5,8 @@ if (isset($_POST["MM_register"]) && $_POST["MM_register"] == "formRegister") {
     $nom_marca = isset($_POST['nom_marca']) ? $_POST['nom_marca'] : "";
 
     // Validaciones adicionales en el lado del servidor
-    if (strlen($nom_marca) < 6 || strlen($nom_marca) > 20) {
-        echo '<script>alert("La marca debe tener entre 6 y 20 caracteres.");</script>';
+    if (strlen($nom_marca) < 3 || strlen($nom_marca) > 20) {
+        echo '<script>alert("La marca debe tener entre 3 y 20 caracteres.");</script>';
         echo '<script>window.location = "./regis_marca.php";</script>';
     } else {
         // Se elimina NOW() de los valores

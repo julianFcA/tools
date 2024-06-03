@@ -5,8 +5,8 @@ if (isset($_POST["MM_register"]) && $_POST["MM_register"] == "formRegister") {
     $nom_marca = isset($_POST['nom_marca']) ? $_POST['nom_marca'] : "";
 
     // Validaciones adicionales en el lado del servidor
-    if (strlen($nom_marca) < 6 || strlen($nom_marca) > 20) {
-        echo '<script>alert("La marca debe tener entre 6 y 20 caracteres.");</script>';
+    if (strlen($nom_marca) < 3 || strlen($nom_marca) > 20) {
+        echo '<script>alert("La marca debe tener entre 3 y 20 caracteres.");</script>';
         echo '<script>window.location = "./regis_marca.php";</script>';
     } else {
         // Se elimina NOW() de los valores
@@ -41,7 +41,7 @@ if (isset($_POST["MM_register"]) && $_POST["MM_register"] == "formRegister") {
                                             <label for="empresa"></label>
                                             <div class="form-group">
                                                 <label>Marca de Herramientas</label>
-                                                <input type="text" placeholder="Ingrese Marca" class="form-control" name="nom_marca" title="Debe ser de 20 letras" required minlength="6" maxlength="20" oninput="validarLetras(this)" >
+                                                <input type="text" placeholder="Ingrese Marca" class="form-control" name="nom_marca" title="Debe ser de 20 letras" required minlength="3" maxlength="20" oninput="validarLetras(this)" >
                                             </div>
                                             <br>
                                             <input type="submit" name="MM_register" value="Crear Marca de Herramienta" class="btn-primary"></input>
