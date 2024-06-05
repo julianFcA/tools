@@ -65,11 +65,11 @@ $consult = $consulta7->fetch(PDO::FETCH_ASSOC);
 
 <div class="modal" id="modal">
     <div class="modal-content">
-        <span id="close"class="close">&times;</span>
+        <span id="close" class="close">&times;</span>
         <h2>Ingrese Nit de Empresa</h2>
-        <input type="password"id="nitInput" name="nit_empre"placeholder="Ingrese Nit de la Empresa a la que Pertenece">
-        <input type="hidden"id="nitInput" name="nit_empre"value="<?php echo htmlspecialchars($_POST['nit_empre'] ?? ''); ?>">
-        <button onclick="validarAcceso()"class="accept-button" style="background-color: orange; width: calc(100% - 10px); padding: 10px; margin-top: 10px;">Aceptar</button>
+        <input type="password" id="nitInput" name="nit_empre" placeholder="Ingrese Nit de la Empresa a la que Pertenece">
+        <input type="hidden" id="nitInput" name="nit_empre" value="<?php echo htmlspecialchars($_POST['nit_empre'] ?? ''); ?>">
+        <button onclick="validarAcceso()" class="accept-button" style="background-color: orange; width: calc(100% - 10px); padding: 10px; margin-top: 10px;">Aceptar</button>
     </div>
 </div>
 
@@ -152,8 +152,7 @@ $consult = $consulta7->fetch(PDO::FETCH_ASSOC);
         </div>
 
         <div class="form-group">
-            <input type="hidden" id="nombreEmpresa" name="nombreEmpresa" placeholder="Nombre de la Empresa" 
-            readonly>
+            <input type="hidden" id="nombreEmpresa" name="nombreEmpresa" placeholder="Nombre de la Empresa" readonly>
         </div>
 
         <div class="form-group">
@@ -168,24 +167,26 @@ $consult = $consulta7->fetch(PDO::FETCH_ASSOC);
                 <div class="container-terminos">
                     <span class="close-btn-terminos" onclick="closeOverlayTerminos()">X</span>
                     <h1>Términos y Condiciones</h1>
-                    <div class="center-content">
-                        <p>Estos son los términos y condiciones para el uso de la aplicación de préstamos de herramientas:</p>
-                        <ol>
-                            <li><strong>Uso Aceptable:</strong> Al utilizar esta aplicación, aceptas utilizarla de manera ética y legal. No debes usar la aplicación con fines ilegales o dañinos.</li>
-                            <li><strong>Registro:</strong> Para acceder a la funcionalidad completa de la aplicación, es posible que debas registrarte proporcionando información precisa y actualizada.</li>
-                            <li><strong>Préstamos:</strong> El préstamo de herramientas está sujeto a disponibilidad y a las reglas establecidas por la aplicación. Asegúrate de cumplir con las fechas y condiciones acordadas.</li>
-                            <li><strong>Responsabilidad:</strong> La aplicación y sus desarrolladores no se hacen responsables de cualquier daño o pérdida resultante del uso de la aplicación o de las herramientas prestadas.</li>
-                        </ol>
-                        <p>Al utilizar esta aplicación, aceptas cumplir con estos términos y condiciones. Si no estás de acuerdo con estos términos, por favor, no utilices la aplicación.</p>
-                    </div>
-                    <input type="checkbox" class="form-control" id="checkboxTerminos" name="terminos" <?php echo ($consult && $consult['terminos'] == '1') ? 'checked' : ''; ?> required>
+                    <p>Estos son los términos y condiciones para el uso de la aplicación de préstamos de herramientas:</p>
+                    <ol>
+                        <li><strong>Uso Aceptable:</strong> Al utilizar esta aplicación, aceptas utilizarla de manera ética y legal. No debes usar la aplicación con fines ilegales o dañinos.</li>
+                        <li><strong>Registro:</strong> Para acceder a la funcionalidad completa de la aplicación, es posible que debas registrarte proporcionando información precisa y actualizada.</li>
+                        <li><strong>Préstamos:</strong> El préstamo de herramientas está sujeto a disponibilidad y a las reglas establecidas por la aplicación. Asegúrate de cumplir con las fechas y condiciones acordadas.</li>
+                        <li><strong>Responsabilidad:</strong> La aplicación y sus desarrolladores no se hacen responsables de cualquier daño o pérdida resultante del uso de la aplicación o de las herramientas prestadas.</li>
+                    </ol>
+                    <p>Al utilizar esta aplicación, aceptas cumplir con estos términos y condiciones. Si no estás de acuerdo con estos términos, por favor, no utilices la aplicación.</p>
                 </div>
             </div>
             <br>
-            <button type="button" onclick=" openOverlayTerminos()">Acepto Términos y Condiciones</button>
+            <input type="checkbox" class="form-control" id="checkboxTerminos" name="terminos" <?php echo ($consult && $consult['terminos'] == '1') ? 'checked' : ''; ?> required>
+            <label for="checkboxTerminos">Acepto Términos y Condiciones</label>
+            <!-- Nuevo elemento para el mensaje de error -->
+            <span id="errorTerminos" style="color: red; display: none;">Debe aceptar los términos y condiciones</span>
         </div>
+        <button class="btn-success" type="button" onclick="openOverlayTerminos()">Ver Términos y Condiciones</button>
+        <br>
+        <br>
 
- 
         <input type="submit" name="MM_register" value="Registrarme" class="btn"></input>
         <input type="hidden" name="MM_register" value="formRegister" onclick="if(validarAceptacionTerminos())">
 
@@ -370,28 +371,30 @@ $consult = $consulta7->fetch(PDO::FETCH_ASSOC);
 <script>
     // Función para validar el código o el NIT de la empresa según el contexto
     $(document).ready(function() {
-    $('#nitInput').change(function() {
-        var nit = $(this).val();
-        $.ajax({
-            type: "POST",
-            url: "validar_acceso.php", // Asegúrate que esta es la ruta correcta al archivo PHP
-            data: { nit_empre: nit },
-            dataType: 'json',
-            success: function(response) {
-                if(response.acceso_permitido) {
-                    $('#nombreEmpresa').val(response.nombre_empresa);
-                    $('#modal').hide();
-                } else {
-                    alert('Acceso denegado o no se encontró la empresa.');
-                    $('#nombreEmpresa').val(''); // Limpia el campo si no se encuentra la empresa
+        $('#nitInput').change(function() {
+            var nit = $(this).val();
+            $.ajax({
+                type: "POST",
+                url: "validar_acceso.php", // Asegúrate que esta es la ruta correcta al archivo PHP
+                data: {
+                    nit_empre: nit
+                },
+                dataType: 'json',
+                success: function(response) {
+                    if (response.acceso_permitido) {
+                        $('#nombreEmpresa').val(response.nombre_empresa);
+                        $('#modal').hide();
+                    } else {
+                        alert('Acceso denegado o no se encontró la empresa.');
+                        $('#nombreEmpresa').val(''); // Limpia el campo si no se encuentra la empresa
+                    }
+                },
+                error: function() {
+                    alert('Error al realizar la consulta.');
                 }
-            },
-            error: function() {
-                alert('Error al realizar la consulta.');
-            }
+            });
         });
     });
-});
     window.onload = function() {
         document.getElementById("modal").style.display = "block";
 
@@ -404,36 +407,37 @@ $consult = $consulta7->fetch(PDO::FETCH_ASSOC);
 
 
     $(document).ready(function() {
-    $('#nitInput').change(function() {
-        var nit = $(this).val();
-        $.ajax({
-            type: "POST",
-            url: "obtener_formacion_empresa.php", // Este será el archivo PHP nuevo para la consulta
-            data: { nit_empre: nit },
-            dataType: 'json',
-            success: function(response) {
-                var selectFormacion = $('#nom_forma');
-                selectFormacion.empty(); // Limpia opciones anteriores
+        $('#nitInput').change(function() {
+            var nit = $(this).val();
+            $.ajax({
+                type: "POST",
+                url: "obtener_formacion_empresa.php", // Este será el archivo PHP nuevo para la consulta
+                data: {
+                    nit_empre: nit
+                },
+                dataType: 'json',
+                success: function(response) {
+                    var selectFormacion = $('#nom_forma');
+                    selectFormacion.empty(); // Limpia opciones anteriores
 
-                if (response.formaciones.length > 0) {
-                    response.formaciones.forEach(function(formacion) {
+                    if (response.formaciones.length > 0) {
+                        response.formaciones.forEach(function(formacion) {
+                            selectFormacion.append($('<option>', {
+                                value: formacion.id_forma,
+                                text: formacion.nom_forma
+                            }));
+                        });
+                    } else {
                         selectFormacion.append($('<option>', {
-                            value: formacion.id_forma,
-                            text: formacion.nom_forma
+                            value: '',
+                            text: 'No hay formaciones disponibles'
                         }));
-                    });
-                } else {
-                    selectFormacion.append($('<option>', {
-                        value: '',
-                        text: 'No hay formaciones disponibles'
-                    }));
+                    }
+                },
+                error: function() {
+                    alert('Error al cargar las formaciones.');
                 }
-            },
-            error: function() {
-                alert('Error al cargar las formaciones.');
-            }
+            });
         });
     });
-});
 </script>
-

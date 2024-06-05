@@ -15,10 +15,22 @@ document.addEventListener('DOMContentLoaded', function() {
         var documento = form['documento'].value;
         var nombre = form['nombre'].value;
         var correo = form['correo'].value;
+        var checkboxTerminos = document.getElementById('checkboxTerminos');
 
         // Aplica las funciones de validación específicas
         mayuscula(form['nombre']); // Convierte a mayúsculas el nombre
         eliminarEspacios(form['documento']); // Elimina espacios en el documento
+
+          // Verifica si el checkbox de términos y condiciones está seleccionado
+          if (!checkboxTerminos.checked) {
+            // Mostrar el mensaje de error si los términos y condiciones no están aceptados
+            document.getElementById("errorTerminos").style.display = "block";
+            return false;
+        } else {
+            // Ocultar el mensaje de error si los términos y condiciones están aceptados
+            document.getElementById("errorTerminos").style.display = "none";
+            return true;
+        }
 
         // Realiza tus validaciones aquí y muestra mensajes de error si es necesario
 
@@ -39,7 +51,6 @@ document.addEventListener('DOMContentLoaded', function() {
             showError('Correo electrónico no válido');
             return false;
         }
-
         // Más validaciones según sea necesario...
 
         return true; // Si todas las validaciones pasan, retorna true
@@ -130,8 +141,6 @@ function validateForm() {
         return false;
     }
 
-    // Más validaciones según sea necesario...
-
     return true; // Si todas las validaciones pasan, retorna true
 }
 function validarLetras(input) {
@@ -188,6 +197,7 @@ function validarContraseña() {
         return false;
     }
     return true;
+
 }
 
 

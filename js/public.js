@@ -39,11 +39,13 @@ document.addEventListener('DOMContentLoaded', function() {
         var nombre = document.getElementsByName('nombre')[0].value;
         var apellido = document.getElementsByName('apellido')[0].value;
         var correo = form['correo'].value;
-    
+
+
         // Aplica las funciones de validación específicas
         minuscula(form['nombre']); 
         minuscula(form['apellido']); 
         eliminarEspacios(form['documento']); // Elimina espacios en el documento
+
     
         // Realiza tus validaciones aquí y muestra mensajes de error si es necesario
     

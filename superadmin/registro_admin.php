@@ -122,7 +122,7 @@ if (isset($_POST["MM_register"]) && $_POST["MM_register"] == "formRegister") {
         <div class="form-group">
             <label>Documento</label>
             <input type="number" placeholder="Ingrese Documento" class="form-control" name="documento" title="Debe ser de 8 a 11 dígitos" required minlength="8" maxlength="11">
-            <span id="errorDocumento" style="color: red; display: none;">El documento solo puede contener números de 8 a 11 dígitos</span> 
+            <span id="errorDocumento" style="color: red; display: none;">El documento solo puede contener números de 8 a 11 dígitos</span>
         </div>
 
         <div class="form-group">
@@ -187,12 +187,17 @@ if (isset($_POST["MM_register"]) && $_POST["MM_register"] == "formRegister") {
                         <li><strong>Responsabilidad:</strong> La aplicación y sus desarrolladores no se hacen responsables de cualquier daño o pérdida resultante del uso de la aplicación o de las herramientas prestadas.</li>
                     </ol>
                     <p>Al utilizar esta aplicación, aceptas cumplir con estos términos y condiciones. Si no estás de acuerdo con estos términos, por favor, no utilices la aplicación.</p>
-                    <input type="checkbox" class="form-control" id="checkboxTerminos" name="terminos" <?php echo ($consult && $consult['terminos'] == '1') ? 'checked' : ''; ?> required>
                 </div>
             </div>
             <br>
-            <button class="btn-success" type="button" onclick="openOverlayTerminos()">Acepto Términos y Condiciones</button>
+            <input type="checkbox" class="form-control" id="checkboxTerminos" name="terminos" <?php echo ($consult && $consult['terminos'] == '1') ? 'checked' : ''; ?> required>
+            <label for="checkboxTerminos">Acepto Términos y Condiciones</label>
+            <!-- Nuevo elemento para el mensaje de error -->
+            <span id="errorTerminos" style="color: red; display: none;">Debe aceptar los términos y condiciones</span>
         </div>
+        <button class="btn-success" type="button" onclick="openOverlayTerminos()">Ver Términos y Condiciones</button>
+        <br>
+        <br>
 
         <input type="submit" name="MM_register" value="Registrar" class="btn-primary"></input>
         <input type="hidden" name="MM_register" value="formRegister">
