@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 28-05-2024 a las 07:46:10
+-- Tiempo de generación: 05-06-2024 a las 11:32:00
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -18,7 +18,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Base de datos: `herramientas`
+-- Base de datos: `herramientas_1`
 --
 
 -- --------------------------------------------------------
@@ -30,7 +30,7 @@ SET time_zone = "+00:00";
 CREATE TABLE `detalle_prestamo` (
   `id_deta_presta` int(4) NOT NULL,
   `cant_herra` tinyint(4) NOT NULL,
-  `codigo_barra_herra` varchar(500) NOT NULL,
+  `codigo_herra` varchar(500) NOT NULL,
   `id_presta` int(4) NOT NULL,
   `estado_presta` enum('prestado','incompleto','devuelto','reportado','tarde','bloqueado','reportado una parte') NOT NULL,
   `cant_devolucion` tinyint(4) NOT NULL
@@ -57,7 +57,7 @@ CREATE TABLE `deta_ficha` (
 CREATE TABLE `deta_reporte` (
   `id_deta_reporte` int(4) NOT NULL,
   `id_reporte` int(4) NOT NULL,
-  `codigo_barra_herra` varchar(255) NOT NULL
+  `codigo_herra` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -143,7 +143,7 @@ CREATE TABLE `formacion` (
 --
 
 CREATE TABLE `herramienta` (
-  `codigo_barra_herra` varchar(500) NOT NULL,
+  `codigo_herra` varchar(500) NOT NULL,
   `id_tp_herra` tinyint(4) NOT NULL,
   `nombre_herra` varchar(20) NOT NULL,
   `id_marca` tinyint(4) NOT NULL,
@@ -318,7 +318,7 @@ CREATE TABLE `usuario` (
   `apellido` text NOT NULL,
   `contrasena` varchar(255) NOT NULL,
   `correo` varchar(40) NOT NULL,
-  `codigo_barras` varchar(500) NOT NULL,
+  `codigo` varchar(500) NOT NULL,
   `fecha_registro` date NOT NULL,
   `terminos` enum('si','no','','') NOT NULL,
   `id_rol` tinyint(4) NOT NULL,
@@ -330,7 +330,7 @@ CREATE TABLE `usuario` (
 -- Volcado de datos para la tabla `usuario`
 --
 
-INSERT INTO `usuario` (`documento`, `id_tp_docu`, `nombre`, `apellido`, `contrasena`, `correo`, `codigo_barras`, `fecha_registro`, `terminos`, `id_rol`, `id_esta_usu`, `nit_empre`) VALUES
+INSERT INTO `usuario` (`documento`, `id_tp_docu`, `nombre`, `apellido`, `contrasena`, `correo`, `codigo`, `fecha_registro`, `terminos`, `id_rol`, `id_esta_usu`, `nit_empre`) VALUES
 (28741078, 2, 'cesar', 'esquivel', '$2y$10$jbUGbmVjvExaWEvuBNKkM.GC28J3uTtUX1UhKcDlrFEiZ.T48ThPm', 'calderon@gmail.com', '66470677148bf9889', '2024-05-17', 'si', 1, 1, '899999034-1');
 
 --
@@ -363,7 +363,7 @@ DELIMITER ;
 --
 ALTER TABLE `detalle_prestamo`
   ADD PRIMARY KEY (`id_deta_presta`),
-  ADD KEY `codigo_barra_herra` (`codigo_barra_herra`),
+  ADD KEY `codigo_barra_herra` (`codigo_herra`),
   ADD KEY `id_presta` (`id_presta`);
 
 --
@@ -379,7 +379,7 @@ ALTER TABLE `deta_ficha`
 --
 ALTER TABLE `deta_reporte`
   ADD PRIMARY KEY (`id_deta_reporte`),
-  ADD KEY `codigo_barra_herra` (`codigo_barra_herra`),
+  ADD KEY `codigo_barra_herra` (`codigo_herra`),
   ADD KEY `id_reporte` (`id_reporte`);
 
 --
@@ -419,7 +419,7 @@ ALTER TABLE `formacion`
 -- Indices de la tabla `herramienta`
 --
 ALTER TABLE `herramienta`
-  ADD PRIMARY KEY (`codigo_barra_herra`),
+  ADD PRIMARY KEY (`codigo_herra`),
   ADD KEY `id_tp_herra` (`id_tp_herra`),
   ADD KEY `id_marca` (`id_marca`),
   ADD KEY `nit_empre` (`nit_empre`);
@@ -558,7 +558,7 @@ ALTER TABLE `tp_herra`
 -- Filtros para la tabla `detalle_prestamo`
 --
 ALTER TABLE `detalle_prestamo`
-  ADD CONSTRAINT `detalle_prestamo_ibfk_3` FOREIGN KEY (`codigo_barra_herra`) REFERENCES `herramienta` (`codigo_barra_herra`),
+  ADD CONSTRAINT `detalle_prestamo_ibfk_3` FOREIGN KEY (`codigo_herra`) REFERENCES `herramienta` (`codigo_herra`),
   ADD CONSTRAINT `detalle_prestamo_ibfk_4` FOREIGN KEY (`id_presta`) REFERENCES `prestamo_herra` (`id_presta`);
 
 --
@@ -572,7 +572,7 @@ ALTER TABLE `deta_ficha`
 -- Filtros para la tabla `deta_reporte`
 --
 ALTER TABLE `deta_reporte`
-  ADD CONSTRAINT `deta_reporte_ibfk_2` FOREIGN KEY (`codigo_barra_herra`) REFERENCES `herramienta` (`codigo_barra_herra`),
+  ADD CONSTRAINT `deta_reporte_ibfk_2` FOREIGN KEY (`codigo_herra`) REFERENCES `herramienta` (`codigo_herra`),
   ADD CONSTRAINT `deta_reporte_ibfk_3` FOREIGN KEY (`id_reporte`) REFERENCES `reporte` (`id_reporte`);
 
 --
