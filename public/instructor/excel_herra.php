@@ -5,8 +5,6 @@ require '../../vendor/autoload.php';
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use PhpOffice\PhpSpreadsheet\Style;
-use PhpOffice\PhpSpreadsheet\Worksheet\Drawing;
-use Picqer\Barcode\BarcodeGeneratorPNG;
 
 // Crea un nuevo objeto Spreadsheet
 $spreadsheet = new Spreadsheet();
@@ -31,7 +29,7 @@ if ($conn->connect_error) {
 }
 
 // Consulta los datos de la tabla actual
-$sql = "SELECT herramienta.codigo_barra_herra, tp_herra.nom_tp_herra, herramienta.nombre_herra, marca_herra.nom_marca, herramienta.descripcion, herramienta.cantidad, herramienta.esta_herra
+$sql = "SELECT herramienta.codigo_herra, tp_herra.nom_tp_herra, herramienta.nombre_herra, marca_herra.nom_marca, herramienta.descripcion, herramienta.cantidad, herramienta.esta_herra
         FROM empresa
         INNER JOIN licencia ON empresa.nit_empre = licencia.nit_empre
         LEFT JOIN herramienta ON empresa.nit_empre = herramienta.nit_empre
@@ -51,7 +49,7 @@ if ($result->num_rows > 0) {
     $sheet->getStyle('A1')->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
 
     // Encabezados personalizados de columna
-    $headers = ['Código de Barras', 'Tipo de Herramienta', 'Nombre de Herramienta', 'Marca', 'Descripción', 'Cantidad', 'Estado de Herramienta'];
+    $headers = ['Código de Herramienta', 'Tipo de Herramienta', 'Nombre de Herramienta', 'Marca', 'Descripción', 'Cantidad', 'Estado de Herramienta'];
 
     $sheet->fromArray($headers, null, 'A2');
 
@@ -63,30 +61,11 @@ if ($result->num_rows > 0) {
     ];
     $sheet->getStyle('A2:G2')->applyFromArray($headerStyle);
 
-    // Generador de código de barras
-    $barcodeGenerator = new BarcodeGeneratorPNG();
 
     // Iterar sobre los resultados y agregar filas
     $rowNum = 3; // Comienza en la fila 3
     while ($row = $result->fetch_assoc()) {
-        // Genera la imagen del código de barras
-        $barcodeData = $barcodeGenerator->getBarcode($row['codigo_barra_herra'], $barcodeGenerator::TYPE_CODE_128);
-        $barcodeFilePath = tempnam(sys_get_temp_dir(), 'barcode_') . '.png';
-        file_put_contents($barcodeFilePath, $barcodeData);
-
-        // Insertar la imagen del código de barras en la celda
-        $drawing = new Drawing();
-        $drawing->setPath($barcodeFilePath);
-        $drawing->setCoordinates('A' . $rowNum);
-        $drawing->setHeight(50); // Ajustar la altura de la imagen
-        $drawing->setWidth(150); // Ajustar el ancho de la imagen
-        $drawing->setOffsetX(5); // Añadir un pequeño margen a la izquierda
-        $drawing->setOffsetY(5); // Añadir un pequeño margen arriba
-        $drawing->setWorksheet($sheet);
-
-        // Ajustar la altura de la fila para que quepa la imagen
-        $sheet->getRowDimension($rowNum)->setRowHeight(50);
-
+        $sheet->setCellValue('A' . $rowNum, $row['codigo_herra']);
         $sheet->setCellValue('B' . $rowNum, $row['nom_tp_herra']);
         $sheet->setCellValue('C' . $rowNum, $row['nombre_herra']);
         $sheet->setCellValue('D' . $rowNum, $row['nom_marca']);

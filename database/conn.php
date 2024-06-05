@@ -6,7 +6,7 @@
     {
         // Variable para declarar el parametro del servidor
         private $localhost = "localhost";
-        private $database = "herramientas";
+        private $database = "herramientas_1";
         private $username = "root";
         private $userpassword = "";
         private $charset ="utf8";

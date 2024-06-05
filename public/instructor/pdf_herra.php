@@ -3,7 +3,6 @@ require_once('./../../vendor/autoload.php');
 
 // Incluye las clases que necesitamos de los espacios de nombres
 use Spipu\Html2Pdf\Html2Pdf;
-use Picqer\Barcode\BarcodeGeneratorHTML;
 
 // Conecta a la base de datos (ajusta las credenciales según tu configuración)
 $servername = "localhost";
@@ -22,7 +21,7 @@ if ($conn->connect_error) {
 }
 
 // Consulta SQL
-$sql = "SELECT herramienta.codigo_barra_herra, herramienta.nombre_herra, herramienta.descripcion, herramienta.imagen, herramienta.cantidad, herramienta.esta_herra, tp_herra.nom_tp_herra, marca_herra.nom_marca
+$sql = "SELECT herramienta.codigo_herra, herramienta.nombre_herra, herramienta.descripcion, herramienta.imagen, herramienta.cantidad, herramienta.esta_herra, tp_herra.nom_tp_herra, marca_herra.nom_marca
 FROM empresa 
 INNER JOIN licencia ON empresa.nit_empre = licencia.nit_empre 
 LEFT JOIN herramienta ON empresa.nit_empre = herramienta.nit_empre 
@@ -44,22 +43,19 @@ if ($result->num_rows > 0) {
                 th, td { padding: 5px; text-align: left; border: 1px solid #ddd; font-size: 10px; }
                 th { background-color: #f2f2f2; }
                 h1 { text-align: center; font-size: 14px; }
-                .barcode { width: 10px; height: auto; }
             </style>';
     $html .= '</head><body>';
     $html .= '<h1>Reporte de Herramientas</h1>';
 
     // Crea una variable para almacenar el HTML de la tabla
-    $html .= '<table><tr><th>Código de Barras</th><th>Nombre de Herramienta</th><th>Descripción</th><th>Imagen</th><th>Cantidad</th><th>Estado de Herramienta</th><th>Tipo de Herramienta</th><th>Marca</th></tr>';
+    $html .= '<table><tr><th>Código de herramienta</th><th>Nombre de Herramienta</th><th>Descripción</th><th>Imagen</th><th>Cantidad</th><th>Estado de Herramienta</th><th>Tipo de Herramienta</th><th>Marca</th></tr>';
 
-    // Crea un objeto generador de código de barras
-    $barcodeGenerator = new BarcodeGeneratorHTML();
+
 
     // Itera sobre los resultados y agrega filas a la tabla
     while($row = $result->fetch_assoc()) {
-        $barcode = '<div style="width: 10px; height: auto;">' . $barcodeGenerator->getBarcode($row['codigo_barra_herra'], $barcodeGenerator::TYPE_CODE_128) . '</div>';
         $html .= '<tr>';
-        $html .= '<td>' . $barcode . '</td>';
+        $html .= '<td>' . htmlspecialchars($row['codigo_herra']) . '</td>';
         $html .= '<td>' . htmlspecialchars($row['nombre_herra']) . '</td>';
         $html .= '<td>' . htmlspecialchars($row['descripcion']) . '</td>';
         $html .= '<td>' . htmlspecialchars($row['imagen']) . '</td>';
