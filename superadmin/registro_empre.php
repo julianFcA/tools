@@ -5,6 +5,8 @@ $empresa = $conn->prepare("SELECT * FROM empresa");
 $empresa->execute();
 $empresas = $empresa->fetchAll();  // Cambiado de fetch() a fetchAll()
 
+//proyecto_2026_registro
+
 if (isset($_POST["MM_register"]) && $_POST["MM_register"] == "formRegister") {
     $nit_empre = $_POST['nit_empre'] ?? "";
     $nom_empre = $_POST['nom_empre'] ?? "";
