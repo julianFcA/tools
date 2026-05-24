@@ -5,6 +5,7 @@ $columnas = [];
 
 $docu = $_SESSION['documento'];
 // echo $docu;
+//datos_2026
 
 if (isset($_SESSION['documento'])) {
     $consulta_tipo = $conn->prepare("SELECT usuario.nombre, usuario.apellido, usuario.documento, usuario.correo, usuario.codigo_barras, empresa.nit_empre, empresa.nom_empre FROM usuario INNER JOIN empresa ON empresa.nit_empre = usuario.nit_empre WHERE usuario.documento = :documento;");
