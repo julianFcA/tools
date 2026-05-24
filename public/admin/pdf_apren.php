@@ -4,6 +4,7 @@ require_once('./../../vendor/autoload.php');
 // Incluye la clase que necesitamos del espacio de nombres
 use Spipu\Html2Pdf\Html2Pdf;
 
+//pdf_2026
 
 // Conecta a la base de datos (ajusta las credenciales según tu configuración)
 $servername = "localhost";
